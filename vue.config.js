@@ -22,6 +22,20 @@ module.exports = {
         background: {
           entry: 'src/background.js',
         },
+        contentScripts: {
+          entries: {
+            'content-script': [
+              'src/content-scripts/content-script.js',
+            ],
+          },
+        },
+      },
+    },
+  },
+  css: {
+    loaderOptions: {
+      scss: {
+        prependData: '@import "~@/styles/_variables.scss";',
       },
     },
   },

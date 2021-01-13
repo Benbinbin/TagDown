@@ -11,7 +11,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss" scoped>
 html {
   width: 400px;
   height: 400px;
