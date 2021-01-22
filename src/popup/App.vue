@@ -9,7 +9,7 @@
         </svg>
         <span>添加书签</span>
       </button>
-      <div v-if="booked" @mouseenter="editing=true" @mouseleave="editing=false" class="btn-container">
+      <div v-if="booked" @mouseenter="editing=true" @mouseleave="editing=false" class="btn-sub-container">
         <button class="btn-success" v-show="!editing">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark-check" viewBox="0 0 16 16">
             <path fill-rule="evenodd" d="M10.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0z" />
@@ -17,9 +17,9 @@
           </svg>
           <span>已添加</span>
         </button>
-        <div v-show="editing" class="btn-container" style="flex-direction: row">
+        <div v-show="editing" class="edit-buttons-container">
           <button class="btn-delete" @click="deleteBookmark">删除</button>
-          <button>编辑</button>
+          <button class="btn-edit">编辑</button>
         </div>
       </div>
 
@@ -37,6 +37,10 @@
       </button>
     </div>
     <div v-if="current === 'tree'">
+      <div class="nav">
+        <button>返回</button>
+        <button>切换模式</button>
+      </div>
       <tree :bookmarks="bookmarks"></tree>
     </div>
   </div>
@@ -133,13 +137,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// body {
-//   max-width: 100%;
-//   max-height: 100%;
-// }
-
 .btn-container {
-  max-width: 100vw;
+  margin: 10px;
   width: 130px;
   display: flex;
   flex-direction: column;
@@ -148,21 +147,21 @@ export default {
 
   button {
     width: 100%;
-    padding: 0.5rem;
-    margin: 0.5rem;
+  }
+
+  .btn-sub-container {
+    width: 100%;
+    display: flex;
+    button {
+      margin: 0.5rem 0;
+    }
+  }
+
+  .edit-buttons-container {
+    width: 100%;
     display: flex;
     align-items: center;
-    justify-content: space-evenly;
-    border: 2px solid $blue;
-    border-radius: 0.8rem;
-    background: $light;
-    color: $dark;
-
-    &:hover {
-      background: $blue;
-      color: $light;
-      font-weight: bold;
-    }
+    justify-content: space-between;
   }
 
   .btn-success {
@@ -172,11 +171,41 @@ export default {
 
   .btn-delete {
     border: 2px solid $red;
-    color: $red;
-
-    &:hover {
-      background: $red;
-    }
+    border-radius: 0.5rem 0 0 0.5rem;
+    background: $red;
+    color: $light;
+    font-weight: bold;
   }
+
+  .btn-edit {
+    border: 2px solid $blue;
+    border-radius: 0 0.5rem 0.5rem 0;
+    background: $blue;
+    color: $light;
+    font-weight: bold;
+  }
+}
+
+button {
+  padding: 0.5rem;
+  margin: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  border: 2px solid $blue;
+  border-radius: 0.5rem;
+  background: $light;
+  color: $dark;
+  &:hover {
+    background: $blue;
+    color: $light;
+    font-weight: bold;
+  }
+}
+
+.nav {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px;
 }
 </style>
