@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "__MSG_extName__",
   "homepage_url": "http://localhost:8080/",
-  "description": "A Vue Browser Extension",
+  "description": "A enhanced bookmark manager",
   "default_locale": "en",
   "permissions": [
     "activeTab",
@@ -30,10 +30,7 @@
       "38": "icons/38.png"
     }
   },
-  "options_ui": {
-    "page": "options.html",
-    "browser_style": true
-  },
+  "options_page": "options.html",
   "chrome_url_overrides": {
     "newtab": "override.html"
   }

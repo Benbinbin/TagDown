@@ -1,191 +1,120 @@
 <template>
-  <div class="tree-container">
-  </div>
+  <!-- eslint-disable max-len -->
+  <svg class="tree-diagram" :viewBox="viewBox">
+    <circle cx="0" cy="0" r="5" fill="red"></circle>
+    <g class="container" ref="container" :transform="adjustTransform">
+      <g class="links-container" fill="none" stroke="#555" stroke-opacity="0.4" stroke-width="1.5">
+        <path v-for="link of links" :key="link.target.id" :d="linkPath(link)"></path>
+      </g>
+      <g class="nodes-cotainer" cursor="pointer" pointer-events="all" style="font: 14px sans-serif;">
+        <g v-for="node of nodes" :key="node.id" @click="clickHandler(node, $event)" :transform="`translate(${node.y}, ${node.x})`">
+
+          <!-- <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z" /> -->
+
+          <text dy="0.25em" x="6" text-anchor="start" stroke-linejoin="round" stroke-width="5" stroke="white">
+            {{ text(node) }}
+          </text>
+          <text dy="0.25em" x="6" text-anchor="start">
+            {{ text(node) }}
+          </text>
+          <circle r="2.5" :fill="node._children ? '#555' : '#999'" stroke-width="10"></circle>
+
+          <title>{{ node.data.title }}</title>
+        </g>
+      </g>
+    </g>
+  </svg>
 </template>
 
 <script>
 import * as d3 from 'd3';
 
-/**
- * 预设参数和构建 svg 相关元素的容器
- */
-// <svg> 元素的尺寸
-const width = 500;
-const height = 500;
-// 树布局的节点尺寸
-const dx = 25;
-const dy = width / 4;
-
-// 创建 svg 元素，设置合适的视窗 viewBox 大小
-const svg = d3
-  .create('svg')
-  .attr('viewBox', [-2 * dy, -height / 2, width, height])
-  .style('font', '14px sans-serif');
-
-// 所有树图元素的容器 <g>
-const container = svg.append('g').attr('class', 'container');
-
-// 创建节点间连线容器 <g>，并设置线条的样式
-const gLink = container
-  .append('g')
-  .attr('fill', 'none')
-  .attr('stroke', '#555')
-  .attr('stroke-opacity', 0.4)
-  .attr('stroke-width', 1.5);
-
-// 创建节点容器 <g>，并设置鼠标悬浮时的样式
-const gNode = container
-  .append('g')
-  .attr('cursor', 'pointer')
-  .attr('pointer-events', 'all');
-
-/**
- * 响应用户主动缩放和拖移操作
- */
-function zoomHandler(event) {
-  const { x, y, k } = event.transform;
-  container.attr('transform', `translate(${x}, ${y}) scale(${k})`);
-}
-
-const zoom = d3.zoom().scaleExtent([0.5, 10]).on('zoom', zoomHandler);
-
-svg.call(zoom);
-
 export default {
   props: ['bookmarks'],
   data() {
     return {
+      width: 500,
+      height: 500,
+      dx: 25,
       root: null,
+      nodes: null,
+      links: null,
+      zoom: null,
+      transform: {
+        x: 0,
+        y: 0,
+        k: 1,
+      },
+      zoomType: 'click',
     };
   },
-  methods: {
-    update(source, duration = 250) {
-      /**
-       * 基于「更新」的 this.root 数据重新计算节点的层次布局坐标，更新画面
-       */
-      d3.tree().nodeSize([dx, dy])(this.root);
-
-      this.root.eachBefore((d) => {
-        d.x0 = d.x;
-        d.y0 = d.y;
-      });
-
-      this.drawNodes(source);
-      this.drawLines(source);
+  computed: {
+    dy() {
+      return this.width / 4;
     },
-    drawNodes(source) {
-      /**
-       * 绘制节点
-       */
-      const nodesData = this.root.descendants(); // 节点数据
-      const nodes = gNode.selectAll('g').data(nodesData, (d) => d.id);
-
-      const nodeEnter = nodes
-        .enter()
-        .append('g')
-        .attr('transform', (d) => `translate(${source.y0},${source.x0})`)
-        .attr('fill-opacity', 0)
-        .attr('stroke-opacity', 0);
-
-      // 筛选出新增的节点中具有子节点的节点，绑定点击事件
-      nodeEnter
-        .filter((d) => d.data.children)
-        .on('click', (event, d) => {
-          this.clickHandler(event, d);
-        });
-
-      // 为新增的节点添加圆形图标
-      nodeEnter.append('circle')
-        .attr('r', 2.5)
-        .attr('fill', (d) => (d._children ? '#555' : '#999'))
-        .attr('stroke-width', 10);
-
-      // 为新增的节点添加文本
-      nodeEnter
-        .append('text')
-        .attr('dy', '0.25em')
-        .attr('x', (d) => (d._children ? -6 : 6))
-        .attr('text-anchor', (d) => (d._children ? 'end' : 'start'))
-        .text((d) => d.data.title)
-        .clone(true)
-        .lower()
-        .attr('stroke-linejoin', 'round')
-        .attr('stroke-width', 3)
-        .attr('stroke', 'white');
-
-      // 将新增节点移动到层次布局计算得到的坐标上
-      nodes
-        .merge(nodeEnter)
-        .attr('transform', (d) => `translate(${d.y},${d.x})`)
-        .attr('fill-opacity', 1)
-        .attr('stroke-opacity', 1);
-
-      // 移除多余的节点（收缩子树的场景）
-      nodes.exit().remove();
-      // .attr("transform", (d) => `translate(${source.y},${source.x})`)
-      // .attr("fill-opacity", 0)
-      // .attr("stroke-opacity", 0);
+    viewBox() {
+      return `${-2 * this.dy}, ${-this.height / 2}, ${this.width}, ${
+        this.height
+      }`;
     },
-    drawLines(source) {
-      /**
-       * 绘制连线
-       */
-      const linksData = this.root.links(); // 连线数据
-      const links = gLink.selectAll('path').data(linksData, (d) => d.target.id);
-
-      const linkEnter = links
-        .enter()
-        .append('path')
-        .attr('d', () => {
-          const o = { x: source.x0, y: source.y0 };
-
-          return d3
-            .linkHorizontal()
-            .x((d) => d.y)
-            .y((d) => d.x)({ source: o, target: o });
-        });
-
-      links.merge(linkEnter).attr(
-        'd',
-        d3
-          .linkHorizontal()
-          .x((d) => d.y)
-          .y((d) => d.x),
-      );
-
-      // 从页面上移除 exiting 结点集合，使用前面预设的动效，节点缩回父节点处
-      links.exit().remove();
-      // .attr("d", (d) => {
-      //   const o = { x: source.x, y: source.y };
-      //   return d3
-      //     .linkHorizontal()
-      //     .x((d) => d.y)
-      //     .y((d) => d.x)({ source: o, target: o });
-      // });
-    },
-    clickHandler(event, d) {
-      if (!d.parent) return; // 根节点不可操作
-      // duration = event.altKey ? 1000 : 250;
-      // 切换 children 属性值（在 null 和预先设置的 _children 之间切换）
-      d.children = d.children ? null : d._children;
-
-      if (d.children) {
-        // 展开子树
-        d.parent.children.forEach((item) => {
-          if (item !== d) {
-            // 同时收起同层其他节点下的子树
-            item.children = null;
-            this.update(item);
-          }
-        });
-        this.adjustZoom(d, true);
-      } else {
-        // 收缩子树
-        this.adjustZoom(d, false);
+    adjustTransform() {
+      if (this.zoomType === 'click') {
+        return `scale(${this.transform.k}) translate(${this.transform.x}, ${this.transform.y})`;
       }
-      this.update(d);
+      return `translate(${this.transform.x}, ${this.transform.y}) scale(${this.transform.k}) `;
     },
-    adjustZoom(d, isExpand) {
+  },
+  methods: {
+    tree() {
+      // 计算节点的层次布局，为 this.root 的每个节点添加坐标属性
+      d3.tree().nodeSize([this.dx, this.dy])(this.root);
+
+      // 节点数据数组
+      this.nodes = this.root.descendants();
+      // 连线数据数组
+      this.links = this.root.links();
+    },
+    linkPath(link) {
+      const linkGenerator = d3
+        .linkHorizontal()
+        .x((d) => d.y)
+        .y((d) => d.x);
+      return linkGenerator(link);
+    },
+    text(node) {
+      const len = Math.floor(this.dy / (14 + 1));
+      if (node.data.title.length > len) {
+        return `${node.data.title.substr(0, len).trim()}...`;
+      }
+      return node.data.title;
+    },
+    clickHandler(d, event) {
+      if (!d.parent) return; // 根节点不可操作
+      if (!d._children) {
+        // 处理叶子节点的点击事件
+        console.log(d.data.title);
+      } else {
+        // 处理非叶子节点的点击事件
+        // 切换 children 属性值（在 null 和预先设置的 _children 之间切换）
+        d.children = d.children ? null : d._children;
+
+        if (d.children) {
+          // 展开子树
+          d.parent.children.forEach((item) => {
+            if (item !== d) {
+              // 同时收起同层其他节点下的子树
+              item.children = null;
+            }
+          });
+          this.tween(d, true);
+        } else {
+          // 收缩子树
+          this.tween(d, false);
+        }
+        this.tree();
+      }
+    },
+    tween(d, isExpand) {
       /**
        * 点击节点如果展开子树，则节点移动到垂直居中位置
        * 点击节点如果收缩节点，其上一级父节点移动到垂直居中位置
@@ -195,49 +124,68 @@ export default {
       let y;
       if (isExpand) {
         // 展开子树
-        scale = height / ((d.children.length + 2) * dx);
+        scale = this.height / ((d.children.length + 2) * this.dx);
         x = d.y;
         y = d.x;
       } else {
         //  收缩子树
-        scale = height / ((d.parent.children.length + 2) * dx);
+        scale = this.height / ((d.parent.children.length + 2) * this.dx);
         x = d.parent.y;
         y = d.parent.x;
       }
 
-      if (scale > 1) {
-        scale = 1;
+      if (scale > 1.2) {
+        // 最大放大倍数是 1.2
+        scale = 1.2;
       }
 
-      svg
-        .transition()
+      this.zoomType = 'click';
+
+      d3.transition()
         .duration(500)
-        .call(zoom.transform, d3.zoomIdentity.translate(-x, -y).scale(scale));
+        .tween('adjustTransform', () => {
+          const interpolate = d3.interpolate(this.transform, {
+            x: -x,
+            y: -y,
+            k: scale,
+          });
+          return (t) => {
+            this.transform = interpolate(t);
+          };
+        });
+    },
+    zoomHandler(event) {
+      this.zoomType = 'user';
+
+      // console.log(event);
+      // const { x, y, k } = event.transform;
+      this.transform = event.transform;
     },
   },
-  mounted() {
-    console.log(this.bookmarks);
-
-    /**
-     * 结构化数据
-     */
+  created() {
+    // 结构化数据
     this.root = d3.hierarchy(this.bookmarks);
 
     this.root.descendants().forEach((d, i) => {
       d.id = i;
       d._children = d.children;
-      if (d.depth >= 1) d.children = null;
+      if (d.depth >= 1) d.children = null; // 初始化只显示两个层级
     });
-    // console.log(root);
-    this.update(this.root);
-    d3.select('.tree-container').append(() => svg.node());
+
+    // 计算节点的层次布局
+    this.tree();
+  },
+  mounted() {
+    // 响应用户主动缩放和拖移操作
+    this.zoom = d3.zoom().scaleExtent([0.5, 10]).on('zoom', this.zoomHandler);
+    d3.select('.tree-diagram').call(this.zoom);
   },
 };
 </script>
 
 <style lang="scss" scoped>
-.tree-container {
-  width: 600px;
-  height: 600px;
+svg {
+  width: 100%;
+  height: 100%;
 }
 </style>
