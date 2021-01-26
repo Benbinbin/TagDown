@@ -64,17 +64,22 @@
           </svg>
         </li>
       </ul>
-      <tree :bookmarks="bookmarks" class="tree"></tree>
+      <tree v-if="mode === 'tree'" :bookmarks="bookmarks" class="tree"></tree>
+      <sunburst v-if="mode==='nav'" :bookmarks="bookmarks" class="tree"></sunburst>
     </div>
   </div>
 </template>
 
 <script>
 import Tree from '@/components/Tree.vue';
+import Sunburst from '@/components/Sunburst.vue';
 
 export default {
   name: 'App',
-  components: { Tree },
+  components: {
+    Tree,
+    Sunburst,
+  },
   data() {
     return {
       id: null,
@@ -82,7 +87,7 @@ export default {
       editing: false,
       current: 'buttons',
       bookmarks: [],
-      mode: 'tree',
+      mode: 'nav',
     };
   },
   methods: {
@@ -137,7 +142,7 @@ export default {
     },
     getBookmarks() {
       this.getTree().then((bookmarks) => {
-        console.log(bookmarks);
+        // console.log(bookmarks);
         [this.bookmarks] = bookmarks;
         this.current = 'tree';
       });
@@ -156,6 +161,10 @@ export default {
         this.id = bookmarkNode[0].id;
         this.booked = true;
       });
+
+    // chrome.bookmarks.getChildren('0', (bookmarks) => {
+    //   console.log(bookmarks);
+    // });
   },
 };
 </script>
@@ -225,6 +234,9 @@ export default {
 }
 
 .tree-container {
+  width: 500px;
+  height: 530px;
+
   .nav {
     width: 100%;
     height: 30px;
@@ -242,7 +254,6 @@ export default {
     }
   }
   .tree {
-    width: 500px;
     height: 500px;
   }
 }

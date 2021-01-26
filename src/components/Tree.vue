@@ -8,17 +8,18 @@
       </g>
       <g class="nodes-cotainer" cursor="pointer" pointer-events="all" style="font: 14px sans-serif;">
         <g v-for="node of nodes" :key="node.id" @click="clickHandler(node, $event)" :transform="`translate(${node.y}, ${node.x})`">
-
-          <!-- <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z" /> -->
-
-          <text dy="0.25em" x="6" text-anchor="start" stroke-linejoin="round" stroke-width="5" stroke="white">
+          <text dy="0.25em" x="0.6em" text-anchor="start" stroke-linejoin="round" stroke-width="5" stroke="white">
             {{ text(node) }}
           </text>
-          <text dy="0.25em" x="6" text-anchor="start">
+          <text dy="0.25em" x="0.6em" text-anchor="start">
             {{ text(node) }}
           </text>
-          <circle r="2.5" :fill="node._children ? '#555' : '#999'" stroke-width="10"></circle>
-
+          <svg v-if="!node._children && node.parent" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#2f89fc" class="bi bi-bookmark-fill" viewBox="0 0 16 16" x="-0.6em" y="-0.6em">
+            <path d="M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z" />
+          </svg>
+          <svg v-if="node._children && node.parent" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#feb062" class="bi bi-folder-fill" viewBox="0 0 16 16" x="-0.6em" y="-0.6em">
+            <path d="M9.828 3h3.982a2 2 0 0 1 1.992 2.181l-.637 7A2 2 0 0 1 13.174 14H2.826a2 2 0 0 1-1.991-1.819l-.637-7a1.99 1.99 0 0 1 .342-1.31L.5 3a2 2 0 0 1 2-2h3.672a2 2 0 0 1 1.414.586l.828.828A2 2 0 0 0 9.828 3zm-8.322.12C1.72 3.042 1.95 3 2.19 3h5.396l-.707-.707A1 1 0 0 0 6.172 2H2.5a1 1 0 0 0-1 .981l.006.139z" />
+          </svg>
           <title>{{ node.data.title }}</title>
         </g>
       </g>
@@ -82,7 +83,7 @@ export default {
       return linkGenerator(link);
     },
     text(node) {
-      const len = Math.floor(this.dy / (14 + 1));
+      const len = Math.floor(this.dy / (14 + 2));
       if (node.data.title.length > len) {
         return `${node.data.title.substr(0, len).trim()}...`;
       }
@@ -155,7 +156,7 @@ export default {
         });
     },
     zoomHandler(event) {
-      this.zoomType = 'user';
+      this.zoomType = 'click';
 
       // console.log(event);
       // const { x, y, k } = event.transform;
