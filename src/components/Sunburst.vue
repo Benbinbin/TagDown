@@ -2,24 +2,26 @@
   <!-- eslint-disable max-len -->
   <svg :viewBox="`0, 0, ${this.width}, ${this.height}`">
     <g class="container" :transform="`translate(${this.width/2}, ${this.height/2})`">
-      <g class="outer">
+      <g class="outer" v-show="size==='large'">
         <g class="path">
-          <path v-for="node of outerNodes" :key="node.id" :fill="color(node)" :fill-opacity="arcVisible(node.current) ? (node.children ?  0.6 : 0.4) : 0" :d="arcPath(node.current)" style="cursor: pointer;" @click="clickHandler(node, $event)">
+          <path v-for="node of outerNodes" :key="node.id" :fill="color(node)" :fill-opacity="node.height > 1 ?  1 : 0.5" :d="arcPath(node.current)" style="cursor: pointer;" @click="clickHandler(node, $event)">
             <title>{{ node.data.title }}</title>
           </path>
         </g>
         <g class="label" text-anchor="middle" pointer-events="none" style="user-select: none;">
-          <text v-for="node of outerNodes" :key="node.id" dy="0.25em" :fill-opacity="labelVisible(node.current) ? 1 : 0" :transform="labelTransform(node.current)" font-size="1em" fill="white">{{ node.data.title }}</text>
+          <text v-for="node of outerNodes" :key="node.id" dy="0.25em" :transform="labelTransform(node.current)" font-size="1em" :fill="node.height > 1 ? '#f5f5f5' : '#40514e'">{{ label(node) }}</text>
         </g>
       </g>
       <g class="center">
         <g class="center-path">
-          <path v-for="node of centerNodes" :key="node.id" :fill="centerColor(node)" pointer-events="all" :d="centerArcPath(node)" :filter="node === current ? null : 'url(#shadow)'" style="cursor: pointer;" @click="clickHandler(node, $event)"></path>
+          <path v-for="node of centerNodes" :key="node.id" :fill="centerColor(node)" pointer-events="all" :d="centerArcPath(node)" :filter="node === current ? null : 'url(#shadow)'" style="cursor: pointer;" @click="clickHandler(node, $event)">
+            <title>{{ node.depth === 0 ? '根节点' : node.data.title }}</title>
+          </path>
         </g>
         <g class="center-label" pointer-events="none" style="user-select: none;">
-          <path v-for="node of centerNodes" :key="node.id" :d="centerLabelArc(node)" :id="node.data.title" fill="none"></path>
-          <text v-for="node of centerNodes" :key="node.id" dy="0.25em" text-anchor="middle" font-size="1em">
-            <textPath :xlink:href="`#${node.data.title}`" startOffset="50%">{{ node.data.title }}</textPath>
+          <path v-for="node of centerNodes" :key="node.id" :d="centerLabelArc(node)" :id="node.depth === 0 ? '根节点' : node.data.title" fill="none"></path>
+          <text v-for="node of centerNodes" :key="node.id" dy="0.25em" text-anchor="middle" :font-size="size==='small' ? '3em' : '1em'" fill="#40514e">
+            <textPath :xlink:href="`#${node.depth === 0 ? '根节点' : node.data.title}`" startOffset="50%">{{ node.depth === 0 ? '根节点' : node.data.title }}</textPath>
           </text>
         </g>
       </g>
@@ -36,18 +38,30 @@
 import * as d3 from 'd3';
 
 export default {
-  props: ['bookmarks'],
+  props: ['bookmarks', 'size'],
   data() {
     return {
       width: 500,
       height: 500,
-      radius: 0,
       root: null,
       current: null,
-      select: [],
+      select: null,
     };
   },
   computed: {
+    radius() {
+      // 设置径向树环形的宽度
+      return this.width > this.height ? this.height / 6 : this.width / 6;
+    },
+    centerRadius() {
+      if (this.size === 'small') {
+        // eslint-disable-next-line max-len
+        return this.width > this.height
+          ? this.height / (this.centerNodes.length * 2)
+          : this.width / (this.centerNodes.length * 2);
+      }
+      return this.radius / this.centerNodes.length;
+    },
     outerNodes() {
       // console.log(this.root.descendants().slice(1));
       const arr = [];
@@ -74,14 +88,9 @@ export default {
           }
         });
       });
-      console.log(children);
-      console.log(subChildren);
-      console.log(arr);
-      // return this.root.descendants().slice(1);
       return arr;
     },
     centerNodes() {
-      // console.log(this.current.ancestors());
       return this.current.ancestors();
     },
     colorScale() {
@@ -93,13 +102,14 @@ export default {
     },
   },
   methods: {
-    arcVisible(d) {
-      return d.y1 <= 3 && d.y0 >= 1 && d.x1 > d.x0;
-    },
-    labelVisible(d) {
-      return d.y1 <= 3 && d.y0 >= 1 && (d.y1 - d.y0) * (d.x1 - d.x0) > 0.03;
-    },
+    // arcVisible(d) {
+    //   return d.y1 <= 3 && d.y0 >= 1 && d.x1 > d.x0;
+    // },
+    // labelVisible(d) {
+    //   return d.y1 <= 3 && d.y0 >= 1 && (d.y1 - d.y0) * (d.x1 - d.x0) > 0.03;
+    // },
     color(d) {
+      if (d === this.select) return '#fff';
       while (d.parent !== this.current && d.depth > this.current.depth) {
         d = d.parent;
       }
@@ -121,48 +131,61 @@ export default {
       const y = ((d.y0 + d.y1) / 2) * this.radius;
       return `rotate(${x - 90}) translate(${y},0) rotate(${x < 180 ? 0 : 180})`;
     },
+    label(node) {
+      const len = Math.floor(this.radius / 12);
+      if (node.data.title.length > len) {
+        return `${node.data.title.substr(0, len).trim()}...`;
+      }
+      return node.data.title;
+    },
     centerColor(node) {
+      if (node === this.select) return '#fff';
       const colorScale = d3.quantize(
         d3.interpolate('rgb(180, 180, 180)', 'rgb(255, 255, 255)'),
         this.centerNodes.length + 1,
       );
 
-      if (!node.parent) {
-        // 设置为根节点为白色
-        return 'rgb(255, 255, 255)';
-      }
+      // if (!node.parent) {
+      //   // 设置为根节点为白色
+      //   return 'rgb(255, 255, 255)';
+      // }
       return colorScale[this.centerNodes.indexOf(node)];
     },
     centerArcPath(node) {
-      const centerRadius = this.radius / this.centerNodes.length;
-
       const arc = d3
         .arc()
         .startAngle(0)
         .endAngle(2 * Math.PI)
-        .innerRadius((d) => d.y0 * centerRadius)
-        .outerRadius((d) => Math.max(d.y0 * centerRadius, d.y1 * centerRadius))(
-          node,
-        );
+        .innerRadius((d) => d.y0 * this.centerRadius)
+        .outerRadius((d) => Math.max(d.y0 * this.centerRadius, d.y1 * this.centerRadius))(node);
 
       return arc;
     },
     centerLabelArc(node) {
-      const centerRadius = this.radius / this.centerNodes.length;
-
       const path = d3.path();
       if (node.parent) {
         // 对于其他节点（完整的圆环），字体对应的路径是曲线（位于环形中心）
-        path.arc(0, 0, ((node.y0 + node.y1) / 2) * centerRadius, -Math.PI, 0);
+        path.arc(
+          0,
+          0,
+          ((node.y0 + node.y1) / 2) * this.centerRadius,
+          -Math.PI,
+          0,
+        );
       } else {
         // 对于根节点（在中心，圆形形式），字体对应的路径是直线（位于圆心）
-        path.moveTo(-centerRadius / 2, 0);
-        path.lineTo(centerRadius / 2, 0);
+        path.moveTo(-this.centerRadius / 2, 0);
+        path.lineTo(this.centerRadius / 2, 0);
       }
 
       return path;
     },
     clickHandler(p, event) {
+      if (p.height === 1) {
+        this.select = p;
+        return;
+      }
+      this.select = p;
       this.current = p;
       // 基于点击的节点为参考标准，重新计算其他节点的定位
       this.outerNodes.forEach((d) => {
@@ -217,9 +240,7 @@ export default {
     });
 
     this.current = this.root;
-
-    // 设置径向树环形的宽度
-    this.radius = this.width > this.height ? this.height / 6 : this.width / 6;
+    this.select = this.root;
   },
 };
 </script>

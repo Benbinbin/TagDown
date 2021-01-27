@@ -6,12 +6,12 @@
       <g class="links-container" fill="none" stroke="#555" stroke-opacity="0.4" stroke-width="1.5">
         <path v-for="link of links" :key="link.target.id" :d="linkPath(link)"></path>
       </g>
-      <g class="nodes-cotainer" cursor="pointer" pointer-events="all" style="font: 14px sans-serif;">
+      <g class="nodes-cotainer" cursor="pointer" pointer-events="all" style="font: 12px sans-serif;">
         <g v-for="node of nodes" :key="node.id" @click="clickHandler(node, $event)" :transform="`translate(${node.y}, ${node.x})`">
-          <text dy="0.25em" x="0.6em" text-anchor="start" stroke-linejoin="round" stroke-width="5" stroke="white">
+          <text dy="0.35em" x="0.8em" text-anchor="start" stroke-linejoin="round" stroke-width="5" stroke="white">
             {{ text(node) }}
           </text>
-          <text dy="0.25em" x="0.6em" text-anchor="start">
+          <text dy="0.35em" x="0.8em" text-anchor="start">
             {{ text(node) }}
           </text>
           <svg v-if="!node._children && node.parent" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#2f89fc" class="bi bi-bookmark-fill" viewBox="0 0 16 16" x="-0.6em" y="-0.6em">
@@ -83,7 +83,7 @@ export default {
       return linkGenerator(link);
     },
     text(node) {
-      const len = Math.floor(this.dy / (14 + 2));
+      const len = Math.floor(this.dy / 12);
       if (node.data.title.length > len) {
         return `${node.data.title.substr(0, len).trim()}...`;
       }
