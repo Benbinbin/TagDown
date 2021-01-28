@@ -1,7 +1,7 @@
 <template>
   <!-- eslint-disable max-len -->
   <svg class="tree-diagram" :viewBox="viewBox">
-    <circle cx="0" cy="0" r="5" fill="red"></circle>
+    <!-- <circle cx="0" cy="0" r="5" fill="red"></circle> -->
     <g class="container" ref="container" :transform="adjustTransform">
       <g class="links-container" fill="none" stroke="#555" stroke-opacity="0.4" stroke-width="1.5">
         <path v-for="link of links" :key="link.target.id" :d="linkPath(link)"></path>

@@ -4,24 +4,24 @@
     <g class="container" :transform="`translate(${this.width/2}, ${this.height/2})`">
       <g class="outer" v-show="size==='large'">
         <g class="path">
-          <path v-for="node of outerNodes" :key="node.id" :fill="color(node)" :fill-opacity="node.height > 1 ?  1 : 0.5" :d="arcPath(node.current)" style="cursor: pointer;" @click="clickHandler(node, $event)">
+          <path v-for="node of outerNodes" :key="node.id" :fill="color(node)" :fill-opacity="node.height > 1 ?  1 : 0.5" :d="arcPath(node.current)" style="cursor: pointer;" :stroke="node===select ? '#ff5959': 'none'" stroke-width="3" @click="clickHandler(node, 'outer', $event)">
             <title>{{ node.data.title }}</title>
           </path>
         </g>
         <g class="label" text-anchor="middle" pointer-events="none" style="user-select: none;">
-          <text v-for="node of outerNodes" :key="node.id" dy="0.25em" :transform="labelTransform(node.current)" font-size="1em" :fill="node.height > 1 ? '#f5f5f5' : '#40514e'">{{ label(node) }}</text>
+          <text v-for="node of outerNodes" :key="node.id" dy="0.25em" :transform="labelTransform(node.current)" font-size="12px" :fill="node === select ? '#000' : (node.height > 1 ? '#f5f5f5' : '#40514e')">{{ label(node) }}</text>
         </g>
       </g>
       <g class="center">
         <g class="center-path">
-          <path v-for="node of centerNodes" :key="node.id" :fill="centerColor(node)" pointer-events="all" :d="centerArcPath(node)" :filter="node === current ? null : 'url(#shadow)'" style="cursor: pointer;" @click="clickHandler(node, $event)">
-            <title>{{ node.depth === 0 ? '根节点' : node.data.title }}</title>
+          <path v-for="node of centerNodes" :key="node.id" :fill="centerColor(node)" pointer-events="all" :d="centerArcPath(node)" :filter="node === current ? null : 'url(#shadow)'" style="cursor: pointer;" :stroke="node===select ? '#ff5959': 'none'" stroke-width="3" @click="clickHandler(node, 'center', $event)">
+            <title>{{ node.depth === 0 ? 'root' : node.data.title }}</title>
           </path>
         </g>
         <g class="center-label" pointer-events="none" style="user-select: none;">
-          <path v-for="node of centerNodes" :key="node.id" :d="centerLabelArc(node)" :id="node.depth === 0 ? '根节点' : node.data.title" fill="none"></path>
+          <path v-for="node of centerNodes" :key="node.id" :d="centerLabelArc(node)" :id="node.depth === 0 ? 'root' : node.data.title" fill="none"></path>
           <text v-for="node of centerNodes" :key="node.id" dy="0.25em" text-anchor="middle" :font-size="size==='small' ? '3em' : '1em'" fill="#40514e">
-            <textPath :xlink:href="`#${node.depth === 0 ? '根节点' : node.data.title}`" startOffset="50%">{{ node.depth === 0 ? '根节点' : node.data.title }}</textPath>
+            <textPath :xlink:href="`#${node.depth === 0 ? 'root' : node.data.title}`" startOffset="50%">{{ node.depth === 0 ? 'root' : node.data.title }}</textPath>
           </text>
         </g>
       </g>
@@ -38,14 +38,13 @@
 import * as d3 from 'd3';
 
 export default {
-  props: ['bookmarks', 'size'],
+  props: ['size', 'root', 'select', 'current'],
   data() {
     return {
       width: 500,
       height: 500,
-      root: null,
-      current: null,
-      select: null,
+      outerNodes: [],
+      centerNodes: [],
     };
   },
   computed: {
@@ -57,16 +56,31 @@ export default {
       if (this.size === 'small') {
         // eslint-disable-next-line max-len
         return this.width > this.height
-          ? this.height / (this.centerNodes.length * 2)
-          : this.width / (this.centerNodes.length * 2);
+          ? this.height / (this.centerNodes.length * 2) - 1
+          : this.width / (this.centerNodes.length * 2) - 1;
       }
-      return this.radius / this.centerNodes.length;
+      return this.radius / this.centerNodes.length - 1;
     },
-    outerNodes() {
-      // console.log(this.root.descendants().slice(1));
+    colorScale() {
+      return d3.scaleOrdinal(
+        d3.quantize(d3.interpolateRainbow, this.current.children.length + 1),
+      );
+    },
+  },
+  watch: {
+    current() {
+      this.centerNodes = this.current.ancestors();
+
+      this.setOuterNodes(this.current);
+
+      // console.log(this.outerNodes);
+      // console.log(this.centerNodes);
+    },
+  },
+  methods: {
+    setOuterNodes(p) {
       const arr = [];
       const children = [];
-      const subChildren = [];
       this.current.children.forEach((node) => {
         if (node.height !== 0) {
           arr.push(node);
@@ -77,37 +91,27 @@ export default {
         item.children.forEach((node) => {
           if (node.height !== 0) {
             arr.push(node);
-            subChildren.push(node);
           }
         });
       });
-      subChildren.forEach((item) => {
-        item.children.forEach((node) => {
-          if (node.height !== 0) {
-            arr.push(item);
-          }
-        });
-      });
-      return arr;
-    },
-    centerNodes() {
-      return this.current.ancestors();
-    },
-    colorScale() {
-      const colorScale = d3.scaleOrdinal(
-        d3.quantize(d3.interpolateRainbow, this.current.children.length + 1),
-      );
+      this.outerNodes = arr;
 
-      return colorScale;
+      // 基于点击的节点为参考标准，重新计算其他节点的定位
+      this.outerNodes.forEach((d) => {
+        d.current = {
+          x0:
+            Math.max(0, Math.min(1, (d.x0 - p.x0) / (p.x1 - p.x0)))
+            * 2
+            * Math.PI,
+          x1:
+            Math.max(0, Math.min(1, (d.x1 - p.x0) / (p.x1 - p.x0)))
+            * 2
+            * Math.PI,
+          y0: Math.max(0, d.y0 - p.depth),
+          y1: Math.max(0, d.y1 - p.depth),
+        };
+      });
     },
-  },
-  methods: {
-    // arcVisible(d) {
-    //   return d.y1 <= 3 && d.y0 >= 1 && d.x1 > d.x0;
-    // },
-    // labelVisible(d) {
-    //   return d.y1 <= 3 && d.y0 >= 1 && (d.y1 - d.y0) * (d.x1 - d.x0) > 0.03;
-    // },
     color(d) {
       if (d === this.select) return '#fff';
       while (d.parent !== this.current && d.depth > this.current.depth) {
@@ -145,10 +149,6 @@ export default {
         this.centerNodes.length + 1,
       );
 
-      // if (!node.parent) {
-      //   // 设置为根节点为白色
-      //   return 'rgb(255, 255, 255)';
-      // }
       return colorScale[this.centerNodes.indexOf(node)];
     },
     centerArcPath(node) {
@@ -180,67 +180,26 @@ export default {
 
       return path;
     },
-    clickHandler(p, event) {
+    clickHandler(p, type, event) {
+      // console.log(event);
+
       if (p.height === 1) {
-        this.select = p;
+        this.$emit('changeSelect', p);
         return;
       }
-      this.select = p;
-      this.current = p;
-      // 基于点击的节点为参考标准，重新计算其他节点的定位
-      this.outerNodes.forEach((d) => {
-        d.current = {
-          x0:
-            Math.max(0, Math.min(1, (d.x0 - p.x0) / (p.x1 - p.x0)))
-            * 2
-            * Math.PI,
-          x1:
-            Math.max(0, Math.min(1, (d.x1 - p.x0) / (p.x1 - p.x0)))
-            * 2
-            * Math.PI,
-          y0: Math.max(0, d.y0 - p.depth),
-          y1: Math.max(0, d.y1 - p.depth),
-        };
-      });
+
+      if ((type === 'outer' && event.ctrlKey) || type === 'center') {
+        // 按住 ctrl 再点击环形才进行下钻，否则是选择该环形
+        this.$emit('changeSelect', null);
+        this.$emit('changeCurrent', p);
+      } else {
+        this.$emit('changeSelect', p);
+      }
     },
   },
   created() {
-    // 结构化数据
-    this.root = d3
-      .hierarchy(this.bookmarks)
-      .eachAfter((d) => {
-        if (d.height === 0) {
-          d.value = 0;
-        } else if (d.height === 1) {
-          d.value = 1;
-        } else {
-          let value = 0;
-
-          d.children.forEach((item) => {
-            value += item.value;
-          });
-          d.value = value;
-        }
-      })
-      .sort((a, b) => b.value - a.value);
-
-    console.log(this.root);
-    // 计算节点的层次布局
-    const tree = d3.partition().size([2 * Math.PI, this.root.height + 1])(
-      this.root,
-    );
-
-    tree.each((d) => {
-      d.current = {
-        x0: d.x0,
-        x1: d.x1,
-        y0: d.y0,
-        y1: d.y1,
-      };
-    });
-
-    this.current = this.root;
-    this.select = this.root;
+    this.centerNodes = this.current.ancestors();
+    this.setOuterNodes(this.current);
   },
 };
 </script>
