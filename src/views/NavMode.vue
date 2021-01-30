@@ -2,10 +2,56 @@
   <!-- eslint-disable max-len -->
   <div class="main">
     <div class="sidebar">
+      <div class="nav-top">
+        <button class="open" @click="open">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M6.354 5.5H4a3 3 0 0 0 0 6h3a3 3 0 0 0 2.83-4H9c-.086 0-.17.01-.25.031A2 2 0 0 1 7 10.5H4a2 2 0 1 1 0-4h1.535c.218-.376.495-.714.82-1z" />
+            <path d="M9 5.5a3 3 0 0 0-2.83 4h1.098A2 2 0 0 1 9 6.5h3a2 2 0 1 1 0 4h-1.535a4.02 4.02 0 0 1-.82 1H12a3 3 0 1 0 0-6H9z" />
+          </svg>
+        </button>
+
+        <button class="checked" @click="checked">
+          <title>全选</title>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M10.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0z" />
+            <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z" />
+          </svg>
+        </button>
+
+        <button class="unchecked" @click="unchecked">
+          <title>全不选</title>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M5.5 6.5A.5.5 0 0 1 6 6h4a.5.5 0 0 1 0 1H6a.5.5 0 0 1-.5-.5z" />
+            <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z" />
+          </svg>
+        </button>
+
+        <button class="clear" @click="clear('', $event)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#ff5959" viewBox="0 0 16 16">
+            <title>清空全部</title>
+            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+            <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+          </svg>
+        </button>
+
+        <!-- <button class="more" @click="showMore">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M2.5 11.5A.5.5 0 0 1 3 11h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 3 7h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 3 3h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z" />
+          </svg>
+        </button> -->
+
+      </div>
       <div class="pins-list scrollbar" ref="pins">
-        <div class="pin" v-for="bookmark of pinsList" :key="bookmark">
-          <input type="checkbox" :name="bookmark" :id="bookmark">
-          <label :for="bookmark">{{ bookmark }}</label>
+        <div class="pin" v-for="bookmark of pinsList" :key="bookmark.data.id">
+          <input type="checkbox" :value="bookmark" :id="bookmark.data.id" v-model="selectedList">
+          <label :for="bookmark.data.id">{{ bookmark.data.title }}</label>
+          <button class="clear" @click="clear(bookmark, $event)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#ff5959" viewBox="0 0 16 16">
+              <title>删除</title>
+              <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+              <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+            </svg>
+          </button>
         </div>
       </div>
       <div class="nav-bottom">
@@ -44,7 +90,9 @@
     </div>
     <div class="bookmarks-list">
       <div class="first">
-        <p class="folder">{{ current.data.title ? current.data.title : '根目录' }}</p>
+        <div class="folder">
+          <p>{{ current.data.title ? current.data.title : '根目录' }}</p>
+        </div>
         <ul class="scrollbar" ref="first">
           <li v-for="bookmark of firstBookmarksList" :key="bookmark.data.id" :style="folderStyle(bookmark)" @click="clickHandler(bookmark, 'first', $event)">
             <svg v-if="bookmark.data.children" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
@@ -78,7 +126,9 @@
       </div>
 
       <div class="second">
-        <p class="folder" v-if="select">{{ select.data.title }}</p>
+        <div class="folder">
+          <p>{{ select ? select.data.title : '' }}</p>
+        </div>
         <ul class="scrollbar" ref="second">
           <li v-for="bookmark of secondBookmarksList" :key="bookmark.data.id" :style="folderStyle(bookmark)" @click="clickHandler(bookmark, 'second', $event)">
             <svg v-if="bookmark.data.children" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
@@ -118,36 +168,18 @@ export default {
   components: {
     Sunburst,
   },
-  props: ['bookmarks'],
+  props: ['bookmarks', 'previewMode'],
   data() {
     return {
       root: null,
       current: null,
       select: null,
-      pinsList: [
-        'BananaBananaBananaBananaBananaBanana',
-        'Orange',
-        'Apple',
-        'Mango',
-        'Banana2',
-        'Orange2',
-        'Apple2',
-        'Mango2',
-        'Banana3',
-        'Orange3',
-        'Apple3',
-        'Mango3',
-        'Banana4',
-        'Orange4',
-        'Apple4',
-        'Mango4',
-        'Banana5',
-        'Orange5',
-        'Apple5',
-        'Mango5',
-      ],
+      set: new Set(),
+      pinsList: [],
+      selectedList: [],
       showNav: 'sunburst',
-      navSize: 'large',
+      navSize: 'small',
+      showMore: false,
     };
   },
   computed: {
@@ -170,6 +202,7 @@ export default {
         return {
           border: '3px solid #2f89fc',
           background: '#2f89fc',
+          color: '#f5f5f5',
         };
       }
       if (node.height !== 0) {
@@ -186,6 +219,44 @@ export default {
     changeCurrentHandler(node) {
       this.current = node;
     },
+    open() {
+      const promises = [];
+      this.selectedList.forEach((node) => {
+        const p = this.openUrl(node.data.url, 'multi');
+        promises.push(p);
+      });
+      // console.log(this.selectedList);
+      Promise.all(promises).then((tabs) => {
+        const tabIds = tabs.map((item) => item.id);
+        chrome.tabs.group({
+          tabIds,
+        });
+      });
+      const arr = this.selectedList.slice();
+
+      arr.forEach((item) => {
+        this.clear(item);
+      });
+    },
+    checked() {
+      this.selectedList = this.pinsList;
+    },
+    clear(node) {
+      if (node) {
+        this.set.delete(node);
+        const pinIndex = this.pinsList.indexOf(node);
+        const selectIndex = this.selectedList.indexOf(node);
+        this.pinsList.splice(pinIndex, 1);
+        if (selectIndex !== -1) this.selectedList.splice(selectIndex, 1);
+      } else {
+        this.set.clear();
+        this.pinsList = [];
+        this.selectedList = [];
+      }
+    },
+    unchecked() {
+      this.selectedList = [];
+    },
     closeNav() {
       this.showNav = null;
       this.navSize = 'small';
@@ -200,26 +271,75 @@ export default {
       this.current = this.current.parent;
       this.select = null;
     },
-    clickHandler(node, column, event) {
-      //   console.log(node);
-      //   console.log(column);
-      //   console.log(event);
+    getCurrentTab() {
+      return new Promise((resolve, reject) => {
+        chrome.tabs.query(
+          {
+            active: true,
+            currentWindow: true,
+          },
+          (tabs) => {
+            resolve(tabs[0]);
+          },
+        );
+      });
+    },
+    // eslint-disable-next-line consistent-return
+    openUrl(url, mode = this.previewMode) {
+      if (mode === 'default') {
+        return new Promise((resolve, reject) => {
+          this.getCurrentTab().then((tab) => {
+            chrome.tabs.create({
+              active: false,
+              url: tab.url,
+            });
 
+            chrome.tabs.update({ url }, (t) => resolve(t));
+          });
+        });
+      }
+      if (mode === 'one') {
+        return new Promise((resolve, reject) => {
+          chrome.tabs.update({ url }, (t) => resolve(t));
+        });
+      }
+      if (mode === 'multi') {
+        return new Promise((resolve, reject) => {
+          chrome.tabs.create(
+            {
+              active: false,
+              url,
+            },
+            (t) => resolve(t),
+          );
+        });
+      }
+    },
+    clickHandler(node, column, event) {
+      // console.log(event);
+      if (event.ctrlKey && !node.data.children) {
+        // 按住 Ctrl 键点击书签
+        if (this.set.has(node)) return;
+        this.set.add(node);
+        this.selectedList.push(node);
+        this.pinsList.push(node);
+        return;
+      }
       if (column === 'first') {
         // 点击第一列的文件夹，「展开」到第二列
         if (node.data.children) {
           this.select = node;
         } else {
           // 点击第一列的书签
-          console.log(node.data.title);
+          this.openUrl(node.data.url);
         }
       } else if (node.data.children) {
-        //   点击第二列的文件夹，切换第一列和第二列，下钻「展开」
+        // 点击第二列的文件夹，切换第一列和第二列，下钻「展开」
         this.current = this.select;
         this.select = node;
       } else {
         // 点击第二列的书签
-        console.log(node.data.title);
+        this.openUrl(node.data.url);
       }
     },
   },
@@ -298,15 +418,18 @@ button:focus {
     display: none;
   }
 
+  .nav-top,
   .nav-bottom {
+    height: 25px;
     display: flex;
     align-items: center;
     button {
-      background: $light;
       width: 100%;
+      height: 100%;
       display: flex;
       justify-content: center;
       align-items: center;
+      background: $light;
       border: none;
       padding: 2px 0;
       cursor: pointer;
@@ -325,6 +448,10 @@ button:focus {
     grid-area: pins;
     display: flex;
     flex-direction: column;
+
+    .nav-top {
+      border-bottom: 2px solid $light-bg;
+    }
 
     .navigator {
       width: 100%;
@@ -369,12 +496,13 @@ button:focus {
     }
 
     .pins-list {
-      padding: 0 5px;
+      padding: 5px;
       flex-grow: 1;
       overflow-y: auto;
       scroll-behavior: smooth;
 
       .pin {
+        margin: 0.25rem 0;
         width: 100%;
         display: flex;
         justify-content: space-between;
@@ -382,17 +510,27 @@ button:focus {
         label {
           width: 100%;
           padding: 0.25rem;
-          margin-left: 0.25rem;
+          margin: 0 0.25rem;
           border: 1px solid $yellow;
           border-left: 5px solid $yellow;
+          white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
+          user-select: none;
 
           &:hover {
             background: $yellow;
             color: $light;
             font-weight: bold;
           }
+        }
+        button {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          cursor: pointer;
+          background: none;
+          border: none;
         }
       }
     }
@@ -419,13 +557,18 @@ button:focus {
 
     .folder {
       width: 100%;
-      padding: 2px 5px;
+      height: 25px;
       background: $light;
       border-bottom: 2px solid $light-bg;
-      text-align: center;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      p {
+        height: 100%;
+        line-height: 25px;
+        font-size: 12px;
+        text-align: center;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
     }
 
     ul {

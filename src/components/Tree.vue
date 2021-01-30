@@ -14,10 +14,10 @@
           <text dy="0.35em" x="0.8em" text-anchor="start">
             {{ text(node) }}
           </text>
-          <svg v-if="!node._children && node.parent" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#2f89fc" class="bi bi-bookmark-fill" viewBox="0 0 16 16" x="-0.6em" y="-0.6em">
+          <svg v-if="!node.data.children && node.parent" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#2f89fc" class="bi bi-bookmark-fill" viewBox="0 0 16 16" x="-0.6em" y="-0.6em">
             <path d="M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z" />
           </svg>
-          <svg v-if="node._children && node.parent" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#feb062" class="bi bi-folder-fill" viewBox="0 0 16 16" x="-0.6em" y="-0.6em">
+          <svg v-if="node.data.children && node.parent" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#feb062" class="bi bi-folder-fill" viewBox="0 0 16 16" x="-0.6em" y="-0.6em">
             <path d="M9.828 3h3.982a2 2 0 0 1 1.992 2.181l-.637 7A2 2 0 0 1 13.174 14H2.826a2 2 0 0 1-1.991-1.819l-.637-7a1.99 1.99 0 0 1 .342-1.31L.5 3a2 2 0 0 1 2-2h3.672a2 2 0 0 1 1.414.586l.828.828A2 2 0 0 0 9.828 3zm-8.322.12C1.72 3.042 1.95 3 2.19 3h5.396l-.707-.707A1 1 0 0 0 6.172 2H2.5a1 1 0 0 0-1 .981l.006.139z" />
           </svg>
           <title>{{ node.data.title }}</title>
@@ -31,7 +31,7 @@
 import * as d3 from 'd3';
 
 export default {
-  props: ['bookmarks'],
+  props: ['bookmarks', 'previewMode'],
   data() {
     return {
       width: 500,
@@ -91,9 +91,15 @@ export default {
     },
     clickHandler(d, event) {
       if (!d.parent) return; // 根节点不可操作
-      if (!d._children) {
+      // if (!d.data.children && event.ctrlKey) {
+      //   // 按住 Ctrl 键点击书签
+      //   this.$emit('pin', d);
+      //   return;
+      // }
+      if (!d.data.children) {
         // 处理叶子节点的点击事件
-        console.log(d.data.title);
+        // console.log(d.data);
+        this.openUrl(d.data.url);
       } else {
         // 处理非叶子节点的点击事件
         // 切换 children 属性值（在 null 和预先设置的 _children 之间切换）
@@ -161,6 +167,50 @@ export default {
       // console.log(event);
       // const { x, y, k } = event.transform;
       this.transform = event.transform;
+    },
+    getCurrentTab() {
+      return new Promise((resolve, reject) => {
+        chrome.tabs.query(
+          {
+            active: true,
+            currentWindow: true,
+          },
+          (tabs) => {
+            resolve(tabs[0]);
+          },
+        );
+      });
+    },
+    // eslint-disable-next-line consistent-return
+    openUrl(url, mode = this.previewMode) {
+      if (mode === 'default') {
+        return new Promise((resolve, reject) => {
+          this.getCurrentTab().then((tab) => {
+            chrome.tabs.create({
+              active: false,
+              url: tab.url,
+            });
+
+            chrome.tabs.update({ url }, (t) => resolve(t));
+          });
+        });
+      }
+      if (mode === 'one') {
+        return new Promise((resolve, reject) => {
+          chrome.tabs.update({ url }, (t) => resolve(t));
+        });
+      }
+      if (mode === 'multi') {
+        return new Promise((resolve, reject) => {
+          chrome.tabs.create(
+            {
+              active: false,
+              url,
+            },
+            (t) => resolve(t),
+          );
+        });
+      }
     },
   },
   created() {

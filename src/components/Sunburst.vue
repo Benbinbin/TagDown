@@ -188,12 +188,13 @@ export default {
         return;
       }
 
-      if ((type === 'outer' && event.ctrlKey) || type === 'center') {
-        // 按住 ctrl 再点击环形才进行下钻，否则是选择该环形
+      if (type === 'outer' && event.ctrlKey) {
+        // 点击环形才进行下钻
+        this.$emit('changeSelect', p);
+      } else {
+        // 按住 ctrl 再点击环形是选择该环形
         this.$emit('changeSelect', null);
         this.$emit('changeCurrent', p);
-      } else {
-        this.$emit('changeSelect', p);
       }
     },
   },
