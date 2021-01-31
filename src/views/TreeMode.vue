@@ -1,6 +1,6 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div class="main">
+  <div class="main" :style="{height: treeHeight}">
     <div class="sidebar">
       <div class="nav-top">
         <button class="open" @click="open">
@@ -83,6 +83,7 @@ export default {
   props: ['bookmarks', 'previewMode'],
   data() {
     return {
+      treeHeight: 500,
       set: new Set(),
       pinsList: [],
       selectedList: [],
@@ -90,6 +91,13 @@ export default {
     };
   },
   methods: {
+    getStorage() {
+      return new Promise((resolve, reject) => {
+        chrome.storage.local.get(['width', 'height', 'mode'], (data) => {
+          resolve(data);
+        });
+      });
+    },
     pinHandler(d) {
       if (this.set.has(d)) return;
       this.set.add(d);
@@ -185,12 +193,17 @@ export default {
       }
     },
   },
+  created() {
+    this.getStorage().then((data) => {
+      this.treeHeight = `${data.height}px`;
+    });
+  },
 };
 </script>
 
 <style lang="scss" scoped>
 .main {
-  height: 500px;
+  // height: 500px;
   width: 100%;
 }
 </style>

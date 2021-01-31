@@ -1,6 +1,6 @@
 <template>
   <!-- eslint-disable max-len -->
-  <svg class="tree-diagram" :viewBox="viewBox">
+  <svg class="tree-diagram" :viewBox="viewBox" :style="{height: treeHeight}">
     <!-- <circle cx="0" cy="0" r="5" fill="red"></circle> -->
     <g class="container" ref="container" :transform="adjustTransform">
       <g class="links-container" fill="none" stroke="#555" stroke-opacity="0.4" stroke-width="1.5">
@@ -36,6 +36,7 @@ export default {
     return {
       width: 500,
       height: 500,
+      treeHeight: '500px',
       dx: 25,
       root: null,
       nodes: null,
@@ -66,6 +67,13 @@ export default {
     },
   },
   methods: {
+    getStorage() {
+      return new Promise((resolve, reject) => {
+        chrome.storage.local.get(['width', 'height', 'mode'], (data) => {
+          resolve(data);
+        });
+      });
+    },
     tree() {
       // 计算节点的层次布局，为 this.root 的每个节点添加坐标属性
       d3.tree().nodeSize([this.dx, this.dy])(this.root);
@@ -214,6 +222,12 @@ export default {
     },
   },
   created() {
+    this.getStorage().then((data) => {
+      this.height = data.height;
+      this.width = data.width;
+      this.treeHeight = `${data.height}px`;
+      // this.treeWeight = `${data.width}px`;
+    });
     // 结构化数据
     this.root = d3.hierarchy(this.bookmarks);
 
@@ -235,8 +249,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-svg {
-  width: 100%;
-  height: 100%;
-}
+// svg {
+//   width: 100%;
+//   height: 100%;
+// }
 </style>

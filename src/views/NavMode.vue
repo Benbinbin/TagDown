@@ -1,26 +1,27 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div class="main">
+  <div class="main" :style="{height: pageHeight}">
     <div class="sidebar">
       <div class="nav-top">
         <button class="open" @click="open">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+            <title>在组中打开</title>
             <path d="M6.354 5.5H4a3 3 0 0 0 0 6h3a3 3 0 0 0 2.83-4H9c-.086 0-.17.01-.25.031A2 2 0 0 1 7 10.5H4a2 2 0 1 1 0-4h1.535c.218-.376.495-.714.82-1z" />
             <path d="M9 5.5a3 3 0 0 0-2.83 4h1.098A2 2 0 0 1 9 6.5h3a2 2 0 1 1 0 4h-1.535a4.02 4.02 0 0 1-.82 1H12a3 3 0 1 0 0-6H9z" />
           </svg>
         </button>
 
         <button class="checked" @click="checked">
-          <title>全选</title>
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+            <title>全选</title>
             <path fill-rule="evenodd" d="M10.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0z" />
             <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z" />
           </svg>
         </button>
 
         <button class="unchecked" @click="unchecked">
-          <title>全不选</title>
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+            <title>全不选</title>
             <path fill-rule="evenodd" d="M5.5 6.5A.5.5 0 0 1 6 6h4a.5.5 0 0 1 0 1H6a.5.5 0 0 1-.5-.5z" />
             <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z" />
           </svg>
@@ -171,6 +172,7 @@ export default {
   props: ['bookmarks', 'previewMode'],
   data() {
     return {
+      pageHeight: '500px',
       root: null,
       current: null,
       select: null,
@@ -197,6 +199,13 @@ export default {
     },
   },
   methods: {
+    getStorage() {
+      return new Promise((resolve, reject) => {
+        chrome.storage.local.get(['width', 'height', 'mode'], (data) => {
+          resolve(data);
+        });
+      });
+    },
     folderStyle(node) {
       if (node === this.select) {
         return {
@@ -344,6 +353,10 @@ export default {
     },
   },
   created() {
+    this.getStorage().then((data) => {
+      this.pageHeight = `${data.height}px`;
+      // this.treeWeight = `${data.width}px`;
+    });
     // 结构化数据
     this.root = d3.hierarchy(this.bookmarks).eachAfter((d) => {
       if (d.height === 0) {
@@ -388,7 +401,7 @@ button:focus {
 }
 
 .main {
-  height: 500px;
+  // height: 500px;
   width: 100%;
   // border: 1px solid $blue;
   display: grid;

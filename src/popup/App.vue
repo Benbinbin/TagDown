@@ -2,7 +2,7 @@
   <!-- eslint-disable max-len -->
   <div>
     <div class="btn-container" v-if="currentTab === 'buttons'">
-      <button class="btn" @click="addBookmark" v-if="!booked">
+      <!-- <button class="btn" @click="addBookmark" v-if="!booked">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
           <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5V6H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V7H6a.5.5 0 0 1 0-1h1.5V4.5A.5.5 0 0 1 8 4z" />
           <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z" />
@@ -21,7 +21,7 @@
           <button class="btn-delete" @click="deleteBookmark">删除</button>
           <button class="btn-edit">编辑</button>
         </div>
-      </div>
+      </div> -->
 
       <button class="btn" @click="getBookmarks">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="transform: rotate(-90deg)">
@@ -29,14 +29,22 @@
         </svg>
         <span>浏览书签</span>
       </button>
-      <button class="btn">
+      <button class="btn" @click="openTab('bookmarksManager')">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-          <path fill-rule="evenodd" d="M11.5 2a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM9.05 3a2.5 2.5 0 0 1 4.9 0H16v1h-2.05a2.5 2.5 0 0 1-4.9 0H0V3h9.05zM4.5 7a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM2.05 8a2.5 2.5 0 0 1 4.9 0H16v1H6.95a2.5 2.5 0 0 1-4.9 0H0V8h2.05zm9.45 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm-2.45 1a2.5 2.5 0 0 1 4.9 0H16v1h-2.05a2.5 2.5 0 0 1-4.9 0H0v-1h9.05z" />
+          <path fill-rule="evenodd" d="M6 8V1h1v6.117L8.743 6.07a.5.5 0 0 1 .514 0L11 7.117V1h1v7a.5.5 0 0 1-.757.429L9 7.083 6.757 8.43A.5.5 0 0 1 6 8z" />
+          <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2z" />
+          <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1z" />
         </svg>
         <span>书签管理</span>
       </button>
+      <button class="btn" @click="openTab('optionPage')">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+          <path fill-rule="evenodd" d="M11.5 2a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM9.05 3a2.5 2.5 0 0 1 4.9 0H16v1h-2.05a2.5 2.5 0 0 1-4.9 0H0V3h9.05zM4.5 7a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM2.05 8a2.5 2.5 0 0 1 4.9 0H16v1H6.95a2.5 2.5 0 0 1-4.9 0H0V8h2.05zm9.45 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm-2.45 1a2.5 2.5 0 0 1 4.9 0H16v1h-2.05a2.5 2.5 0 0 1-4.9 0H0v-1h9.05z" />
+        </svg>
+        <span>设置参数</span>
+      </button>
     </div>
-    <div class="bookmarks-container" v-if="currentTab === 'bookmarks'">
+    <div class="bookmarks-container" v-if="currentTab === 'bookmarks'" :style="{width: popupWidth}">
       <ul class="navbar">
         <li @click="currentTab='buttons'">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
@@ -87,11 +95,11 @@
             </li>
           </ul>
         </li>
-        <li class="enlarge-btn" @click="enlarge">
+        <!-- <li class="enlarge-btn" @click="enlarge">
           最大化
-        </li>
+        </li> -->
       </ul>
-       <tree v-if="mode === 'tree'" :bookmarks="bookmarks" :previewMode="previewMode" class="tree"></tree>
+      <tree v-if="mode === 'tree'" :bookmarks="bookmarks" :previewMode="previewMode" class="tree"></tree>
       <!-- <tree-mode v-if="mode === 'tree'" :bookmarks="bookmarks" :previewMode="previewMode" class="tree"></tree-mode> -->
       <nav-mode v-if="mode==='nav'" :bookmarks="bookmarks" :previewMode="previewMode"></nav-mode>
     </div>
@@ -113,6 +121,7 @@ export default {
   data() {
     return {
       id: null,
+      popupWidth: '500px',
       booked: false,
       editing: false,
       currentTab: 'buttons',
@@ -124,6 +133,13 @@ export default {
   },
 
   methods: {
+    getStorage() {
+      return new Promise((resolve, reject) => {
+        chrome.storage.local.get(['width', 'height', 'mode'], (data) => {
+          resolve(data);
+        });
+      });
+    },
     enlarge() {
       this.showMore = false;
     },
@@ -183,6 +199,23 @@ export default {
         this.currentTab = 'bookmarks';
       });
     },
+    openTab(target) {
+      let url = '';
+      if (target === 'bookmarksManager') {
+        url = 'chrome://bookmarks/';
+      } else if (target === 'optionPage') {
+        const { id } = chrome.runtime;
+        url = `chrome-extension://${id}/options.html`;
+      }
+      return new Promise((resolve, reject) => {
+        chrome.tabs.create(
+          {
+            url,
+          },
+          (t) => resolve(t),
+        );
+      });
+    },
   },
   mounted() {
     this.getTab()
@@ -201,6 +234,12 @@ export default {
     // chrome.bookmarks.getChildren('0', (bookmarks) => {
     //   console.log(bookmarks);
     // });
+  },
+  created() {
+    this.getStorage().then((data) => {
+      this.popupWidth = `${data.width}px`;
+      this.mode = data.mode;
+    });
   },
 };
 </script>
@@ -275,7 +314,7 @@ button:focus {
 }
 
 .bookmarks-container {
-  width: 500px;
+  // width: 500px;
   display: flex;
   flex-direction: column;
   align-items: center;
