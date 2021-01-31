@@ -31,8 +31,5 @@
       "38": "icons/38.png"
     }
   },
-  "options_page": "options.html",
-  "chrome_url_overrides": {
-    "newtab": "override.html"
-  }
+  "options_page": "options.html"
 }

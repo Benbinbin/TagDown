@@ -10,11 +10,11 @@ module.exports = {
       entry: './src/options/main.js',
       title: 'Options',
     },
-    override: {
-      template: 'public/browser-extension.html',
-      entry: './src/override/main.js',
-      title: 'Override',
-    },
+    // override: {
+    //   template: 'public/browser-extension.html',
+    //   entry: './src/override/main.js',
+    //   title: 'Override',
+    // },
   },
   pluginOptions: {
     browserExtension: {
@@ -22,13 +22,13 @@ module.exports = {
         background: {
           entry: 'src/background.js',
         },
-        contentScripts: {
-          entries: {
-            'content-script': [
-              'src/content-scripts/content-script.js',
-            ],
-          },
-        },
+        // contentScripts: {
+        //   entries: {
+        //     'content-script': [
+        //       'src/content-scripts/content-script.js',
+        //     ],
+        //   },
+        // },
       },
     },
   },
