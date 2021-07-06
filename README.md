@@ -1,14 +1,18 @@
-# BookDown
+# TagDown
+
+<p align="center">
+    <img style="width: 60%; padding:5rem" src="./screenshot/logo-text.png"/>
+</p>
+
+<p align="center">An Enhance Bookmarks Manager</p>
 
 ## Introduction
 
-BookDown is an enhance bookmarks manager Chrome extension. Power by D3.js to visualize the hierarchy data, you can browse the bookmarks fast and conveniently.
+TagDown is a browser extension to manage bookmarks. Power by D3.js to visualize the hierarchy data, you can browse the bookmarks fast and conveniently.
 
 ![screenshot-1](./screenshot/screenshot-1.png)
 ![screenshot-2](./screenshot/screenshot-2.png)
 ![screenshot-3](./screenshot/screenshot-3.png)
-
----
 
 ## Install
 
@@ -25,5 +29,8 @@ BookDown is an enhance bookmarks manager Chrome extension. Power by D3.js to vis
 * [v1.0.0](https://github.com/Benbinbin/BookDown/releases/tag/v1.0.0) provide two modes to visualize the hierarchy data, you can browse the bookmarks fast and conveniently.
 
 ## Todos
-- [ ] add bookmark feature
-- [ ] override the Bookmark Manager page
+- [ ] add bookmark
+- [ ] add tags and memo to describe bookmark
+- [ ] preview mode of bookmark
+- [ ] the batch management page of bookmarks
+- [ ] share bookmarks group
