@@ -29,6 +29,7 @@ TagDown is a browser extension to manage bookmarks. Power by D3.js to visualize 
 * [v1.0.0](https://github.com/Benbinbin/BookDown/releases/tag/v1.0.0) provide two modes to visualize the hierarchy data, you can browse the bookmarks fast and conveniently.
 
 ## Todos
+- [ ] redesign the UI
 - [ ] add bookmark
 - [ ] add tags and memo to describe bookmark
 - [ ] preview mode of bookmark
