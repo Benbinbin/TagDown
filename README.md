@@ -8,11 +8,8 @@
 
 ## Introduction
 
-TagDown is a browser extension to manage bookmarks. Power by D3.js to visualize the hierarchy data, you can browse the bookmarks fast and conveniently.
+TagDown is a browser extension to manage bookmarks, you can browse the bookmarks more faster and conveniently.
 
-![screenshot-1](./screenshot/screenshot-1.png)
-![screenshot-2](./screenshot/screenshot-2.png)
-![screenshot-3](./screenshot/screenshot-3.png)
 
 ## Install
 
@@ -24,14 +21,16 @@ TagDown is a browser extension to manage bookmarks. Power by D3.js to visualize 
 
 3. feel free to play around!
 
-## version
+## Version
 
 * [v1.0.0](https://github.com/Benbinbin/BookDown/releases/tag/v1.0.0) provide two modes to visualize the hierarchy data, you can browse the bookmarks fast and conveniently.
 
+## Design
+You can access to this [site](https://www.figma.com/community/file/1014891055524312843) of Figma community to get the design file and try the [prototype](https://www.figma.com/proto/2Rtmm9uWs4LOAqLviyvveX/TagDown?node-id=1447%3A7484&scaling=scale-down&page-id=1403%3A1050&starting-point-node-id=1447%3A7484&show-proto-sidebar=1).
 ## Todos
 - [ ] redesign the UI
-- [ ] add bookmark
-- [ ] add tags and memo to describe bookmark
-- [ ] preview mode of bookmark
-- [ ] the batch management page of bookmarks
-- [ ] share bookmarks group
+- [ ] support to add new bookmark
+- [ ] support to add tags and group to classify the bookmarks
+- [ ] support to add memo to describe bookmark
+- [ ] override the Bookmark Manager page to provide more convenient and more features to manipulate bookmarks in batch
+- [ ] support to backup and export the data
