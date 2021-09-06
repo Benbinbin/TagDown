@@ -1,6 +1,14 @@
 {
-  "extName": {
-    "message": "bookdown",
-    "description": ""
-  }
+    "appTitle": {
+        "message": "TagDown",
+        "description": "The title of this chrome extension"
+    },
+    "appDescription": {
+        "message": "TagDown is a browser extension to manage bookmarks, you can browse the bookmarks more faster and conveniently.",
+        "description": "the description of this chrome extension"
+    },
+    "actionTitle": {
+        "message": "TagDown",
+        "description": "the content show when mouse hover the icon of this chrome extension in browser toolbar"
+    }
 }

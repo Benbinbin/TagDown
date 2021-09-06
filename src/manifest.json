@@ -1,37 +1,28 @@
 {
-  "manifest_version": 2,
-  "name": "__MSG_extName__",
-  "homepage_url": "http://localhost:8080/",
-  "description": "A Vue Browser Extension",
-  "default_locale": "en",
-  "permissions": [
-    "<all_urls>",
-    "*://*/*"
-  ],
-  "icons": {
-    "16": "icons/16.png",
-    "48": "icons/48.png",
-    "128": "icons/128.png"
-  },
-  "background": {
-    "scripts": [
-      "js/background.js"
-    ],
-    "persistent": false
-  },
-  "browser_action": {
-    "default_popup": "popup.html",
-    "default_title": "__MSG_extName__",
-    "default_icon": {
-      "19": "icons/19.png",
-      "38": "icons/38.png"
-    }
-  },
-  "options_ui": {
-    "page": "options.html",
-    "browser_style": true
-  },
-  "chrome_url_overrides": {
-    "newtab": "override.html"
-  }
+    "name": "__MSG_appTitle__",
+    "manifest_version": 3,
+    "version": "2.0.0",
+    "description": "__MSG_appDescription__",
+    "background": {
+        "service_worker": "./background/main.js"
+    },
+    "action": {
+        "default_title": "__MSG_actionTitle__",
+        "default_popup": "./popup.html",
+        "default_icon": {
+            "16": "./assets/images/icon16_tag.png",
+            "32": "./assets/images/icon32_tag.png",
+            "48": "./assets/images/icon48_tag.png",
+            "64": "./assets/images/icon64_tag.png",
+            "128": "./assets/images/icon128_tag.png"
+        }
+    },
+    "icons": {
+        "16": "./assets/images/icon16_tag.png",
+        "32": "./assets/images/icon32_tag.png",
+        "48": "./assets/images/icon48_tag.png",
+        "64": "./assets/images/icon64_tag.png",
+        "128": "./assets/images/icon128_tag.png"
+    },
+    "default_locale": "zh_CN"
 }

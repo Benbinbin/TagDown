@@ -1,19 +1,24 @@
-<template>
-  <hello-world />
+<template lang="">
+  <div>
+    <h1 class="text-blue-400">
+      TagDown
+    </h1>
+    <img
+      src="@/assets/images/logo.png"
+      alt="logo"
+    >
+    <HelloPopup />
+  </div>
 </template>
-
 <script>
-import HelloWorld from '@/components/HelloWorld.vue';
+import HelloPopup from './components/HelloPopup.vue';
 
 export default {
-  name: 'App',
-  components: { HelloWorld },
+  components: {
+    HelloPopup,
+  },
 };
 </script>
+<style lang="">
 
-<style>
-html {
-  width: 400px;
-  height: 400px;
-}
 </style>
