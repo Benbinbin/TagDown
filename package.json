@@ -19,6 +19,7 @@
     "eslint-plugin-import": "^2.24.2",
     "eslint-plugin-vue": "^7.17.0",
     "postcss": "^8.3.6",
+    "sass": "^1.39.0",
     "tailwindcss": "^2.2.9",
     "vite": "^2.5.2",
     "vite-plugin-vue-crx3": "^1.0.6"

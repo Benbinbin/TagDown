@@ -6,4 +6,5 @@
         "javascript",
         "vue"
     ],
+    "files.eol": "\n",
 }
