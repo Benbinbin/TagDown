@@ -1,6 +1,6 @@
 <template>
   <div>
-    menu
+    tree
   </div>
 </template>
 <script>

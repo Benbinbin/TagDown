@@ -20,7 +20,7 @@
         <button
           v-show="browserType === 'all' && browserMode === 'grid'"
           title="show bookmarks in grid mode"
-          class="btn w-8 h-8 h-center text-gray-400 hover:text-gray-800"
+          class="btn w-8 h-8 text-gray-400 hover:text-gray-800"
           @click="$emit('change-browser-mode', 'tree')"
         >
           <svg
@@ -37,7 +37,7 @@
         <button
           v-show="browserType === 'all' && browserMode === 'tree'"
           title="show bookmarks in tree mode"
-          class="btn w-8 h-8 h-center text-gray-400 hover:text-gray-800"
+          class="btn w-8 h-8 text-gray-400 hover:text-gray-800"
           @click="$emit('change-browser-mode', 'grid')"
         >
           <svg
@@ -136,7 +136,7 @@ export default {
 
   },
   emits: ['change-browser-mode', 'change-browser-type'],
-  setup(props) {
+  setup() {
 
   },
 };

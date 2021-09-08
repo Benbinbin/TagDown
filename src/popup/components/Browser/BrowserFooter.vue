@@ -97,13 +97,17 @@
             </div>
             <input
               class="flex-grow px-1 border border-gray-300 rounded"
+              :class="{ 'opacity-10': !multiOnGroup }"
               type="text"
               placeholder="输入 group 名称"
               :disabled="!multiOnGroup"
               :value="groupName"
               @input="$emit('update:groupName', $event.target.value)"
             >
-            <div class="relative">
+            <div
+              class="relative"
+              :class="{ 'opacity-10': !multiOnGroup }"
+            >
               <button
                 title="select group color"
                 :disabled="!multiOnGroup"
@@ -115,19 +119,19 @@
               />
               <div
                 v-show="showColorPalette"
-                class="absolute -top-6 flex p-1 bg-white space-x-2 rounded-sm shadow"
+                class="absolute -top-10 flex p-2 bg-white space-x-2 rounded-sm shadow"
               >
                 <button
                   v-for="color of colorScheme"
-                  :key="color"
-                  :title="color"
+                  :key="color.name"
+                  :title="color.name"
                   :disabled="!multiOnGroup"
                   class="w-4 h-4 rounded-full opacity-80 hover:opacity-100"
-                  :class="{ 'ring-2': groupColor === color }"
+                  :class="{ 'ring-2 ring-green-400': groupColor === color.value }"
                   :style="{
-                    'background': color
+                    'background': color.value
                   }"
-                  @click="setGroupColorHandler(color)"
+                  @click="setGroupColorHandler(color.value)"
                 />
               </div>
             </div>
@@ -171,7 +175,7 @@
           backgroundImage:
             'url(' + `https://www.youtube.com/s/desktop/4eebcda0/img/favicon_32x32.png` + ')',
         }"
-        @click="$emit('edit-bookmark')"
+        @click="toggleEditBookmark"
       >
         <svg
           class="absolute z-10 w-4 h-4"
@@ -196,7 +200,7 @@
           <button
             title="delete bookmark"
             class="p-0.5 h-center rounded-sm bg-red-200 hover:bg-red-400 text-white"
-            @click="$emit('delete-bookmark')"
+            @click="deleteBookmarkHandler"
           >
             <svg
               class="w-3 h-3"
@@ -218,7 +222,7 @@
           <button
             title="add bookmark"
             class="p-px0.5 h-center rounded-sm bg-green-200 hover:bg-green-400 text-white"
-            @click="$emit('edit-bookmark')"
+            @click="toggleEditBookmark"
           >
             <svg
               class="w-3 h-3"
@@ -237,11 +241,10 @@
   </footer>
 </template>
 <script>
-import { ref } from 'vue';
+import { ref, inject } from 'vue';
 
 export default {
   props: {
-    bookmarkState: Boolean,
     browserType: {
       type: String,
       default: 'all',
@@ -257,17 +260,15 @@ export default {
     multiOnGroup: Boolean,
     groupName: {
       type: String,
-      default: 'new',
+      default: '',
     },
     groupColor: {
       type: String,
-      default: 'blue',
+      default: '#1A73E8',
     },
     multiSwitch: Boolean,
   },
   emits: [
-    'edit-bookmark',
-    'delete-bookmark',
     'change-bookmark-open-mode',
     'update:singleTab',
     'update:multiOnGroup',
@@ -276,20 +277,70 @@ export default {
     'set-group-color',
   ],
   setup(props, context) {
+    /**
+     * open bookmarks setting
+     */
     const showColorPalette = ref(false);
 
     // group color
-    const colorScheme = ['grey', 'blue', 'red', 'yellow', 'green', 'pink', 'purple', 'cyan'];
+    const colorScheme = [
+      {
+        name: 'grey',
+        value: '#5F6368',
+      },
+      {
+        name: 'blue',
+        value: '#1A73E8',
+      },
+      {
+        name: 'red',
+        value: '#D93025',
+      },
+      {
+        name: 'yellow',
+        value: '#E37400',
+      },
+      {
+        name: 'green',
+        value: '#188038',
+      },
+      {
+        name: 'pink',
+        value: '#D01884',
+      },
+      {
+        name: 'purple',
+        value: '#9334E6',
+      },
+      {
+        name: 'cyan',
+        value: '#007B83',
+      },
+    ];
 
-    function setGroupColorHandler(color) {
-      context.emit('set-group-color', color);
+    function setGroupColorHandler(value) {
+      context.emit('set-group-color', value);
       showColorPalette.value = false;
     }
+
+    /**
+     * edit bookmark
+    */
+    // bookmark tag state
+    const bookmarkState = ref(true);
+    function deleteBookmarkHandler() {
+      bookmarkState.value = false;
+    }
+
+    const toggleEditBookmark = inject('toggleEditBookmark');
 
     return {
       showColorPalette,
       colorScheme,
       setGroupColorHandler,
+      bookmarkState,
+      deleteBookmarkHandler,
+      toggleEditBookmark,
     };
   },
 };
@@ -316,3 +367,43 @@ export default {
   border-radius: 0.25rem;
 }
 </style>
+
+.text-xxs {
+  font-size: 10px;
+}
+
+.h-center {
+  @apply flex justify-center items-center;
+}
+
+.edit-bookmark-btn:hover::before {
+  content: "";
+  transform: scale(1.2);
+  background-color: #d1d5db;
+  background-size: cover;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+  border-radius: 0.25rem;
+.text-xxs {
+  font-size: 10px;
+}
+
+.h-center {
+  @apply flex justify-center items-center;
+}
+
+.edit-bookmark-btn:hover::before {
+  content: "";
+  transform: scale(1.2);
+  background-color: #d1d5db;
+  background-size: cover;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+  border-radius: 0.25rem;
+}
