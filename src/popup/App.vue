@@ -1,12 +1,12 @@
 <template>
   <BrowserPage
-    v-if="(page === 'browser') && !editBookmark"
-    class="browser-mode flex flex-col"
+    v-if="page === 'browser'"
+    class="browser-mode"
   />
 
   <EditPage
     v-else
-    class="tag-mode flex flex-col"
+    class="tag-mode"
   />
 </template>
 
@@ -24,25 +24,25 @@ export default {
     // page to show: browser or edit
     const page = ref('browser'); // browser, edit
     // edit bookmark state
-    const editBookmark = ref(false);
+    // const editBookmark = ref(false);
 
     const changePage = (value) => {
       page.value = value;
     };
 
-    const toggleEditBookmark = () => {
-      editBookmark.value = !editBookmark.value;
-    };
+    // const toggleEditBookmark = () => {
+    //   editBookmark.value = !editBookmark.value;
+    // };
 
     provide('page', page);
-    provide('cahngePage', changePage);
+    provide('changePage', changePage);
 
-    provide('editBookmark', editBookmark);
-    provide('toggleEditBookmark', toggleEditBookmark);
+    // provide('editBookmark', editBookmark);
+    // provide('toggleEditBookmark', toggleEditBookmark);
 
     return {
       page,
-      editBookmark,
+      // editBookmark,
     };
   },
 };

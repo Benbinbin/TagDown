@@ -1,5 +1,5 @@
 <template>
-  <footer class="w-full px-4 py-2 flex justify-between items-center border-t border-gray-200">
+  <footer class="w-full px-4 py-2 flex justify-between items-end border-t border-gray-200">
     <button
       title="expand window button"
       class="w-10 h-10 h-center text-gray-400 hover:bg-gray-200 hover:text-gray-800 rounded"
@@ -175,7 +175,7 @@
           backgroundImage:
             'url(' + `https://www.youtube.com/s/desktop/4eebcda0/img/favicon_32x32.png` + ')',
         }"
-        @click="toggleEditBookmark"
+        @click="changePage('edit')"
       >
         <svg
           class="absolute z-10 w-4 h-4"
@@ -222,7 +222,7 @@
           <button
             title="add bookmark"
             class="p-px0.5 h-center rounded-sm bg-green-200 hover:bg-green-400 text-white"
-            @click="toggleEditBookmark"
+            @click="changePage('edit')"
           >
             <svg
               class="w-3 h-3"
@@ -332,7 +332,7 @@ export default {
       bookmarkState.value = false;
     }
 
-    const toggleEditBookmark = inject('toggleEditBookmark');
+    const changePage = inject('changePage');
 
     return {
       showColorPalette,
@@ -340,7 +340,7 @@ export default {
       setGroupColorHandler,
       bookmarkState,
       deleteBookmarkHandler,
-      toggleEditBookmark,
+      changePage,
     };
   },
 };
