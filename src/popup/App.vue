@@ -22,7 +22,7 @@ export default {
   },
   setup() {
     // page to show: browser or edit
-    const page = ref('browser'); // browser, edit
+    const page = ref('edit'); // browser, edit
     // edit bookmark state
     // const editBookmark = ref(false);
 
