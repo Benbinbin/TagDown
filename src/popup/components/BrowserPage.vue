@@ -1,5 +1,8 @@
 <template>
-  <div class="flex flex-col">
+  <div
+    id="browser-page"
+    class="flex flex-col"
+  >
     <BrowserHeader
       :browser-type="browserType"
       :browser-mode="browserMode"

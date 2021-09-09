@@ -71,6 +71,7 @@
           <button
             title="add new folder"
             class="p-0.5 text-yellow-400 hover:text-white hover:bg-yellow-400 rounded"
+            @click="showCardHandler"
           >
             <svg
               class="w-4 h-4"
@@ -110,6 +111,7 @@
             <button
               title="locate folder item"
               class="p-1 text-xs text-white bg-yellow-400 hover:bg-yellow-600 rounded-r-sm"
+              @click="showCardHandler"
             >
               {{ folder }}
             </button>
@@ -139,7 +141,7 @@
           class="wrapper h-0 absolute -bottom-1 inset-x-0 z-10 select-none"
         >
           <div
-            class="folders-popup w-full p-2 flex flex-wrap absolute border border-gray-300 bg-white rounded shadow"
+            class="recent-folders-popup w-full p-2 flex flex-wrap absolute border border-gray-300 bg-white rounded shadow"
           >
             <button
               v-for="folder of recentFolders"
@@ -291,14 +293,36 @@
       </div>
     </div>
   </div>
+  <!-- <teleport to="#edit-page"> -->
+  <div
+    v-show="showCard"
+    class="fixed inset-0 z-20"
+  >
+    <div
+      class="modal-background w-full h-full bg-black opacity-25"
+      @click="showSelectFolders = false"
+    />
+    <transition
+      name="popup-card"
+      @after-leave="showCard = false"
+    >
+      <SelectFolders
+        v-show="showSelectFolders"
+        class="select-folders-modal w-full absolute bottom-0 z-30 bg-white rounded-t-2xl"
+      />
+    </transition>
+  </div>
+  <!-- </teleport> -->
 </template>
 <script>
 import { ref } from 'vue';
 import ItemsInput from './ItemsInput.vue';
+import SelectFolders from './SelectFolders.vue';
 
 export default {
   components: {
     ItemsInput,
+    SelectFolders,
   },
   setup() {
     // title
@@ -308,6 +332,13 @@ export default {
 
     // folders
     const folders = ref(['a', 'apple', 'abandan', 'b', 'box', 'c', 'cat']);
+    const showCard = ref(false);
+    const showSelectFolders = ref(false);
+    const showCardHandler = () => {
+      showCard.value = true;
+      showSelectFolders.value = true;
+    };
+
     const showRecentFolders = ref(false);
     const recentFolders = ['a', 'apple', 'abandan', 'b', 'box', 'c', 'cat', 'a', 'apple', 'abandan', 'b', 'box', 'c', 'cat', 'sfhdklasfjkdlj', 'ofhwasif', 'Lorem', 'ipsum', 'dolor', 'sit,', 'amet', 'consectetur', 'adipisicing', 'elit.', 'Ipsa', 'tempora', 'iusto', 'nobis', 'reiciendis', 'explicabo', 'ea', 'exercitationem'];
 
@@ -332,6 +363,9 @@ export default {
       title,
       url,
       folders,
+      showCard,
+      showSelectFolders,
+      showCardHandler,
       showRecentFolders,
       recentFolders,
       share,
@@ -362,7 +396,7 @@ export default {
   @apply p-1 text-green-400 hover:text-white hover:bg-green-400 rounded;
 }
 
-.folders-popup {
+.recent-folders-popup {
   max-height: 5rem;
   overflow-y: overlay;
   &::-webkit-scrollbar {
@@ -377,5 +411,25 @@ export default {
   &::-webkit-scrollbar-thumb:hover {
     background-color: #4b5563;
   }
+}
+
+.select-folders-modal {
+  width: 400px;
+  height: 560px;
+}
+
+.popup-card-enter-from,
+.popup-card-leave-to {
+  transform: translateY(560px);
+  // opacity: 0;
+}
+
+.popup-card-enter-active {
+  transition: transform 350ms ease-in-out;
+}
+
+.popup-card-leave-active {
+  transition: transform 200ms ease-in-out;
+
 }
 </style>

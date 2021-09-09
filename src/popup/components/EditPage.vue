@@ -1,7 +1,10 @@
 <template>
-  <div class="flex flex-col">
+  <div
+    id="edit-page"
+    class="flex flex-col"
+  >
     <header
-      class="w-full p-4 flex justify-between items-center fixed top-0 bg-white border-b border-gray-200"
+      class="w-full p-4 flex justify-between items-center fixed top-0 z-10 bg-white border-b border-gray-200"
     >
       <button
         title="delete bookmark"
@@ -55,7 +58,7 @@
       <EditInfo />
     </div>
 
-    <footer class="w-full fixed bottom-0 bg-white">
+    <footer class="w-full fixed bottom-0 z-10 bg-white">
       <div class="w-full p-2">
         <button
           title="finish editing bookmark"
