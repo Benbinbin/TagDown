@@ -90,7 +90,7 @@
     <div class="px-4 py-2 flex items-center space-x-2">
       <button
         title="back to parent folder"
-        class="p-1 flex items-center  bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-800 rounded"
+        class="p-1 flex items-center bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-800 rounded"
       >
         <svg
           class="w-4 h-4"
@@ -106,7 +106,7 @@
       </button>
       <button
         title="back to root folder"
-        class="p-1 flex items-center  bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-800 rounded"
+        class="p-1 flex items-center bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-800 rounded"
       >
         <svg
           class="w-4 h-4"
@@ -122,14 +122,55 @@
       </button>
     </div>
     <div class="flex-grow">
-      content
+      <button
+        class="p-1 text-white bg-red-400 rounded"
+        @click="showDeleteFolderModal = true"
+      >
+        show modal
+      </button>
+      <PromptModal
+        v-if="showDeleteFolderModal"
+        v-model:show="showDeleteFolderModal"
+        @result="getResultHandler"
+      >
+        <template #title>
+          <h2 class="p-4 text-sm font-bold">
+            是否删除该文件夹及其书签
+          </h2>
+        </template>
+        <template #msg>
+          <p class="p-2 text-xs text-center">
+            folder1
+          </p>
+        </template>
+        <template #btn="{ resultHandler }">
+          <div class="p-2 all-center space-x-2">
+            <button
+              class="p-1 text-white bg-red-400 hover:bg-red-600 rounded"
+              @click="resultHandler(true)"
+            >
+              确定
+            </button>
+            <button
+              class="p-1 text-white bg-green-400 hover:bg-green-600 rounded"
+              @click="resultHandler(false)"
+            >
+              false
+            </button>
+          </div>
+        </template>
+      </PromptModal>
     </div>
   </div>
 </template>
 <script>
 import { ref } from 'vue';
+import PromptModal from '../Modal/PromptModal.vue';
 
 export default {
+  components: {
+    PromptModal,
+  },
   props: {
     selectFolders: {
       type: Array,
@@ -149,9 +190,17 @@ export default {
         context.emit('save-folders', ['folder1', 'folder2']);
       }
     };
+
+    const showDeleteFolderModal = ref(false);
+    const getResultHandlerd = (value) => {
+      console.log(value);
+    };
+
     return {
       foldersMode,
       finishFolders,
+      showDeleteFolderModal,
+      getResultHandlerd,
     };
   },
 };
