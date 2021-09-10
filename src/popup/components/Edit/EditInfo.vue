@@ -86,11 +86,11 @@
           </button>
         </div>
 
-        <div class="input-style flex flex-wrap items-center">
+        <div class="w-full pb-2 flex flex-wrap border border-gray-300 rounded">
           <div
-            v-for="folder of folders"
+            v-for="folder of selectFolders"
             :key="folder"
-            class="mt-1 ml-1 flex items-center"
+            class="mt-2 ml-2 flex items-center"
           >
             <button
               title="delete folder item"
@@ -308,7 +308,10 @@
     >
       <SelectFolders
         v-show="showSelectFolders"
-        class="select-folders-modal w-full absolute bottom-0 z-30 bg-white rounded-t-2xl"
+        class="select-folders-modal w-full absolute bottom-0 z-30 bg-white shadow"
+        :select-folders="selectFolders"
+        @cancel-folders="showSelectFolders = false"
+        @save-folders="saveFoldersHandler"
       />
     </transition>
   </div>
@@ -331,12 +334,16 @@ export default {
     const url = ref('');
 
     // folders
-    const folders = ref(['a', 'apple', 'abandan', 'b', 'box', 'c', 'cat']);
+    const selectFolders = ref(['a', 'apple', 'abandan', 'b', 'box', 'c', 'cat', 'dolor', 'sit,', 'amet', 'consectetur', 'consectetur', 'adipisicing', 'elit.', 'Ipsa', 'tempora', 'iusto', 'nobis', 'reiciendis', 'explicabo', 'ea', 'exercitationem']);
     const showCard = ref(false);
     const showSelectFolders = ref(false);
     const showCardHandler = () => {
       showCard.value = true;
       showSelectFolders.value = true;
+    };
+    const saveFoldersHandler = (foldersArr) => {
+      console.log(foldersArr);
+      showSelectFolders.value = false;
     };
 
     const showRecentFolders = ref(false);
@@ -362,10 +369,11 @@ export default {
     return {
       title,
       url,
-      folders,
+      selectFolders,
       showCard,
       showSelectFolders,
       showCardHandler,
+      saveFoldersHandler,
       showRecentFolders,
       recentFolders,
       share,
@@ -430,6 +438,5 @@ export default {
 
 .popup-card-leave-active {
   transition: transform 200ms ease-in-out;
-
 }
 </style>

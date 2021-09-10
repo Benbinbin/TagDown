@@ -1,5 +1,5 @@
 <template>
-  <div class="space-y-2 relative">
+  <div class="relative">
     <div class="label-style">
       <slot name="labelIcon" />
       <slot name="labeName" />
@@ -8,7 +8,7 @@
       <div
         v-for="item of items"
         :key="item"
-        class="mt-1 ml-1 flex items-center"
+        class="mt-2 ml-2 flex flex-wrap items-center"
       >
         <button
           title="delete folder item"
@@ -16,15 +16,15 @@
         >
           <slot name="itemIcon" />
         </button>
-        <button
+        <span
           title="locate folder item"
-          class="p-1 text-xs text-white bg-green-400 hover:bg-green-600 rounded-r-sm"
+          class="p-1 text-xs text-white bg-green-400 rounded-r-sm"
         >
           {{ item }}
-        </button>
+        </span>
       </div>
     </div>
-    <div class="input-style flex items-center space-x-1">
+    <div class="input-style mt-2 flex items-center space-x-1">
       <input
         v-model="inputText"
         class="flex-grow border-0"
