@@ -95,6 +95,7 @@
             <button
               title="delete folder item"
               class="p-1 text-red-400 bg-gray-200 hover:text-white hover:bg-red-400 rounded-l-sm"
+              @click="setDeleteFolderCandidate(folder)"
             >
               <svg
                 class="w-4 h-4"
@@ -201,6 +202,7 @@
         :items="tags"
         :candidates="allTags"
         :placeholder="请输入标签"
+        :modal-title="是否删除该标签"
       >
         <template #labelIcon>
           <svg
@@ -235,6 +237,7 @@
         :items="groups"
         :candidates="allGroups"
         :placeholder="请输入分组"
+        :modal-title="是否删除该分组"
       >
         <template #labelIcon>
           <svg
@@ -293,7 +296,6 @@
       </div>
     </div>
   </div>
-  <!-- <teleport to="#edit-page"> -->
   <div
     v-show="showCard"
     class="fixed inset-0 z-20"
@@ -315,17 +317,35 @@
       />
     </transition>
   </div>
-  <!-- </teleport> -->
+
+  <PromptModal
+    v-if="showConfirmDeleteFolderModal"
+    v-model:show="showConfirmDeleteFolderModal"
+    @result="getFolderDeleteResult"
+  >
+    <template #title>
+      <h2 class="p-4 text-sm font-bold">
+        是否删除该文件夹
+      </h2>
+    </template>
+    <template #msg>
+      <p class="p-2 text-xs text-center">
+        {{ deleteFolderCandidate }}
+      </p>
+    </template>
+  </PromptModal>
 </template>
 <script>
 import { ref } from 'vue';
 import ItemsInput from './ItemsInput.vue';
 import SelectFolders from './SelectFolders.vue';
+import PromptModal from '../Modal/PromptModal.vue';
 
 export default {
   components: {
     ItemsInput,
     SelectFolders,
+    PromptModal,
   },
   setup() {
     // title
@@ -335,6 +355,18 @@ export default {
 
     // folders
     const selectFolders = ref(['a', 'apple', 'abandan', 'b', 'box', 'c', 'cat', 'dolor', 'sit,', 'amet', 'consectetur', 'consectetur', 'adipisicing', 'elit.', 'Ipsa', 'tempora', 'iusto', 'nobis', 'reiciendis', 'explicabo', 'ea', 'exercitationem']);
+    const deleteFolderCandidate = ref(null);
+    const showConfirmDeleteFolderModal = ref(false);
+
+    const setDeleteFolderCandidate = (folder) => {
+      deleteFolderCandidate.value = folder;
+      showConfirmDeleteFolderModal.value = true;
+    };
+    const getFolderDeleteResult = (value) => {
+      console.log(value);
+      deleteFolderCandidate.value = null;
+    };
+
     const showCard = ref(false);
     const showSelectFolders = ref(false);
     const showCardHandler = () => {
@@ -342,7 +374,6 @@ export default {
       showSelectFolders.value = true;
     };
     const saveFoldersHandler = (foldersArr) => {
-      console.log(foldersArr);
       showSelectFolders.value = false;
     };
 
@@ -370,6 +401,10 @@ export default {
       title,
       url,
       selectFolders,
+      deleteFolderCandidate,
+      setDeleteFolderCandidate,
+      showConfirmDeleteFolderModal,
+      getFolderDeleteResult,
       showCard,
       showSelectFolders,
       showCardHandler,
@@ -429,7 +464,6 @@ export default {
 .popup-card-enter-from,
 .popup-card-leave-to {
   transform: translateY(560px);
-  // opacity: 0;
 }
 
 .popup-card-enter-active {

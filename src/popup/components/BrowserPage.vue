@@ -1,6 +1,6 @@
 <template>
   <div
-    id="browser-page"
+    id="browser"
     class="flex flex-col"
   >
     <BrowserHeader

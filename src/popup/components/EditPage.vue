@@ -1,6 +1,6 @@
 <template>
   <div
-    id="edit-page"
+    id="edit"
     class="flex flex-col"
   >
     <header

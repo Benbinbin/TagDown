@@ -13,6 +13,7 @@
         <button
           title="delete folder item"
           class="p-1 text-red-400 bg-gray-200 hover:text-white hover:bg-red-400 rounded-l-sm"
+          @click="setDeleteCandidate(item)"
         >
           <slot name="itemIcon" />
         </button>
@@ -87,11 +88,31 @@
       </button>
     </div>
   </div>
+  <PromptModal
+    v-if="showDeleteConfirmModal"
+    v-model:show="showDeleteConfirmModal"
+    @result="getDeleteResult"
+  >
+    <template #title>
+      <h2 class="p-4 text-sm font-bold">
+        {{ modalTitle }}
+      </h2>
+    </template>
+    <template #msg>
+      <p class="p-2 text-xs text-center">
+        {{ deleteCandidate }}
+      </p>
+    </template>
+  </PromptModal>
 </template>
 <script>
 import { ref, computed } from 'vue';
+import PromptModal from '../Modal/PromptModal.vue';
 
 export default {
+  components: {
+    PromptModal,
+  },
   props: {
     items: {
       type: Array,
@@ -109,6 +130,10 @@ export default {
       type: String,
       default: '请输入内容',
     },
+    modalTitle: {
+      type: String,
+      default: '是否删除该选项',
+    },
   },
   setup(props) {
     // input
@@ -121,10 +146,27 @@ export default {
     // popup
     const showCandidatePopup = ref(false);
 
+    // modal
+    const deleteCandidate = ref(null);
+    const showDeleteConfirmModal = ref(false);
+
+    const setDeleteCandidate = (item) => {
+      deleteCandidate.value = item;
+      showDeleteConfirmModal.value = true;
+    };
+    const getDeleteResult = (value) => {
+      console.log(value);
+      deleteCandidate.value = null;
+    };
+
     return {
       inputText,
       filterCandidates,
       showCandidatePopup,
+      deleteCandidate,
+      showDeleteConfirmModal,
+      setDeleteCandidate,
+      getDeleteResult,
     };
   },
 };
