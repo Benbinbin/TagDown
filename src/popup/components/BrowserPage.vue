@@ -9,6 +9,7 @@
       @change-browser-mode="browserMode = $event"
       @change-browser-type="browserType = $event"
     />
+    <!-- menu -->
     <div class="w-full px-8 py-2 border-b border-gray-200">
       <component
         :is="browserMenuComponent"
@@ -21,10 +22,31 @@
         @set-group-color="groupColor = $event"
       />
     </div>
-    <component
-      :is="browserContentComponent"
-      class="flex-grow"
-    />
+    <div class="flex-grow all-center">
+      <component :is="browserContentComponent" />
+      <button
+        class="p-1 text-white bg-green-400 rounded"
+        @click="showRenameFolderModal=true"
+      >
+        Rename Folder
+      </button>
+      <InputModal
+        v-if="showRenameFolderModal"
+        v-model:show="showRenameFolderModal"
+        :init-value="'folder_name'"
+        :placeholder="'请输入文件夹名称'"
+        @result="getRenameResultHandler"
+      >
+        <template #title>
+          <div
+            for="input-modal"
+            class="p-4 text-sm font-bold"
+          >
+            重命名文件夹
+          </div>
+        </template>
+      </InputModal>
+    </div>
 
     <!-- <div class="flex-grow">
       <p>browserType {{ browserType }}</p>
@@ -58,6 +80,7 @@ import BrowserGrid from './Browser/BrowserGrid.vue';
 import BrowserTree from './Browser/BrowserTree.vue';
 import BrowserMenu from './Browser/BrowserMenu.vue';
 import BrowserMenuPin from './Browser/BrowserMenuPin.vue';
+import InputModal from './Modal/InputModal.vue';
 
 export default {
   components: {
@@ -67,11 +90,9 @@ export default {
     BrowserTree,
     BrowserMenu,
     BrowserMenuPin,
+    InputModal,
   },
   setup() {
-    // page to show: browser or edit
-    const page = ref('browser'); // browser, edit
-
     // browser page setting
     const browserType = ref('pin'); // all, star, pin
     const browserMode = ref('tree'); // grid, tree
@@ -98,8 +119,14 @@ export default {
     const groupColor = ref('#1A73E8'); // grey, blue, red, yellow, green, pink, purple, cyan
     const multiSwitch = ref(false);
 
+    // modal
+    // rename folder name modal
+    const showRenameFolderModal = ref(false);
+    const getRenameResultHandler = (obj) => {
+      console.log(obj);
+    };
+
     return {
-      page,
       browserType,
       browserMode,
       browserMenuComponent,
@@ -110,9 +137,15 @@ export default {
       groupName,
       groupColor,
       multiSwitch,
+      showRenameFolderModal,
+      getRenameResultHandler,
     };
   },
 };
 </script>
+
 <style lang="scss" scoped>
+.all-center {
+  @apply flex justify-center items-center
+}
 </style>

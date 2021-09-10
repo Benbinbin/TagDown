@@ -121,7 +121,7 @@
         <span class="text-xxs">根目录</span>
       </button>
     </div>
-    <div class="flex-grow">
+    <div class="flex-grow h-center">
       <button
         class="p-1 text-white bg-red-400 rounded"
         @click="showDeleteFolderModal = true"
