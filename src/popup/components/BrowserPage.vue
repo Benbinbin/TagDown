@@ -49,11 +49,14 @@
       <div
         v-show="showBrowserPopupMenu"
         class="fixed inset-0 z-10"
-        @click="showBrowserPopupMenu = false"
       >
         <div
+          class="fixed inset-0 z-20"
+          @click="showBrowserPopupMenu = false"
+        />
+        <div
           ref="menuWrapper"
-          class="absolute z-20"
+          class="absolute z-30 transform -translate-x-full"
         >
           <BrowserPopupMenu
             :item-type="'bookmark'"
@@ -167,8 +170,10 @@ export default {
       console.log(target);
       console.log(menuWrapper.value);
       if (!target || !menuWrapper.value) return;
-      const left = target.offsetLeft + 20;
-      const top = target.offsetTop + 20;
+      // const left = target.offsetLeft + 10;
+      // const top = target.offsetTop + 10;
+      const left = target.offsetLeft;
+      const top = target.offsetTop;
 
       menuWrapper.value.style.left = `${left}px`;
       menuWrapper.value.style.top = `${top}px`;
