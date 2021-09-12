@@ -3,6 +3,7 @@
     id="browser"
     class="flex flex-col"
   >
+    <!-- header -->
     <BrowserHeader
       :browser-type="browserType"
       :browser-mode="browserMode"
@@ -22,7 +23,8 @@
         @set-group-color="groupColor = $event"
       />
     </div>
-    <div class="flex-grow all-center space-x-2 space-y-2">
+    <!-- content -->
+    <div class="flex-grow flex justify-between items-start space-x-2 space-y-2">
       <component :is="browserContentComponent" />
       <button
         class="p-1 text-white bg-green-400 rounded"
@@ -46,23 +48,14 @@
           />
         </svg>
       </button>
-      <div
+      <BrowserPopupMenu
         v-show="showBrowserPopupMenu"
-        class="fixed inset-0 z-10"
-      >
-        <div
-          class="fixed inset-0 z-20"
-          @click="showBrowserPopupMenu = false"
-        />
-        <div
-          ref="menuWrapper"
-          class="absolute z-30 transform -translate-x-full"
-        >
-          <BrowserPopupMenu
-            :item-type="'bookmark'"
-          />
-        </div>
-      </div>
+        v-model:show="showBrowserPopupMenu"
+        :item-type="itemType"
+        :item-value="itemValue"
+        :left="left"
+        :top="top"
+      />
       <InputModal
         v-if="showRenameFolderModal"
         v-model:show="showRenameFolderModal"
@@ -162,23 +155,18 @@ export default {
     };
 
     // browser popup menu
-    const menuWrapper = ref(null);
     const showBrowserPopupMenu = ref(false);
+    const left = ref(0);
+    const top = ref(0);
+    const itemType = ref('tag');
+    const itemValue = ref('');
     const showBrowserPopupMenuHandler = (value, event) => {
-      console.log(value);
       const target = event.currentTarget;
-      console.log(target);
-      console.log(menuWrapper.value);
-      if (!target || !menuWrapper.value) return;
-      // const left = target.offsetLeft + 10;
-      // const top = target.offsetTop + 10;
-      const left = target.offsetLeft;
-      const top = target.offsetTop;
-
-      menuWrapper.value.style.left = `${left}px`;
-      menuWrapper.value.style.top = `${top}px`;
+      if (!target) return;
+      itemValue.value = value;
+      left.value = target.offsetLeft;
+      top.value = target.offsetTop;
       showBrowserPopupMenu.value = true;
-      console.log(showBrowserPopupMenu.value);
     };
 
     return {
@@ -194,8 +182,11 @@ export default {
       multiSwitch,
       showRenameFolderModal,
       getRenameResultHandler,
-      menuWrapper,
       showBrowserPopupMenu,
+      itemType,
+      itemValue,
+      left,
+      top,
       showBrowserPopupMenuHandler,
     };
   },
