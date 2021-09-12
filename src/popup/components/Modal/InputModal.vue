@@ -16,12 +16,13 @@
           <slot name="title">
             <label
               for="input-modal"
-              class="p-4 text-sm font-bold"
-            >标题</label>
+              class="block p-4 text-sm text-center font-bold"
+            >
+              标题
+            </label>
           </slot>
           <slot
             name="input"
-            class="p-2"
             :inputValue="inputValue"
           >
             <input
@@ -30,7 +31,7 @@
               type="text"
               name="input-modal"
               :placeholder="placeholder"
-              class="p-1 border border-gray-300 rounded"
+              class="m-2 p-1 border border-gray-300 rounded"
             >
           </slot>
           <slot
