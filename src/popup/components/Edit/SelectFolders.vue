@@ -12,7 +12,7 @@
         <button
           v-show="foldersMode === 'list'"
           title="show folders in tree mode"
-          class="btn p-0.5"
+          class="p-0.5 hover:bg-gray-200 rounded"
           @click="foldersMode = 'tree'"
         >
           <svg
@@ -29,7 +29,7 @@
         <button
           v-show="foldersMode === 'tree'"
           title="show folders in list mode"
-          class="btn p-0.5"
+          class="p-0.5 hover:bg-gray-200 rounded"
           @click="foldersMode = 'list'"
         >
           <svg
@@ -65,6 +65,7 @@
           <button
             title="delete folder item"
             class="p-1 text-red-400 bg-gray-200 hover:text-white hover:bg-red-400 rounded-l-sm"
+            @click="deleteItemHandler"
           >
             <svg
               class="w-4 h-4"
@@ -90,7 +91,7 @@
     <div class="px-4 py-2 flex items-center space-x-2">
       <button
         title="back to parent folder"
-        class="p-1 flex items-center bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-800 rounded"
+        class="p-1 flex items-center bg-gray-100 text-gray-600 hover:bg-gray-200 space-x-0.5 rounded"
       >
         <svg
           class="w-4 h-4"
@@ -106,7 +107,7 @@
       </button>
       <button
         title="back to root folder"
-        class="p-1 flex items-center bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-800 rounded"
+        class="p-1 flex items-center bg-gray-100 text-gray-600 hover:bg-gray-200 space-x-0.5 rounded"
       >
         <svg
           class="w-4 h-4"
@@ -121,55 +122,206 @@
         <span class="text-xxs">根目录</span>
       </button>
     </div>
-    <div class="flex-grow h-center">
-      <button
-        class="p-1 text-white bg-red-400 rounded"
-        @click="showDeleteFolderModal = true"
-      >
-        show modal
-      </button>
-      <PromptModal
-        v-if="showDeleteFolderModal"
-        v-model:show="showDeleteFolderModal"
-        @result="getResultHandler"
-      >
-        <template #title>
-          <h2 class="p-4 text-sm font-bold">
-            是否删除该文件夹及其书签
-          </h2>
-        </template>
-        <template #msg>
-          <p class="p-2 text-xs text-center">
-            folder1
-          </p>
-        </template>
-        <template #btn="{ resultHandler }">
-          <div class="p-2 all-center space-x-2">
-            <button
-              class="p-1 text-white bg-red-400 hover:bg-red-600 rounded"
-              @click="resultHandler(true)"
+    <div class="main-wrapper overflow-auto w-full h-full p-4">
+      <div class="flex justify-end items-start">
+        <div class="flex items-center space-x-0.5">
+          <!-- triangle toggle button -->
+          <button
+            title="triangle toggle button"
+            class="btn py-1 text-gray-600"
+          >
+            <svg
+              class="w-4 h-4"
+              viewBox="0 0 50 50"
+              fill="currentColor"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              确定
-            </button>
-            <button
-              class="p-1 text-white bg-green-400 hover:bg-green-600 rounded"
-              @click="resultHandler(false)"
+              <path
+                d="M15 7.72733V42.2727C15 42.6143 15.1026 42.9483 15.2949 43.2323C15.4872 43.5164 15.7605 43.7378 16.0803 43.8685C16.4001 43.9993 16.7519 44.0335 17.0914 43.9668C17.4309 43.9002 17.7427 43.7356 17.9875 43.4941L35.4874 26.2214C35.6499 26.061 35.7788 25.8706 35.8668 25.661C35.9547 25.4515 36 25.2268 36 25C36 24.7732 35.9547 24.5486 35.8668 24.339C35.7788 24.1294 35.6499 23.939 35.4874 23.7786L17.9875 6.50594C17.7427 6.26436 17.4309 6.09985 17.0914 6.03319C16.7519 5.96654 16.4001 6.00075 16.0803 6.13148C15.7605 6.26222 15.4872 6.48362 15.2949 6.76768C15.1026 7.05174 15 7.3857 15 7.72733Z"
+              />
+            </svg>
+          </button>
+          <!-- folder button -->
+          <button
+            title="folder button left click to select, right click to  show the more setting popup menu"
+            class="btn p-1 flex items-center text-yellow-400 space-x-0.5"
+            @click.right.prevent="showPopupMenuHandler('folder1', $event)"
+            @mouseenter.ctrl="showPopupHintHandler('folder1', $event)"
+            @mouseleave="hidePopupHintHandler"
+          >
+            <svg
+              class="w-4 h-4"
+              viewBox="0 0 50 50"
+              fill="currentColor"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              false
-            </button>
-          </div>
-        </template>
-      </PromptModal>
+              <path
+                d="M41 14H25.1212L20 8.87901C19.7222 8.5995 19.3916 8.37788 19.0276 8.227C18.6635 8.07612 18.2731 7.99896 17.879 8.00001H8C7.20459 8.0008 6.44199 8.31713 5.87956 8.87957C5.31712 9.442 5.00079 10.2046 5 11V38.1157C5.00104 38.8806 5.30544 39.6138 5.84641 40.1545C6.38738 40.6952 7.12075 40.9993 7.88562 41H41.1669C41.918 40.999 42.638 40.7002 43.1691 40.1691C43.7002 39.638 43.999 38.918 44 38.1669V17.0002C43.9992 16.2048 43.6829 15.4422 43.1204 14.8798C42.558 14.3173 41.7954 14.001 41 14.0002V14ZM8 11H17.879L20.879 14H8V11Z"
+              />
+            </svg>
+            <span class="text-xs text-gray-600">folder1</span>
+          </button>
+        </div>
+
+        <PopupMenu
+          v-if="showPopupMenu"
+          v-model:show="showPopupMenu"
+          :left="menuLeft"
+          :top="menuTop"
+          :menu-width="140"
+          :menu-height="95"
+        >
+          <button
+            title="add subfolder"
+            class="menu-btn-style"
+            @click="addSubfolderHandler"
+          >
+            <div class="menu-icon-style text-yellow-400 border-yellow-400">
+              <svg
+                class="w-3 h-3"
+                viewBox="0 0 50 50"
+                fill="currentColor"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M41.9231 14.1818H25.6373L20.3846 8.90545C20.0996 8.61753 19.7605 8.38926 19.3871 8.23384C19.0137 8.07842 18.6133 7.99895 18.209 8.00001H8.07692C7.26115 8.00093 6.47906 8.32688 5.90222 8.90633C5.32539 9.48579 5.00092 10.2714 5 11.0909V39.0279C5.00087 39.8159 5.31286 40.5713 5.86753 41.1285C6.42219 41.6857 7.17424 41.9991 7.95865 42H42.094C42.8645 41.9991 43.6031 41.6913 44.1479 41.144C44.6927 40.5968 44.9991 39.8548 45 39.0808V17.2727C44.9991 16.4533 44.6746 15.6676 44.0978 15.0881C43.5209 14.5087 42.7388 14.1827 41.9231 14.1818ZM18.209 11.0909L21.2858 14.1818H8.07692V11.0909H18.209ZM41.9231 38.9091H8.07692V17.2727H41.9231V38.9091ZM25 21.9091C25.408 21.9091 25.7993 22.0719 26.0879 22.3617C26.3764 22.6516 26.5385 23.0447 26.5385 23.4546V26.5455H29.6154C30.0234 26.5455 30.4147 26.7083 30.7032 26.9981C30.9918 27.2879 31.1538 27.681 31.1538 28.0909C31.1538 28.5008 30.9918 28.8939 30.7032 29.1837C30.4147 29.4735 30.0234 29.6364 29.6154 29.6364H26.5385V32.7273C26.5385 33.1372 26.3764 33.5302 26.0879 33.8201C25.7993 34.1099 25.408 34.2727 25 34.2727C24.592 34.2727 24.2007 34.1099 23.9121 33.8201C23.6236 33.5302 23.4615 33.1372 23.4615 32.7273V29.6364H20.3846C19.9766 29.6364 19.5853 29.4735 19.2968 29.1837C19.0082 28.8939 18.8462 28.5008 18.8462 28.0909C18.8462 27.681 19.0082 27.2879 19.2968 26.9981C19.5853 26.7083 19.9766 26.5455 20.3846 26.5455H23.4615V23.4546C23.4615 23.0447 23.6236 22.6516 23.9121 22.3617C24.2007 22.0719 24.592 21.9091 25 21.9091Z"
+                />
+              </svg>
+            </div>
+            <span class="menu-text-style">新增子文件夹</span>
+          </button>
+          <button
+            title="rename folder"
+            class="menu-btn-style"
+            @click="renameFolderHandler"
+          >
+            <div class="menu-icon-style text-blue-400 border-blue-400">
+              <svg
+                class="w-3 h-3"
+                viewBox="0 0 50 50"
+                fill="currentColor"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M43.0724 14.79L34.2112 5.92926C33.9166 5.63465 33.5669 5.40095 33.1819 5.24151C32.797 5.08206 32.3845 5 31.9678 5C31.5512 5 31.1386 5.08206 30.7537 5.24151C30.3688 5.40095 30.019 5.63465 29.7244 5.92926L24.501 11.1525V11.1527L24.5006 11.1529L5.92941 29.7235C5.63386 30.0173 5.39953 30.3669 5.24 30.752C5.08047 31.137 4.9989 31.5499 5.00001 31.9667V40.8274C5.00096 41.6686 5.33552 42.475 5.93032 43.0697C6.52511 43.6645 7.33155 43.9991 8.17271 44H17.6908C17.8991 44 18.1054 43.959 18.2979 43.8793C18.4903 43.7996 18.6652 43.6827 18.8125 43.5354L43.0724 19.2764C43.6664 18.681 44 17.8743 44 17.0332C44 16.1922 43.6664 15.3854 43.0724 14.79ZM17.0338 40.8274H8.17271V31.9667L25.6225 14.5176L34.4837 23.3783L17.0338 40.8274ZM36.727 21.1351L27.866 12.2744L31.9679 8.17246L40.8291 17.0332L36.727 21.1351Z"
+                />
+              </svg>
+            </div>
+            <span class="menu-text-style">重命名文件夹</span>
+          </button>
+          <button
+            title="delete folder"
+            class="w-full p-1 flex items-center space-x-1 rounded text-red-400 hover:bg-red-400 hover:text-white"
+            @click="deleteItemHandler"
+          >
+            <div class="menu-icon-style border-red-400">
+              <svg
+                class="w-3 h-3"
+                viewBox="0 0 50 50"
+                fill="currentColor"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M41.5 11H34.0007V9.5C33.9994 8.30694 33.5249 7.16312 32.6813 6.3195C31.8376 5.47588 30.6938 5.00134 29.5007 5H20.5007C19.3077 5.00134 18.1639 5.47588 17.3202 6.3195C16.4766 7.16312 16.0021 8.30694 16.0007 9.5V11H8.5C8.10217 11 7.72064 11.158 7.43934 11.4393C7.15804 11.7206 7 12.1022 7 12.5C7 12.8978 7.15804 13.2794 7.43934 13.5607C7.72064 13.842 8.10217 14 8.5 14H10V41C10.0009 41.7954 10.3173 42.5579 10.8797 43.1203C11.4421 43.6827 12.2046 43.9991 13 44H37C37.7954 43.9991 38.5579 43.6827 39.1203 43.1203C39.6827 42.5579 39.9991 41.7954 40 41V14H41.5C41.8978 14 42.2794 13.842 42.5607 13.5607C42.842 13.2794 43 12.8978 43 12.5C43 12.1022 42.842 11.7206 42.5607 11.4393C42.2794 11.158 41.8978 11 41.5 11ZM19.0007 9.5C19.0012 9.10233 19.1594 8.72109 19.4406 8.43989C19.7218 8.15869 20.1031 8.0005 20.5007 8H29.5007C29.8984 8.0005 30.2797 8.15869 30.5609 8.43989C30.8421 8.72109 31.0003 9.10233 31.0007 9.5V11H19.0007V9.5ZM37 41H13V14H37V41ZM22.0007 21.5V33.5C22.0007 33.8978 21.8427 34.2794 21.5614 34.5607C21.2801 34.842 20.8986 35 20.5007 35C20.1029 35 19.7214 34.842 19.4401 34.5607C19.1588 34.2794 19.0007 33.8978 19.0007 33.5V21.5C19.0007 21.1022 19.1588 20.7206 19.4401 20.4393C19.7214 20.158 20.1029 20 20.5007 20C20.8986 20 21.2801 20.158 21.5614 20.4393C21.8427 20.7206 22.0007 21.1022 22.0007 21.5ZM31.0007 21.5V33.5C31.0007 33.8978 30.8427 34.2794 30.5614 34.5607C30.2801 34.842 29.8986 35 29.5007 35C29.1029 35 28.7214 34.842 28.4401 34.5607C28.1588 34.2794 28.0007 33.8978 28.0007 33.5V21.5C28.0007 21.1022 28.1588 20.7206 28.4401 20.4393C28.7214 20.158 29.1029 20 29.5007 20C29.8986 20 30.2801 20.158 30.5614 20.4393C30.8427 20.7206 31.0007 21.1022 31.0007 21.5Z"
+                />
+              </svg>
+            </div>
+            <span class="text-xs">删除文件夹和书签</span>
+          </button>
+        </PopupMenu>
+        <PromptModal
+          v-if="showConfirmDeleteModal"
+          v-model:show="showConfirmDeleteModal"
+          @result="getResultHandler"
+        >
+          <template #title>
+            <h2 class="p-4 text-sm font-bold">
+              是否删除该文件夹及其书签
+            </h2>
+          </template>
+          <template #msg>
+            <p class="p-2 text-xs text-center">
+              folder1
+            </p>
+          </template>
+          <template #btn="{ resultHandler }">
+            <div class="p-2 all-center space-x-2">
+              <button
+                class="p-1 text-white bg-red-400 hover:bg-red-600 rounded"
+                @click="resultHandler(true)"
+              >
+                确定
+              </button>
+              <button
+                class="p-1 text-white bg-green-400 hover:bg-green-600 rounded"
+                @click="resultHandler(false)"
+              >
+                取消
+              </button>
+            </div>
+          </template>
+        </PromptModal>
+        <InputModal
+          v-if="showRenameFolderModal"
+          v-model:show="showRenameFolderModal"
+          :init-value="'folder_name'"
+          :placeholder="'请输入文件夹名称'"
+          @result="getRenameResultHandler"
+        >
+          <template #title>
+            <label
+              for="input-modal"
+              class="block p-4 text-sm text-center font-bold"
+            >重命名文件夹</label>
+          </template>
+        </InputModal>
+        <InputModal
+          v-if="showAddSubfolderModal"
+          v-model:show="showAddSubfolderModal"
+          :init-value="'subfolder_name'"
+          :placeholder="'请输入子文件夹名称'"
+          @result="getSubfolderNameHandler"
+        >
+          <template #title>
+            <label
+              for="input-modal"
+              class="block p-4 text-sm text-center font-bold"
+            >新增子文件夹</label>
+          </template>
+        </InputModal>
+        <transition name="dissolve">
+          <PopupHint
+            v-if="showPopupHint"
+            @enter-popup="enterPopupHintHandler"
+            @leave-popup="leavePopupHintHandler"
+          >
+            <ul>
+              <li
+                v-for="hint of hintContent"
+                :key="hint"
+              >
+                {{ hint }}
+              </li>
+            </ul>
+          </PopupHint>
+        </transition>
+      </div>
     </div>
   </div>
 </template>
 <script>
 import { ref } from 'vue';
 import PromptModal from '../Modal/PromptModal.vue';
+import PopupMenu from '../Modal/PopupMenu.vue';
+import InputModal from '../Modal/InputModal.vue';
+import PopupHint from '../Modal/PopupHint.vue';
 
 export default {
   components: {
     PromptModal,
+    PopupMenu,
+    InputModal,
+    PopupHint,
   },
   props: {
     selectFolders: {
@@ -191,7 +343,85 @@ export default {
       }
     };
 
-    const showDeleteFolderModal = ref(false);
+    /**
+     * modal
+     */
+
+    // popup menu
+    // show state and location
+    const showPopupMenu = ref(false);
+    const menuLeft = ref(0);
+    const menuTop = ref(0);
+    const selectItem = ref('');
+
+    const showPopupMenuHandler = (value, event) => {
+      const target = event.currentTarget;
+      if (!target) return;
+      selectItem.value = value;
+      menuLeft.value = event.clientX;
+      menuTop.value = event.clientY;
+      showPopupMenu.value = true;
+    };
+
+    // popup hint
+    // show state and location
+    const showPopupHint = ref(false);
+    const hintContent = ref([]);
+
+    const showPopupHintHandler = (value, event) => {
+      const target = event.currentTarget;
+      if (!target) return;
+      // hintContent.value = [value, 'tag1', 'tag2', 'tag3', 'tag4', 'tag5', 'tag2', 'tag3', 'tag4', 'tag5', 'tag2', 'tag3', 'tag4', 'tag5'];
+      hintContent.value = [value, 'tag1', 'tag2', 'tag3', 'tag4', 'tag5', '这是一个很长的 bookmark 名称啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊'];
+      if (hintContent.value.length <= 0) return;
+      showPopupHint.value = true;
+    };
+
+    let hiddenTimmer = null;
+    const hidePopupHintHandler = () => {
+      hiddenTimmer = setTimeout(() => {
+        showPopupHint.value = false;
+      }, 600);
+    };
+
+    const enterPopupHintHandler = () => {
+      console.log('enter popup hint');
+      if (hiddenTimmer) clearTimeout(hiddenTimmer);
+    };
+
+    const leavePopupHintHandler = () => {
+      console.log('leave popup hint');
+      hiddenTimmer = setTimeout(() => {
+        showPopupHint.value = false;
+      }, 600);
+    };
+
+    // rename folder name modal
+    const showRenameFolderModal = ref(false);
+    const renameFolderHandler = () => {
+      showRenameFolderModal.value = true;
+      showPopupMenu.value = false;
+    };
+    const getRenameResultHandler = (obj) => {
+      console.log(obj);
+    };
+
+    // add subfolder modal
+    const showAddSubfolderModal = ref(false);
+    const addSubfolderHandler = () => {
+      showAddSubfolderModal.value = true;
+      showPopupMenu.value = false;
+    };
+    const getSubfolderNameHandler = (obj) => {
+      console.log(obj);
+    };
+
+    // delete folder modal
+    const showConfirmDeleteModal = ref(false);
+    const deleteItemHandler = () => {
+      showConfirmDeleteModal.value = true;
+      showPopupMenu.value = false;
+    };
     const getResultHandlerd = (value) => {
       console.log(value);
     };
@@ -199,34 +429,66 @@ export default {
     return {
       foldersMode,
       finishFolders,
-      showDeleteFolderModal,
+      showPopupMenu,
+      menuLeft,
+      menuTop,
+      showPopupMenuHandler,
+      selectItem,
+      showPopupHint,
+      hintContent,
+      showPopupHintHandler,
+      hidePopupHintHandler,
+      enterPopupHintHandler,
+      leavePopupHintHandler,
+      showRenameFolderModal,
+      renameFolderHandler,
+      getRenameResultHandler,
+      showAddSubfolderModal,
+      addSubfolderHandler,
+      getSubfolderNameHandler,
+      showConfirmDeleteModal,
+      deleteItemHandler,
       getResultHandlerd,
     };
   },
 };
 </script>
-<style lang="scss">
+
+<style lang="scss" scoped>
 .text-xxs {
   font-size: 10px;
 }
 
-.h-center {
+.all-center {
   @apply flex justify-center items-center;
 }
 
 .btn {
-  @apply text-gray-600 hover:text-gray-800 hover:bg-gray-200 rounded;
+  @apply hover:bg-gray-200 rounded;
 }
 
 .input-style {
   @apply w-full p-1 border border-gray-300 rounded;
 }
-.select-folders {
-  min-height: 2rem;
-  max-height: 5rem;
-  overflow-y: overlay;
+
+.menu-btn-style {
+  @apply w-full p-1 flex items-center hover:bg-gray-100 space-x-1 rounded;
+}
+
+.menu-icon-style {
+  @apply p-0.5 border rounded-sm;
+}
+
+.menu-text-style {
+  @apply text-xs text-gray-600;
+}
+
+.select-folders,
+.main-wrapper {
+  overflow: overlay;
   &::-webkit-scrollbar {
     width: 5px;
+    height: 5px;
   }
   &::-webkit-scrollbar-thumb {
     border-radius: 2px;
@@ -234,8 +496,20 @@ export default {
     // border: 3px solid transparent;
     // background-clip: padding-box;
   }
-  &::-webkit-scrollbar-thumb:hover {
-    background-color: #4b5563;
-  }
 }
+
+.select-folders {
+  min-height: 2rem;
+  max-height: 5rem;
+}
+
+.dissolve-enter-from,
+.dissolve-leave-to {
+  opacity: 0
+}
+
+.dissolve-enter-active, .dissolve-leave-active {
+  transition: opacity 300ms ease-in-out 500ms;
+}
+
 </style>

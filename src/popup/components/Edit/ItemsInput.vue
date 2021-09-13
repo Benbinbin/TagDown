@@ -172,7 +172,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .label-style {
     @apply flex items-center text-gray-600 space-x-0.5;
 }

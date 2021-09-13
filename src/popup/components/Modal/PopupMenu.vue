@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { computed } from 'vue';
+import { ref, onMounted } from 'vue';
 
 export default {
   props: {
@@ -28,12 +28,33 @@ export default {
       type: Number,
       default: 0,
     },
+    menuWidth: {
+      type: Number,
+      default: 0,
+    },
+    menuHeight: {
+      type: Number,
+      default: 0,
+    },
   },
   emits: ['update:show'],
   setup(props) {
-    const isTranslateX = computed(() => document.documentElement.clientWidth - props.left - 160 < 0);
+    const isTranslateX = ref(false);
+    const isTranslateY = ref(false);
 
-    const isTranslateY = computed(() => document.documentElement.clientHeight - props.top - 120 < 0);
+    onMounted(() => {
+      // console.log(props.left);
+      // console.log(document.documentElement.clientWidth);
+      // console.log(window.innerWidth);
+      // console.log(document.documentElement.clientWidth - props.left - 160);
+      isTranslateX.value = document.documentElement.clientWidth - props.left - props.menuWidth < 0;
+
+      // console.log(props.top);
+      // console.log(document.documentElement.clientHeight);
+      // console.log(window.innerHeight);
+      // console.log(document.documentElement.clientHeight - props.top - 120);
+      isTranslateY.value = document.documentElement.clientHeight - props.top - props.menuHeight < 0;
+    });
 
     return {
       isTranslateX,
@@ -44,5 +65,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 </style>

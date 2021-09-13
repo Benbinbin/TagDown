@@ -1,12 +1,5 @@
 <template>
-  <div class="w-full h-full flex justify-between items-center">
-    <p>grid</p>
-    <!-- <button
-      class="p-1 text-white bg-green-400 rounded"
-      @click="showRenameFolderModal = true"
-    >
-      Rename Folder
-    </button>-->
+  <div class="w-full h-full flex flex-col items-end">
     <button
       title="show more setting menu"
       class="p-0.5 text-gray-300 hover:text-gray-600 hover:bg-gray-200 rounded-sm"
@@ -23,11 +16,14 @@
         />
       </svg>
     </button>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio magnam, laudantium velit autem obcaecati amet sit fugit commodi sapiente dolor harum, quam, placeat saepe neque animi voluptatem corporis. Aliquid, nam?</p>
     <PopupMenu
-      v-show="showPopupMenu"
+      v-if="showPopupMenu"
       v-model:show="showPopupMenu"
       :left="left"
       :top="top"
+      :menu-width="160"
+      :menu-height="120"
     >
       <!-- star item -->
       <button
@@ -119,7 +115,7 @@
       <!-- delete item -->
       <button
         title="delete item"
-        class="btn text-red-400 hover:bg-red-400 hover:text-white"
+        class="w-full p-1 flex items-center space-x-1 rounded text-red-400 hover:bg-red-400 hover:text-white"
         @click="deleteItemHandler"
       >
         <div class="menu-icon-style border-red-400">
@@ -148,9 +144,7 @@
         <label
           for="input-modal"
           class="block p-4 text-sm text-center font-bold"
-        >
-          重命名文件夹
-        </label>
+        >重命名文件夹</label>
       </template>
     </InputModal>
     <PromptModal
@@ -189,7 +183,7 @@ export default {
      * modal
      */
 
-    // browser popup menu
+    // popup menu
     // show state and location
     const showPopupMenu = ref(false);
     const left = ref(0);
@@ -202,8 +196,10 @@ export default {
       if (!target) return;
       selectItem.value = value;
       selectItemType.value = 'folder';
-      left.value = target.offsetLeft;
-      top.value = target.offsetTop;
+      // left.value = target.offsetLeft;
+      // top.value = target.offsetTop;
+      left.value = event.clientX;
+      top.value = event.clientY;
       showPopupMenu.value = true;
     };
 
@@ -263,7 +259,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .btn {
-  @apply w-full flex items-center space-x-1 rounded;
+  @apply w-full p-1 flex items-center hover:bg-gray-100 space-x-1 rounded;
 }
 
 .menu-icon-style {

@@ -298,10 +298,10 @@
   </div>
   <div
     v-show="showCard"
-    class="fixed inset-0 z-20"
+    class="fixed inset-0 z-10"
   >
     <div
-      class="modal-background w-full h-full bg-black opacity-25"
+      class="modal-background absolute inset-0 bg-black opacity-25"
       @click="showSelectFolders = false"
     />
     <transition
@@ -422,7 +422,7 @@ export default {
   },
 };
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .framework {
   @apply px-2 py-4 space-y-4 rounded-lg border border-gray-200 border-dashed;
 }

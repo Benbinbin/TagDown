@@ -3,9 +3,7 @@
     id="edit"
     class="flex flex-col"
   >
-    <header
-      class="w-full p-4 flex justify-between items-center fixed top-0 z-10 bg-white border-b border-gray-200"
-    >
+    <header class="w-full p-4 flex justify-between items-center bg-white border-b border-gray-200">
       <button
         title="delete bookmark"
         :disabled="!bookmarkState"
@@ -54,11 +52,11 @@
       </button>
     </header>
 
-    <div class="flex-grow pt-16 pb-28">
+    <div class="main flex-grow overflow-y-auto">
       <EditInfo />
     </div>
 
-    <footer class="w-full fixed bottom-0 z-10 bg-white">
+    <footer class="w-full bg-white">
       <div class="w-full p-2">
         <button
           title="finish editing bookmark"
@@ -147,7 +145,12 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+.main::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+}
+
 .h-center {
   @apply flex justify-center items-center;
 }

@@ -11,7 +11,7 @@
       @change-browser-type="browserType = $event"
     />
     <!-- menu -->
-    <div class="w-full px-8 py-2 border-b border-gray-200">
+    <div class="px-8 py-2 border-b border-gray-200">
       <component
         :is="browserMenuComponent"
         v-model:multi-on-group="multiOnGroup"
@@ -24,7 +24,7 @@
       />
     </div>
     <!-- content -->
-    <div class="flex-grow w-full flex justify-between items-start space-x-2 space-y-2">
+    <div class="main flex-grow w-full overflow-y-auto flex justify-between items-start space-x-2 space-y-2">
       <component :is="browserContentComponent" />
     </div>
 
@@ -104,6 +104,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.main::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+}
+
 .all-center {
   @apply flex justify-center items-center;
 }

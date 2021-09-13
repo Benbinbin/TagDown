@@ -82,7 +82,7 @@ export default {
   },
 };
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .all-center {
     @apply flex justify-center items-center;
 }
