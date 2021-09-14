@@ -173,7 +173,7 @@
         >
           <button
             title="add subfolder"
-            class="menu-btn-style"
+            class="menu-btn-style hover:bg-yellow-50"
             @click="addSubfolderHandler"
           >
             <div class="menu-icon-style text-yellow-400 border-yellow-400">
@@ -192,7 +192,7 @@
           </button>
           <button
             title="rename folder"
-            class="menu-btn-style"
+            class="menu-btn-style hover:bg-blue-50"
             @click="renameFolderHandler"
           >
             <div class="menu-icon-style text-blue-400 border-blue-400">
@@ -472,7 +472,7 @@ export default {
 }
 
 .menu-btn-style {
-  @apply w-full p-1 flex items-center hover:bg-gray-100 space-x-1 rounded;
+  @apply w-full p-1 flex items-center space-x-1 rounded;
 }
 
 .menu-icon-style {

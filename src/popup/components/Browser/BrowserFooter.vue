@@ -127,7 +127,7 @@
                   :title="color.name"
                   :disabled="!multiOnGroup"
                   class="w-4 h-4 rounded-full opacity-80 hover:opacity-100"
-                  :class="{ 'ring-2 ring-green-400': groupColor === color.value }"
+                  :class="{ 'ring-2 ring-gray-400': groupColor === color.value }"
                   :style="{
                     'background': color.value
                   }"

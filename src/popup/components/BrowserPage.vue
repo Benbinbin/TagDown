@@ -24,8 +24,13 @@
       />
     </div>
     <!-- content -->
-    <div class="main flex-grow w-full overflow-y-auto flex justify-between items-start space-x-2 space-y-2">
-      <component :is="browserContentComponent" />
+    <div
+      class="main flex-grow w-full overflow-y-auto flex justify-between items-start space-x-2 space-y-2"
+    >
+      <component
+        :is="browserContentComponent"
+        :nodes="childrenNodes"
+      />
     </div>
 
     <!-- footer -->
@@ -43,7 +48,7 @@
   </div>
 </template>
 <script>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import BrowserHeader from './Browser/BrowserHeader.vue';
 import BrowserFooter from './Browser/BrowserFooter.vue';
 import BrowserGrid from './Browser/BrowserGrid.vue';
@@ -61,6 +66,27 @@ export default {
     BrowserMenuPin,
   },
   setup() {
+    // bookmarks
+    const currentNode = ref('');
+    const childrenNodes = ref([]);
+    const getChildrenNodes = (nodeId) => new Promise((resolve, reject) => {
+      if (nodeId) {
+        chrome.bookmarks.getChildren(nodeId).then((nodes) => {
+          resolve(nodes);
+        });
+      } else {
+        chrome.bookmarks.getTree().then((root) => {
+          resolve(root[0].children);
+        });
+      }
+    });
+
+    onMounted(async () => {
+      getChildrenNodes(currentNode.value).then((nodes) => {
+        childrenNodes.value = nodes;
+      });
+    });
+
     // browser page setting
     const browserType = ref('all'); // all, star, pin
     const browserMode = ref('grid'); // grid, tree
@@ -88,6 +114,8 @@ export default {
     const multiSwitch = ref(false);
 
     return {
+      currentNode,
+      childrenNodes,
       browserType,
       browserMode,
       browserMenuComponent,
