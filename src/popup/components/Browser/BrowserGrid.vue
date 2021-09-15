@@ -1,11 +1,15 @@
 <template>
-  <div class="w-full h-full px-8 py-4 grid grid-cols-4 gap-x-2 gap-y-1">
+  <div class="w-full px-8 py-4 grid grid-flow-row-dense grid-cols-4 gap-x-2 gap-y-1">
     <div
       v-for="node of nodes"
       :key="node.id"
       class="grid-item space-y-1 rounded"
       :class="{
-        'bg-gray-100': unfoldFolders.has(node.id)
+        'bg-gray-100': unfoldFolders.has(node.id),
+        'row-span-2': unfoldFolders.has(node.id) && node.children.length === 1,
+        'row-span-3': unfoldFolders.has(node.id) && node.children.length === 2,
+        'row-span-4': unfoldFolders.has(node.id) && node.children.length === 3,
+        'row-span-5': unfoldFolders.has(node.id) && node.children.length >=4,
       }"
     >
       <div class="p-1 flex items-start">
@@ -13,8 +17,8 @@
         <button
           v-if="node.children"
           class="flex-grow p-0.5 flex items-start hover:bg-gray-200 space-x-0.5 rounded-sm"
-          @click="toggleFolderState(node)"
-          @dbclick="openFolderHandler(node)"
+          @click.exact="toggleFolderState(node)"
+          @click.shift.exact="$emit('open-folder', node.id)"
         >
           <svg
             v-if="node.children.length > 0 && !unfoldFolders.has(node.id)"
@@ -52,21 +56,24 @@
             />
           </svg>
 
-          <span class="text-xs text-gray-600">{{ node.title }}</span>
+          <span class="text-xs text-left text-gray-600">{{ node.title }}</span>
         </button>
         <!-- bookmark node -->
         <button
           v-if="!node.children"
           class="flex-grow p-0.5 flex items-start hover:bg-gray-200 space-x-0.5 rounded-sm"
         >
-          <div
-            class="bookmark-favicon w-4 h-4 bg-cover bg-center bg-no-repeat"
-            :style="{
-              backgroundImage:
-                'url(' + `https://www.youtube.com/s/desktop/4eebcda0/img/favicon_32x32.png` + ')',
-            }"
-          />
-          <span class="text-xs text-gray-600">{{ node.title }}</span>
+          <div class="p-0.5">
+            <div
+              class="bookmark-favicon w-3 h-3 bg-cover bg-center bg-no-repeat"
+              :style="{
+                backgroundImage:
+                  'url(' + `https://www.youtube.com/s/desktop/4eebcda0/img/favicon_32x32.png` + ')',
+              }"
+            />
+          </div>
+
+          <span class="text-xs text-left text-gray-600">{{ node.title }}</span>
         </button>
         <!-- more button -->
         <div class="flex items-center space-x-0.5">
@@ -108,7 +115,7 @@
       <!-- unfold folder -->
       <div
         v-if="unfoldFolders.has(node.id)"
-        class="unfold-folders-container p-2 space-y-1"
+        class="unfold-folders-container px-2 py-0.5 space-y-1"
       >
         <div
           v-for="childNode of node.children"
@@ -149,13 +156,15 @@
             v-if="!childNode.children"
             class="flex-grow p-0.5 flex items-start hover:bg-gray-200 space-x-0.5 rounded-sm"
           >
-            <div
-              class="bookmark-favicon w-4 h-4 bg-cover bg-center bg-no-repeat"
-              :style="{
-                backgroundImage:
-                  'url(' + `https://www.youtube.com/s/desktop/4eebcda0/img/favicon_32x32.png` + ')',
-              }"
-            />
+            <div class="p-0.5">
+              <div
+                class="bookmark-favicon w-3 h-3 bg-cover bg-center bg-no-repeat"
+                :style="{
+                  backgroundImage:
+                    'url(' + `https://www.youtube.com/s/desktop/4eebcda0/img/favicon_32x32.png` + ')',
+                }"
+              />
+            </div>
             <span class="text-xs text-left text-gray-600">{{ childNode.title }}</span>
           </button>
           <div class="flex items-center space-x-0.5">
@@ -346,7 +355,7 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
 import PopupMenu from '../Modal/PopupMenu.vue';
 import InputModal from '../Modal/InputModal.vue';
 import PromptModal from '../Modal/PromptModal.vue';
@@ -365,10 +374,11 @@ export default {
       },
     },
   },
+  emits: ['open-folder'],
   setup(props) {
-    onMounted(() => {
-      console.log(props.nodes);
-    });
+    // onMounted(() => {
+    //   console.log(props.nodes);
+    // });
     /**
      * bookmark data
      */
@@ -381,10 +391,6 @@ export default {
       } else {
         unfoldFolders.value.add(node.id);
       }
-    };
-    // open folder
-    const openFolderHandler = (node) => {
-      console.log(node);
     };
 
     /**
@@ -447,7 +453,6 @@ export default {
     return {
       unfoldFolders,
       toggleFolderState,
-      openFolderHandler,
       showPopupMenu,
       left,
       top,

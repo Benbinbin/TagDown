@@ -19,17 +19,19 @@
         :browser-type="browserType"
         :browser-mode="browserMode"
         :group-color="groupColor"
+        :current-node-id="currentNodeId"
         @change-browser-type="browserType = $event"
         @set-group-color="groupColor = $event"
+        @reset-folder="currentNodeId = $event"
+        @clear-unfold-folders="toggleAllFolderState"
       />
     </div>
     <!-- content -->
-    <div
-      class="main flex-grow w-full overflow-y-auto flex justify-between items-start space-x-2 space-y-2"
-    >
+    <div class="main flex-grow w-full overflow-y-auto">
       <component
         :is="browserContentComponent"
         :nodes="childrenNodes"
+        @open-folder="currentNodeId = $event"
       />
     </div>
 
@@ -48,7 +50,7 @@
   </div>
 </template>
 <script>
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, watch } from 'vue';
 import BrowserHeader from './Browser/BrowserHeader.vue';
 import BrowserFooter from './Browser/BrowserFooter.vue';
 import BrowserGrid from './Browser/BrowserGrid.vue';
@@ -67,25 +69,50 @@ export default {
   },
   setup() {
     // bookmarks
-    const currentNode = ref('');
+    const currentNodeId = ref('0');
+    // const currentNode = ref(null);
     const childrenNodes = ref([]);
-    const getChildrenNodes = (nodeId) => new Promise((resolve, reject) => {
-      if (nodeId) {
-        chrome.bookmarks.getChildren(nodeId).then((nodes) => {
-          resolve(nodes);
-        });
-      } else {
-        chrome.bookmarks.getTree().then((root) => {
-          resolve(root[0].children);
-        });
-      }
-    });
 
-    onMounted(async () => {
-      getChildrenNodes(currentNode.value).then((nodes) => {
-        childrenNodes.value = nodes;
-      });
-    });
+    // const getChildrenNodes = (nodeId) => new Promise((resolve, reject) => {
+    //   if (nodeId) {
+    //   chrome.bookmarks.getSubTree(nodeId).then((nodes) => {
+    //     resolve(nodes[0].children);
+    //   });
+    //   } else {
+    //     chrome.bookmarks.getTree().then((root) => {
+    //       resolve(root[0].children);
+    //     });
+    //   }
+    // });
+    // const getCurrentNode = (nodeId) => new Promise((resolve, reject) => {
+    //   if (nodeId) {
+    //     chrome.bookmarks.get(currentNodeId.value).then((node) => {
+    //       resolve(node[0]);
+    //     });
+    //   } else {
+    //     chrome.bookmarks.getTree().then((root) => {
+    //       resolve(root[0]);
+    //     });
+    //   }
+    // });
+
+    watch(
+      currentNodeId,
+      (newValue, oldValue) => {
+        // console.log(currentNodeId.value);
+        // chrome.bookmarks.get(currentNodeId.value).then((node) => {
+        //   currentNode.value = node[0];
+        //   console.log(currentNode.value);
+        // });
+        chrome.bookmarks.getSubTree(currentNodeId.value).then((nodes) => {
+          childrenNodes.value = nodes[0].children;
+          // console.log(childrenNodes.value);
+        });
+      },
+      {
+        immediate: true,
+      },
+    );
 
     // browser page setting
     const browserType = ref('all'); // all, star, pin
@@ -114,7 +141,7 @@ export default {
     const multiSwitch = ref(false);
 
     return {
-      currentNode,
+      currentNodeId,
       childrenNodes,
       browserType,
       browserMode,
