@@ -23,16 +23,30 @@
         @change-browser-type="browserType = $event"
         @set-group-color="groupColor = $event"
         @reset-folder="currentNodeId = $event"
-        @clear-unfold-folders="toggleAllFolderState"
+        @unfold-all="unfoldAllHandler"
+        @fold-all="foldAllHandler"
       />
     </div>
     <!-- content -->
     <div class="main flex-grow w-full overflow-y-auto">
-      <component
-        :is="browserContentComponent"
+      <BrowserGrid
+        v-show="browserType==='all' && browserMode==='grid'"
+        ref="grid"
         :nodes="childrenNodes"
         @open-folder="currentNodeId = $event"
       />
+      <BrowserTree
+        v-show="browserType==='all' && browserMode==='tree'"
+        :nodes="childrenNodes"
+      />
+      <BrowserStar v-show="browserType==='star'" />
+      <BrowserPin v-show="browserType==='pin'" />
+      <!-- <component
+        :is="browserContentComponent"
+        ref="content"
+        :nodes="childrenNodes"
+        @open-folder="currentNodeId = $event"
+      /> -->
     </div>
 
     <!-- footer -->
@@ -55,17 +69,21 @@ import BrowserHeader from './Browser/BrowserHeader.vue';
 import BrowserFooter from './Browser/BrowserFooter.vue';
 import BrowserGrid from './Browser/BrowserGrid.vue';
 import BrowserTree from './Browser/BrowserTree.vue';
+import BrowserStar from './Browser/BrowserStar.vue';
+import BrowserPin from './Browser/BrowserPin.vue';
 import BrowserMenu from './Browser/BrowserMenu.vue';
 import BrowserMenuPin from './Browser/BrowserMenuPin.vue';
 
 export default {
   components: {
+    BrowserMenu,
+    BrowserMenuPin,
     BrowserHeader,
     BrowserFooter,
     BrowserGrid,
     BrowserTree,
-    BrowserMenu,
-    BrowserMenuPin,
+    BrowserStar,
+    BrowserPin,
   },
   setup() {
     // bookmarks
@@ -73,46 +91,27 @@ export default {
     // const currentNode = ref(null);
     const childrenNodes = ref([]);
 
-    // const getChildrenNodes = (nodeId) => new Promise((resolve, reject) => {
-    //   if (nodeId) {
-    //   chrome.bookmarks.getSubTree(nodeId).then((nodes) => {
-    //     resolve(nodes[0].children);
-    //   });
-    //   } else {
-    //     chrome.bookmarks.getTree().then((root) => {
-    //       resolve(root[0].children);
-    //     });
-    //   }
-    // });
-    // const getCurrentNode = (nodeId) => new Promise((resolve, reject) => {
-    //   if (nodeId) {
-    //     chrome.bookmarks.get(currentNodeId.value).then((node) => {
-    //       resolve(node[0]);
-    //     });
-    //   } else {
-    //     chrome.bookmarks.getTree().then((root) => {
-    //       resolve(root[0]);
-    //     });
-    //   }
-    // });
-
     watch(
       currentNodeId,
       (newValue, oldValue) => {
-        // console.log(currentNodeId.value);
-        // chrome.bookmarks.get(currentNodeId.value).then((node) => {
-        //   currentNode.value = node[0];
-        //   console.log(currentNode.value);
-        // });
         chrome.bookmarks.getSubTree(currentNodeId.value).then((nodes) => {
           childrenNodes.value = nodes[0].children;
-          // console.log(childrenNodes.value);
         });
       },
       {
         immediate: true,
       },
     );
+
+    // unfold or fold all folder
+    const grid = ref(null);
+    const unfoldAllHandler = () => {
+      grid.value.unfoldAll();
+    };
+
+    const foldAllHandler = () => {
+      grid.value.foldAll();
+    };
 
     // browser page setting
     const browserType = ref('all'); // all, star, pin
@@ -125,6 +124,7 @@ export default {
       return 'BrowserMenu';
     });
 
+    // content component
     const browserContentComponent = computed(() => {
       if (browserMode.value === 'grid') {
         return 'BrowserGrid';
@@ -143,6 +143,9 @@ export default {
     return {
       currentNodeId,
       childrenNodes,
+      grid,
+      unfoldAllHandler,
+      foldAllHandler,
       browserType,
       browserMode,
       browserMenuComponent,

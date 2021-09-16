@@ -1,5 +1,7 @@
 <template>
-  <div class="w-full px-8 py-4 grid grid-flow-row-dense grid-cols-4 gap-x-2 gap-y-1">
+  <div
+    class="w-full px-8 py-4 grid grid-flow-row-dense grid-cols-4 gap-x-2 gap-y-1"
+  >
     <div
       v-for="node of nodes"
       :key="node.id"
@@ -376,9 +378,6 @@ export default {
   },
   emits: ['open-folder'],
   setup(props) {
-    // onMounted(() => {
-    //   console.log(props.nodes);
-    // });
     /**
      * bookmark data
      */
@@ -392,7 +391,17 @@ export default {
         unfoldFolders.value.add(node.id);
       }
     };
+    const unfoldAll = () => {
+      props.nodes.forEach((node) => {
+        if (node.children && node.children.length > 0) {
+          unfoldFolders.value.add(node.id);
+        }
+      });
+    };
 
+    const foldAll = () => {
+      unfoldFolders.value.clear();
+    };
     /**
      * modal
      */
@@ -453,6 +462,8 @@ export default {
     return {
       unfoldFolders,
       toggleFolderState,
+      unfoldAll,
+      foldAll,
       showPopupMenu,
       left,
       top,
