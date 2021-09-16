@@ -19,12 +19,12 @@
         <button
           v-if="node.children"
           class="flex-grow p-0.5 flex items-start hover:bg-gray-200 space-x-0.5 rounded-sm"
-          @click.exact="toggleFolderState(node)"
-          @click.shift.exact="$emit('open-folder', node.id)"
+          @click.shift.exact="toggleFolderState(node)"
+          @click.exact="$emit('open-folder', node.id)"
         >
           <svg
             v-if="node.children.length > 0 && !unfoldFolders.has(node.id)"
-            class="w-4 h-4"
+            class="flex-shrink-0 w-4 h-4"
             viewBox="0 0 50 50"
             fill="#FBBF24"
             xmlns="http://www.w3.org/2000/svg"
@@ -36,7 +36,7 @@
 
           <svg
             v-if="node.children.length > 0 && unfoldFolders.has(node.id)"
-            class="w-4 h-4"
+            class="flex-shrink-0 w-4 h-4"
             viewBox="0 0 50 50"
             fill="#FBBF24"
             xmlns="http://www.w3.org/2000/svg"
@@ -48,7 +48,7 @@
 
           <svg
             v-if="node.children.length === 0"
-            class="w-4 h-4"
+            class="flex-shrink-0 w-4 h-4"
             viewBox="0 0 50 50"
             fill="#FBBF24"
             xmlns="http://www.w3.org/2000/svg"
@@ -58,14 +58,14 @@
             />
           </svg>
 
-          <span class="text-xs text-left text-gray-600">{{ node.title }}</span>
+          <span class="node-title-style text-xs text-left text-gray-600">{{ node.title }}</span>
         </button>
         <!-- bookmark node -->
         <button
           v-if="!node.children"
           class="flex-grow p-0.5 flex items-start hover:bg-gray-200 space-x-0.5 rounded-sm"
         >
-          <div class="p-0.5">
+          <div class="flex-shrink-0 p-0.5">
             <div
               class="bookmark-favicon w-3 h-3 bg-cover bg-center bg-no-repeat"
               :style="{
@@ -75,7 +75,7 @@
             />
           </div>
 
-          <span class="text-xs text-left text-gray-600">{{ node.title }}</span>
+          <span class="node-title-style text-xs text-left text-gray-600">{{ node.title }}</span>
         </button>
         <!-- more button -->
         <div class="flex items-center space-x-0.5">
@@ -127,10 +127,11 @@
           <button
             v-if="childNode.children"
             class="flex-grow p-0.5 flex items-start hover:bg-gray-200 space-x-0.5 rounded-sm"
+            @click="$emit('open-folder', childNode.id)"
           >
             <svg
               v-if="childNode.children.length > 0"
-              class="w-4 h-4"
+              class="flex-shrink-0 w-4 h-4"
               viewBox="0 0 50 50"
               fill="#FBBF24"
               xmlns="http://www.w3.org/2000/svg"
@@ -142,7 +143,7 @@
 
             <svg
               v-if="childNode.children.length === 0"
-              class="w-4 h-4"
+              class="flex-shrink-0 w-4 h-4"
               viewBox="0 0 50 50"
               fill="#FBBF24"
               xmlns="http://www.w3.org/2000/svg"
@@ -152,13 +153,15 @@
               />
             </svg>
 
-            <span class="text-xs text-left text-gray-600">{{ childNode.title }}</span>
+            <span
+              class="node-title-style text-xs text-left text-gray-600"
+            >{{ childNode.title }}</span>
           </button>
           <button
             v-if="!childNode.children"
             class="flex-grow p-0.5 flex items-start hover:bg-gray-200 space-x-0.5 rounded-sm"
           >
-            <div class="p-0.5">
+            <div class="flex-shrink-0 p-0.5">
               <div
                 class="bookmark-favicon w-3 h-3 bg-cover bg-center bg-no-repeat"
                 :style="{
@@ -167,7 +170,7 @@
                 }"
               />
             </div>
-            <span class="text-xs text-left text-gray-600">{{ childNode.title }}</span>
+            <span class="node-title-style text-xs text-left text-gray-600">{{ childNode.title }}</span>
           </button>
           <div class="flex items-center space-x-0.5">
             <button
@@ -495,6 +498,7 @@ export default {
   overflow-y: overlay;
   &::-webkit-scrollbar {
     width: 4px;
+    height: 4px;
   }
   &::-webkit-scrollbar-thumb {
     border-radius: 2px;
@@ -517,5 +521,9 @@ export default {
 
 .menu-text-style {
   @apply text-xs text-gray-600;
+}
+
+.node-title-style {
+  word-break: break-all;
 }
 </style>

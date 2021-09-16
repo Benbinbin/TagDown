@@ -2,9 +2,9 @@
   <div class="w-full flex justify-between items-center space-x-2">
     <div
       v-show="browserType === 'all' && browserMode === 'grid'"
-      class="flex-grow flex items-center space-x-2"
+      class="breadcrumb flex-grow flex items-center space-x-2"
     >
-      <div class="breadcrumb flex items-center space-x-0.5">
+      <div class="flex-shrink-0 flex items-center space-x-0.5">
         <div
           v-for="(node, index) of breadcrumb"
           :key="node.id"
@@ -206,5 +206,22 @@ export default {
 
 .h-center {
   @apply flex justify-center items-center;
+}
+
+.breadcrumb {
+
+  overflow-x: overlay;
+  &::-webkit-scrollbar {
+    height: 4px;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 2px;
+    background-color: #9ca3af;
+    // border: 3px solid transparent;
+    // background-clip: padding-box;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: #4b5563;
+  }
 }
 </style>
