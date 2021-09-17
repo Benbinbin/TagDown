@@ -221,7 +221,7 @@
       <!-- star item -->
       <button
         title="toggle item star state"
-        class="btn hover:bg-yellow-50"
+        class="btn text-gray-600 hover:text-yellow-600 hover:bg-yellow-50 "
         @click="toggleStarState"
       >
         <div
@@ -239,12 +239,12 @@
             />
           </svg>
         </div>
-        <span class="menu-text-style">{{ starState ? '未设为常用' : '已设为常用' }}</span>
+        <span class="text-xs">{{ starState ? '未设为常用' : '已设为常用' }}</span>
       </button>
       <!-- share item(s) -->
       <button
         title="toggle item share state"
-        class="btn hover:bg-green-50"
+        class="btn text-gray-600 hover:text-green-600 hover:bg-green-50"
         @click="toggleShareState"
       >
         <div
@@ -262,13 +262,13 @@
             />
           </svg>
         </div>
-        <span class="menu-text-style">{{ shareState ? '已开启共享' : '未开启共享' }}</span>
+        <span class="text-xs">{{ shareState ? '已开启共享' : '未开启共享' }}</span>
       </button>
       <!-- edit folder name -->
       <button
         v-if="selectItemType === 'folder'"
         title="edit folder name"
-        class="btn hover:bg-blue-50"
+        class="btn text-gray-600 hover:text-blue-600 hover:bg-blue-50"
         @click="renameFolderHandler"
       >
         <div class="menu-icon-style text-blue-400 border-blue-400">
@@ -289,7 +289,7 @@
       <button
         v-if="selectItemType === 'bookmark'"
         title="edit bookmark"
-        class="btn"
+        class="btn text-gray-600 hover:text-blue-600 hover:bg-blue-50"
       >
         <div class="menu-icon-style text-blue-400 border-blue-400">
           <svg
@@ -303,7 +303,7 @@
             />
           </svg>
         </div>
-        <span class="menu-text-style">修改书签</span>
+        <span class="text-xs">修改书签</span>
       </button>
       <!-- delete item -->
       <button
@@ -519,9 +519,9 @@ export default {
   @apply p-0.5 border rounded-sm;
 }
 
-.menu-text-style {
-  @apply text-xs text-gray-600;
-}
+// .menu-text-style {
+//   @apply text-xs text-gray-600;
+// }
 
 .node-title-style {
   word-break: break-all;

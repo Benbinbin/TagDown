@@ -30,23 +30,25 @@
     <!-- content -->
     <div class="main flex-grow w-full overflow-y-auto">
       <BrowserGrid
-        v-show="browserType==='all' && browserMode==='grid'"
+        v-show="browserType === 'all' && browserMode === 'grid'"
         ref="grid"
         :nodes="childrenNodes"
         @open-folder="currentNodeId = $event"
       />
       <BrowserTree
         v-show="browserType==='all' && browserMode==='tree'"
-        :nodes="childrenNodes"
+        :current-node="currentNode"
+        :width="800"
+        :height="422"
       />
-      <BrowserStar v-show="browserType==='star'" />
-      <BrowserPin v-show="browserType==='pin'" />
+      <BrowserStar v-show="browserType === 'star'" />
+      <BrowserPin v-show="browserType === 'pin'" />
       <!-- <component
         :is="browserContentComponent"
         ref="content"
         :nodes="childrenNodes"
         @open-folder="currentNodeId = $event"
-      /> -->
+      />-->
     </div>
 
     <!-- footer -->
@@ -88,13 +90,14 @@ export default {
   setup() {
     // bookmarks
     const currentNodeId = ref('0');
-    // const currentNode = ref(null);
+    const currentNode = ref(null);
     const childrenNodes = ref([]);
 
     watch(
       currentNodeId,
       (newValue, oldValue) => {
         chrome.bookmarks.getSubTree(currentNodeId.value).then((nodes) => {
+          [currentNode.value] = nodes;
           childrenNodes.value = nodes[0].children;
         });
       },
@@ -142,6 +145,7 @@ export default {
 
     return {
       currentNodeId,
+      currentNode,
       childrenNodes,
       grid,
       unfoldAllHandler,

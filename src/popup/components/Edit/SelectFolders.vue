@@ -173,7 +173,7 @@
         >
           <button
             title="add subfolder"
-            class="menu-btn-style hover:bg-yellow-50"
+            class="menu-btn-style text-gray-600 hover:text-yellow-600  hover:bg-yellow-50"
             @click="addSubfolderHandler"
           >
             <div class="menu-icon-style text-yellow-400 border-yellow-400">
@@ -188,11 +188,11 @@
                 />
               </svg>
             </div>
-            <span class="menu-text-style">新增子文件夹</span>
+            <span class="text-xs">新增子文件夹</span>
           </button>
           <button
             title="rename folder"
-            class="menu-btn-style hover:bg-blue-50"
+            class="menu-btn-style text-gray-600 hover:text-blue-600 hover:bg-blue-50"
             @click="renameFolderHandler"
           >
             <div class="menu-icon-style text-blue-400 border-blue-400">
@@ -207,7 +207,7 @@
                 />
               </svg>
             </div>
-            <span class="menu-text-style">重命名文件夹</span>
+            <span class="text-xs">重命名文件夹</span>
           </button>
           <button
             title="delete folder"
@@ -479,9 +479,9 @@ export default {
   @apply p-0.5 border rounded-sm;
 }
 
-.menu-text-style {
-  @apply text-xs text-gray-600;
-}
+// .menu-text-style {
+//   @apply text-xs text-gray-600;
+// }
 
 .select-folders,
 .main-wrapper {
