@@ -23,7 +23,7 @@
         :pin-nodes-id="pinNodesId"
         @change-browser-type="browserType = $event"
         @set-group-color="groupColor = $event"
-        @reset-folder="currentNodeId = $event"
+        @set-current-node="setCurrentNodeIdHandler"
         @unfold-all="unfoldAllHandler"
         @fold-all="foldAllHandler"
       />
@@ -35,7 +35,7 @@
         ref="grid"
         :nodes="childrenNodes"
         :pin-nodes-id="pinNodesId"
-        @open-folder="currentNodeId = $event"
+        @set-current-node="setCurrentNodeIdHandler"
         @toggle-pin-node="togglePinNodeHandler"
       />
       <BrowserTree
@@ -49,6 +49,7 @@
       <BrowserStar v-show="browserType === 'star'" />
       <BrowserPin
         v-show="browserType === 'pin'"
+        ref="pin"
         :pin-nodes="pinNodes"
         @toggle-pin-node="togglePinNodeHandler"
       />
@@ -91,12 +92,33 @@ export default {
     BrowserPin,
   },
   setup() {
+    // browser page setting
+    const browserType = ref('all'); // all, star, pin
+    const browserMode = ref('grid'); // grid, tree
+
+    const browserMenuComponent = computed(() => {
+      if (browserType.value === 'pin') {
+        return 'BrowserMenuPin';
+      }
+      return 'BrowserMenu';
+    });
+
     // current node
     const currentNodeId = ref('0');
-
     // watch current node id to update the current node and children nodes
     const currentNode = ref(null);
     const childrenNodes = ref([]);
+
+    const setCurrentNodeIdHandler = (value) => {
+      if (value === 'parent' && currentNode.value.parentId) {
+        currentNodeId.value = currentNode.value.parentId;
+      } else if (value === 'root') {
+        currentNodeId.value = '0';
+      } else {
+        currentNodeId.value = value;
+      }
+    };
+
     watch(
       currentNodeId,
       (newValue, oldValue) => {
@@ -132,32 +154,22 @@ export default {
 
     // unfold or fold all folder
     const grid = ref(null);
+    const pin = ref(null);
     const unfoldAllHandler = () => {
-      grid.value.unfoldAll();
+      if (browserType.value === 'all' && browserMode.value === 'grid') {
+        grid.value.unfoldAll();
+      } else if (browserType.value === 'pin') {
+        pin.value.unfoldAll();
+      }
     };
 
     const foldAllHandler = () => {
-      grid.value.foldAll();
+      if (browserType.value === 'all' && browserMode.value === 'grid') {
+        grid.value.foldAll();
+      } else if (browserType.value === 'pin') {
+        pin.value.foldAll();
+      }
     };
-
-    // browser page setting
-    const browserType = ref('all'); // all, star, pin
-    const browserMode = ref('grid'); // grid, tree
-
-    const browserMenuComponent = computed(() => {
-      if (browserType.value === 'pin') {
-        return 'BrowserMenuPin';
-      }
-      return 'BrowserMenu';
-    });
-
-    // content component
-    const browserContentComponent = computed(() => {
-      if (browserMode.value === 'grid') {
-        return 'BrowserGrid';
-      }
-      return 'BrowserTree';
-    });
 
     // bookmark open setting
     const bookmarkOpenMode = ref('single'); // single, multi
@@ -171,16 +183,17 @@ export default {
       currentNodeId,
       currentNode,
       childrenNodes,
+      setCurrentNodeIdHandler,
       pinNodesId,
       pinNodes,
       togglePinNodeHandler,
       grid,
+      pin,
       unfoldAllHandler,
       foldAllHandler,
       browserType,
       browserMode,
       browserMenuComponent,
-      browserContentComponent,
       bookmarkOpenMode,
       singleTab,
       multiOnGroup,

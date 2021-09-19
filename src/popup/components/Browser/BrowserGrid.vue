@@ -28,7 +28,7 @@
           }"
           @click.ctrl.exact="$emit('toggle-pin-node', node.id)"
           @click.shift.exact="toggleFolderState(node)"
-          @click.exact="$emit('open-folder', node.id)"
+          @click.exact="$emit('set-current-node', node.id)"
         >
           <svg
             v-if="node.children.length > 0 && !unfoldFolders.has(node.id)"
@@ -168,7 +168,7 @@
               'text-white hover:bg-blue-600': pinNodesId.includes(childNode.id),
               'text-yellow-400 hover:bg-gray-200 ': !pinNodesId.includes(childNode.id)
             }"
-            @click.exact="$emit('open-folder', childNode.id)"
+            @click.exact="$emit('set-current-node', childNode.id)"
             @click.ctrl.exact="$emit('toggle-pin-node', childNode.id)"
           >
             <svg
@@ -450,7 +450,7 @@ export default {
       },
     },
   },
-  emits: ['open-folder', 'toggle-pin-node'],
+  emits: ['set-current-node', 'toggle-pin-node'],
   setup(props) {
     /**
      * bookmark data
