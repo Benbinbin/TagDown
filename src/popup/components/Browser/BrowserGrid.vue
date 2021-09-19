@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="w-full px-8 py-4 grid grid-flow-row-dense grid-cols-4 gap-x-2 gap-y-1"
-  >
+  <div class="w-full px-8 py-4 grid grid-flow-row-dense grid-cols-4 gap-x-2 gap-y-1">
     <div
       v-for="node of nodes"
       :key="node.id"
@@ -11,14 +9,24 @@
         'row-span-2': unfoldFolders.has(node.id) && node.children.length === 1,
         'row-span-3': unfoldFolders.has(node.id) && node.children.length === 2,
         'row-span-4': unfoldFolders.has(node.id) && node.children.length === 3,
-        'row-span-5': unfoldFolders.has(node.id) && node.children.length >=4,
+        'row-span-5': unfoldFolders.has(node.id) && node.children.length >= 4,
       }"
     >
-      <div class="p-1 flex items-start">
+      <div
+        class="p-1 flex items-start rounded"
+        :class="{
+          'bg-blue-400': pinNodesId.includes(node.id),
+        }"
+      >
         <!-- folder node -->
         <button
           v-if="node.children"
-          class="flex-grow p-0.5 flex items-start hover:bg-gray-200 space-x-0.5 rounded-sm"
+          class="flex-grow p-0.5 flex items-start space-x-0.5 rounded-sm"
+          :class="{
+            'text-white hover:bg-blue-600': pinNodesId.includes(node.id),
+            'text-yellow-400 hover:bg-gray-200 ': !pinNodesId.includes(node.id)
+          }"
+          @click.ctrl.exact="$emit('toggle-pin-node', node.id)"
           @click.shift.exact="toggleFolderState(node)"
           @click.exact="$emit('open-folder', node.id)"
         >
@@ -26,7 +34,7 @@
             v-if="node.children.length > 0 && !unfoldFolders.has(node.id)"
             class="flex-shrink-0 w-4 h-4"
             viewBox="0 0 50 50"
-            fill="#FBBF24"
+            fill="currentColor"
             xmlns="http://www.w3.org/2000/svg"
           >
             <path
@@ -38,7 +46,7 @@
             v-if="node.children.length > 0 && unfoldFolders.has(node.id)"
             class="flex-shrink-0 w-4 h-4"
             viewBox="0 0 50 50"
-            fill="#FBBF24"
+            fill="currentColor"
             xmlns="http://www.w3.org/2000/svg"
           >
             <path
@@ -50,7 +58,7 @@
             v-if="node.children.length === 0"
             class="flex-shrink-0 w-4 h-4"
             viewBox="0 0 50 50"
-            fill="#FBBF24"
+            fill="currentColor"
             xmlns="http://www.w3.org/2000/svg"
           >
             <path
@@ -58,12 +66,23 @@
             />
           </svg>
 
-          <span class="node-title-style text-xs text-left text-gray-600">{{ node.title }}</span>
+          <span
+            class="node-title-style text-xs text-left"
+            :class="{
+              'text-white': pinNodesId.includes(node.id),
+              'text-gray-600  ': !pinNodesId.includes(node.id)
+            }"
+          >{{ node.title }}</span>
         </button>
         <!-- bookmark node -->
         <button
           v-if="!node.children"
-          class="flex-grow p-0.5 flex items-start hover:bg-gray-200 space-x-0.5 rounded-sm"
+          class="flex-grow p-0.5 flex items-start space-x-0.5 rounded-sm"
+          :class="{
+            'text-white hover:bg-blue-600': pinNodesId.includes(node.id),
+            'text-blue-400 hover:bg-gray-200 ': !pinNodesId.includes(node.id)
+          }"
+          @click.ctrl.exact="$emit('toggle-pin-node', node.id)"
         >
           <div class="flex-shrink-0 p-0.5">
             <div
@@ -75,14 +94,24 @@
             />
           </div>
 
-          <span class="node-title-style text-xs text-left text-gray-600">{{ node.title }}</span>
+          <span
+            class="node-title-style text-xs text-left"
+            :class="{
+              'text-white': pinNodesId.includes(node.id),
+              'text-gray-600  ': !pinNodesId.includes(node.id)
+            }"
+          >{{ node.title }}</span>
         </button>
         <!-- more button -->
         <div class="flex items-center space-x-0.5">
           <button
             v-if="!node.children"
             title="copy bookmark url"
-            class="p-0.5 text-gray-300 hover:text-gray-600 hover:bg-gray-200 rounded-sm"
+            class="p-0.5 rounded-sm"
+            :class="{
+              'text-white hover:bg-blue-600 ': pinNodesId.includes(node.id),
+              'text-gray-300 hover:text-gray-600 hover:bg-gray-200': !pinNodesId.includes(node.id)
+            }"
           >
             <svg
               class="w-4 h-4"
@@ -97,7 +126,11 @@
           </button>
           <button
             title="show more setting menu"
-            class="p-0.5 text-gray-300 hover:text-gray-600 hover:bg-gray-200 rounded-sm"
+            class="p-0.5 rounded-sm"
+            :class="{
+              'text-white hover:bg-blue-600 ': pinNodesId.includes(node.id),
+              'text-gray-300 hover:text-gray-600 hover:bg-gray-200': !pinNodesId.includes(node.id)
+            }"
             @click="showPopupMenuHandler(node, $event)"
           >
             <svg
@@ -122,18 +155,27 @@
         <div
           v-for="childNode of node.children"
           :key="childNode.id"
-          class="p-1 flex items-start bg-gray-50 rounded"
+          class="p-1 flex items-start rounded"
+          :class="{
+            'bg-blue-400': pinNodesId.includes(childNode.id),
+            'bg-gray-50': !pinNodesId.includes(childNode.id)
+          }"
         >
           <button
             v-if="childNode.children"
-            class="flex-grow p-0.5 flex items-start hover:bg-gray-200 space-x-0.5 rounded-sm"
-            @click="$emit('open-folder', childNode.id)"
+            class="flex-grow p-0.5 flex items-start space-x-0.5 rounded-sm"
+            :class="{
+              'text-white hover:bg-blue-600': pinNodesId.includes(childNode.id),
+              'text-yellow-400 hover:bg-gray-200 ': !pinNodesId.includes(childNode.id)
+            }"
+            @click.exact="$emit('open-folder', childNode.id)"
+            @click.ctrl.exact="$emit('toggle-pin-node', childNode.id)"
           >
             <svg
               v-if="childNode.children.length > 0"
               class="flex-shrink-0 w-4 h-4"
               viewBox="0 0 50 50"
-              fill="#FBBF24"
+              fill="currentColor"
               xmlns="http://www.w3.org/2000/svg"
             >
               <path
@@ -145,7 +187,7 @@
               v-if="childNode.children.length === 0"
               class="flex-shrink-0 w-4 h-4"
               viewBox="0 0 50 50"
-              fill="#FBBF24"
+              fill="currentColor"
               xmlns="http://www.w3.org/2000/svg"
             >
               <path
@@ -154,12 +196,21 @@
             </svg>
 
             <span
-              class="node-title-style text-xs text-left text-gray-600"
+              class="node-title-style text-xs text-left"
+              :class="{
+                'text-white': pinNodesId.includes(childNode.id),
+                'text-gray-600  ': !pinNodesId.includes(childNode.id)
+              }"
             >{{ childNode.title }}</span>
           </button>
           <button
             v-if="!childNode.children"
-            class="flex-grow p-0.5 flex items-start hover:bg-gray-200 space-x-0.5 rounded-sm"
+            class="flex-grow p-0.5 flex items-start space-x-0.5 rounded-sm"
+            :class="{
+              'text-white hover:bg-blue-600': pinNodesId.includes(childNode.id),
+              'text-blue-400 hover:bg-gray-200 ': !pinNodesId.includes(childNode.id)
+            }"
+            @click.ctrl.exact="$emit('toggle-pin-node', childNode.id)"
           >
             <div class="flex-shrink-0 p-0.5">
               <div
@@ -170,13 +221,23 @@
                 }"
               />
             </div>
-            <span class="node-title-style text-xs text-left text-gray-600">{{ childNode.title }}</span>
+            <span
+              class="node-title-style text-xs text-left"
+              :class="{
+                'text-white': pinNodesId.includes(childNode.id),
+                'text-gray-600  ': !pinNodesId.includes(childNode.id)
+              }"
+            >{{ childNode.title }}</span>
           </button>
           <div class="flex items-center space-x-0.5">
             <button
               v-if="!childNode.children"
               title="copy bookmark url"
-              class="p-0.5 text-gray-300 hover:text-gray-600 hover:bg-gray-200 rounded-sm"
+              class="p-0.5 rounded-sm"
+              :class="{
+                'text-white hover:bg-blue-600 ': pinNodesId.includes(childNode.id),
+                'text-gray-300 hover:text-gray-600 hover:bg-gray-200': !pinNodesId.includes(childNode.id)
+              }"
             >
               <svg
                 class="w-4 h-4"
@@ -191,7 +252,11 @@
             </button>
             <button
               title="show more setting menu"
-              class="p-0.5 text-gray-300 hover:text-gray-600 hover:bg-gray-200 rounded-sm"
+              class="p-0.5 rounded-sm"
+              :class="{
+                'text-white hover:bg-blue-600 ': pinNodesId.includes(childNode.id),
+                'text-gray-300 hover:text-gray-600 hover:bg-gray-200': !pinNodesId.includes(childNode.id)
+              }"
               @click="showPopupMenuHandler(childNode, $event)"
             >
               <svg
@@ -221,7 +286,7 @@
       <!-- star item -->
       <button
         title="toggle item star state"
-        class="btn text-gray-600 hover:text-yellow-600 hover:bg-yellow-50 "
+        class="btn text-gray-600 hover:text-yellow-600 hover:bg-yellow-50"
         @click="toggleStarState"
       >
         <div
@@ -378,8 +443,14 @@ export default {
         return [];
       },
     },
+    pinNodesId: {
+      type: Array,
+      default() {
+        return [];
+      },
+    },
   },
-  emits: ['open-folder'],
+  emits: ['open-folder', 'toggle-pin-node'],
   setup(props) {
     /**
      * bookmark data

@@ -20,6 +20,7 @@
         :browser-mode="browserMode"
         :group-color="groupColor"
         :current-node-id="currentNodeId"
+        :pin-nodes-id="pinNodesId"
         @change-browser-type="browserType = $event"
         @set-group-color="groupColor = $event"
         @reset-folder="currentNodeId = $event"
@@ -33,22 +34,24 @@
         v-show="browserType === 'all' && browserMode === 'grid'"
         ref="grid"
         :nodes="childrenNodes"
+        :pin-nodes-id="pinNodesId"
         @open-folder="currentNodeId = $event"
+        @toggle-pin-node="togglePinNodeHandler"
       />
       <BrowserTree
         v-show="browserType==='all' && browserMode==='tree'"
         :current-node="currentNode"
+        :pin-nodes-id="pinNodesId"
         :width="800"
         :height="422"
+        @toggle-pin-node="togglePinNodeHandler"
       />
       <BrowserStar v-show="browserType === 'star'" />
-      <BrowserPin v-show="browserType === 'pin'" />
-      <!-- <component
-        :is="browserContentComponent"
-        ref="content"
-        :nodes="childrenNodes"
-        @open-folder="currentNodeId = $event"
-      />-->
+      <BrowserPin
+        v-show="browserType === 'pin'"
+        :pin-nodes="pinNodes"
+        @toggle-pin-node="togglePinNodeHandler"
+      />
     </div>
 
     <!-- footer -->
@@ -88,11 +91,12 @@ export default {
     BrowserPin,
   },
   setup() {
-    // bookmarks
+    // current node
     const currentNodeId = ref('0');
+
+    // watch current node id to update the current node and children nodes
     const currentNode = ref(null);
     const childrenNodes = ref([]);
-
     watch(
       currentNodeId,
       (newValue, oldValue) => {
@@ -105,6 +109,26 @@ export default {
         immediate: true,
       },
     );
+
+    // pin nodes
+    const pinNodesId = ref([]);
+    const pinNodes = ref([]);
+    const togglePinNodeHandler = (nodeId) => {
+      const index = pinNodesId.value.indexOf(nodeId);
+      // console.log(nodeId);
+      if (index === -1) {
+        pinNodesId.value.push(nodeId);
+        chrome.bookmarks.getSubTree(nodeId).then((nodes) => {
+          const node = nodes[0];
+          pinNodes.value.push(node);
+        });
+      } else {
+        pinNodesId.value.splice(index, 1);
+        pinNodes.value.splice(index, 1);
+      }
+      // console.log(pinNodesId.value);
+      // console.log(pinNodes.value);
+    };
 
     // unfold or fold all folder
     const grid = ref(null);
@@ -147,6 +171,9 @@ export default {
       currentNodeId,
       currentNode,
       childrenNodes,
+      pinNodesId,
+      pinNodes,
+      togglePinNodeHandler,
       grid,
       unfoldAllHandler,
       foldAllHandler,

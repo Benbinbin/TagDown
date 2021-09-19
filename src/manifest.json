@@ -3,7 +3,7 @@
     "manifest_version": 3,
     "version": "2.0.0",
     "description": "__MSG_appDescription__",
-    "permissions": ["bookmarks"],
+    "permissions": ["bookmarks", "tabs"],
     "background": {
         "service_worker": "./background/main.js"
     },
