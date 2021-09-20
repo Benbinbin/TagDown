@@ -59,8 +59,8 @@
             <input
               id="newtab"
               type="radio"
-              value="new"
-              :checked="singleTab === 'new'"
+              value="current"
+              :checked="singleTab === 'current'"
               @change="$emit('update:singleTab', $event.target.value)"
             >
             <label
@@ -72,8 +72,8 @@
             <input
               id="currenttab"
               type="radio"
-              value="current"
-              :checked="singleTab === 'current'"
+              value="new"
+              :checked="singleTab === 'new'"
               @change="$emit('update:singleTab', $event.target.value)"
             >
             <label
@@ -106,7 +106,7 @@
                 'text-white bg-green-400 hover:bg-green-600': groupType === 'new',
                 'text-gray-500 hover:text-white bg-white hover:bg-green-400': groupType !== 'new'
               }"
-              :disable="!multiOnGroup"
+              :disabled="!multiOnGroup"
               @click="groupType = 'new'"
             >
               新建标签组
@@ -118,7 +118,7 @@
                 'text-white bg-green-400 hover:bg-green-600': groupType === 'old',
                 'text-gray-500 hover:text-white bg-white hover:bg-green-400': groupType !== 'old'
               }"
-              :disable="!multiOnGroup"
+              :disabled="!multiOnGroup"
               @click="groupType = 'old'"
             >
               已有标签组
@@ -136,23 +136,23 @@
               <div class="relative flex items-center">
                 <button
                   title="select group color"
-                  :disabled="!multiOnGroup && groupType !== 'new'"
+                  :disabled="!multiOnGroup || groupType !== 'new'"
                   class="w-3 h-3 rounded-full"
                   :style="{
                     'background': groupColor
                   }"
-                  @click="showColorPalette = true"
+                  @click="showColorPalette = !showColorPalette"
                 />
                 <div
                   v-show="showColorPalette"
-                  class="absolute -top-10 flex p-2 bg-white space-x-2 rounded-sm shadow"
+                  class="absolute -top-0 transform -translate-y-full flex p-2 bg-white space-x-2 rounded-sm shadow"
                 >
                   <button
                     v-for="color of colorScheme"
                     :key="color.name"
                     :title="color.name"
                     class="w-4 h-4 rounded-full opacity-80 hover:opacity-100"
-                    :class="{ 'ring-2 ring-gray-400': groupColor === color.value }"
+                    :class="{ 'ring-2 ring-yellow-400': groupColor === color.value }"
                     :style="{
                       'background': color.value
                     }"
@@ -164,7 +164,7 @@
                 class="flex-grow h-4 px-1 text-xxxs border border-gray-300 rounded"
                 type="text"
                 placeholder="输入 group 名称"
-                :disabled="!multiOnGroup && groupType !== 'new'"
+                :disabled="!multiOnGroup || groupType !== 'new'"
                 :value="groupName"
                 @input="$emit('update:groupName', $event.target.value)"
               >
@@ -176,9 +176,9 @@
             >
               <button
                 title="select old groups"
-                :disabled="!multiOnGroup && groupType !== 'old'"
+                :disabled="!multiOnGroup || groupType !== 'old'"
                 class="p-0.5 flex items-center hover:bg-gray-200 space-x-0.5 rounded"
-                @click="showOldGroups = true"
+                @click="showOldGroups = !showOldGroups"
               >
                 <div
                   class="w-3 h-3 rounded-full"
@@ -197,7 +197,7 @@
                   :key="group.title"
                   :title="group.title"
                   class="group-btn w-full p-1 flex items-center text-xxs text-white opacity-80 hover:opacity-100 rounded"
-                  :class="{ 'ring-2 ring-gray-400': currentGroup.id === group.id }"
+                  :class="{ 'ring-2 ring-yellow-400': currentGroup.id === group.id }"
                   :style="{
                     'background': colorMap(group.color)
                   }"

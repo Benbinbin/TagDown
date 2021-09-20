@@ -33,8 +33,13 @@
       <BrowserGrid
         v-show="browserType === 'all' && browserMode === 'grid'"
         ref="grid"
+        v-model:single-tab="singleTab"
         :nodes="childrenNodes"
         :pin-nodes-id="pinNodesId"
+        :bookmark-open-mode="bookmarkOpenMode"
+        :multi-on-group="multiOnGroup"
+        :new-group-name="groupName"
+        :new-group-color="groupColor"
         @set-current-node="setCurrentNodeIdHandler"
         @toggle-pin-node="togglePinNodeHandler"
       />
@@ -172,11 +177,10 @@ export default {
 
     // bookmark open setting
     const bookmarkOpenMode = ref('single'); // single, multi
-    const singleTab = ref('new'); // new, current
+    const singleTab = ref('current'); // new, current
     const multiOnGroup = ref(false);
     const groupName = ref('');
     const groupColor = ref('#1A73E8'); // grey, blue, red, yellow, green, pink, purple, cyan
-    const multiSwitch = ref(false);
 
     return {
       currentNodeId,
@@ -198,7 +202,6 @@ export default {
       multiOnGroup,
       groupName,
       groupColor,
-      multiSwitch,
     };
   },
 };

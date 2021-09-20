@@ -83,6 +83,7 @@
             'text-blue-400 hover:bg-gray-200 ': !pinNodesId.includes(node.id)
           }"
           @click.ctrl.exact="$emit('toggle-pin-node', node.id)"
+          @click.exact="openBookmarkHandler(node)"
         >
           <div class="flex-shrink-0 p-0.5">
             <div
@@ -429,6 +430,8 @@ import { ref } from 'vue';
 import PopupMenu from '../Modal/PopupMenu.vue';
 import InputModal from '../Modal/InputModal.vue';
 import PromptModal from '../Modal/PromptModal.vue';
+import useTab from '@/composables/useTab';
+import useBookmark from '@/composables/useBookmark';
 
 export default {
   components: {
@@ -449,14 +452,34 @@ export default {
         return [];
       },
     },
+    bookmarkOpenMode: {
+      type: String,
+      default: 'single',
+    },
+    singleTab: {
+      type: String,
+      default: 'current',
+    },
+    multiOnGroup: Boolean,
+    newGroupName: {
+      type: String,
+      default: '',
+    },
+    newGroupColor: {
+      type: String,
+      default: 'blue',
+    },
   },
-  emits: ['set-current-node', 'toggle-pin-node'],
-  setup(props) {
+  emits: ['set-current-node', 'toggle-pin-node', 'update:singleTab'],
+  setup(props, context) {
+    const { createNewTab, getAllTabGroups, createTabInGroup } = useTab();
+    const { getActiveTab, openBookmark, openBookmarkOnGroup } = useBookmark();
+
     /**
-     * bookmark data
+     * node
      */
+    // unfold or fold folder
     const unfoldFolders = ref(new Set());
-    // unfold or fold folder handler
     const toggleFolderState = (node) => {
       if (node.children.length === 0) return;
       if (unfoldFolders.value.has(node.id)) {
@@ -475,6 +498,20 @@ export default {
 
     const foldAll = () => {
       unfoldFolders.value.clear();
+    };
+
+    // open bookmark
+    const openBookmarkHandler = async (node) => {
+      if (props.bookmarkOpenMode === 'single') {
+        if (props.singleTab === 'new') {
+          await openBookmark(node.id, 'new');
+          context.emit('update:singleTab', 'current');
+        } else {
+          openBookmark(node.id, 'current');
+        }
+      } else if (props.bookmarkOpenMode === 'multi') {
+        console.log('multi');
+      }
     };
     /**
      * modal
@@ -538,6 +575,7 @@ export default {
       toggleFolderState,
       unfoldAll,
       foldAll,
+      openBookmarkHandler,
       showPopupMenu,
       left,
       top,

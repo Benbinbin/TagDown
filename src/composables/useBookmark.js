@@ -1,12 +1,8 @@
-export default function useBookmark() {
-  // create new tab
-  const createNewTab = async (active = true) => {
-    const newTab = await chrome.tabs.create({
-      active,
-    });
-    return newTab;
-  };
+import useTab from './useTab';
 
+const { createNewTab } = useTab();
+
+export default function useBookmark() {
   // get current active tab
   const getActiveTab = async () => {
     const [tab] = await chrome.tabs.query({
@@ -17,23 +13,37 @@ export default function useBookmark() {
   };
 
   // open bookmark on current tab or new tab
-  const openBookmark = (nodeId, mode = 'new', active = true) => {
-    chrome.bookmarks.get(nodeId).then((nodes) => nodes[0].url).then(async (url) => {
-      let tab;
-      if (mode === 'new') {
-        tab = await createNewTab(active);
-      } else if (mode === 'current') {
-        tab = await getActiveTab();
-      }
-      chrome.tabs.update(tab.id, {
-        url,
-      });
+  // return tab
+  const openBookmark = async (nodeId, mode = 'new') => {
+    const nodes = await chrome.bookmarks.get(nodeId);
+    const { url } = nodes[0];
+
+    let tab;
+    if (mode === 'new') {
+      // open on new tab
+      tab = await createNewTab();
+    } else if (mode === 'current') {
+      // open on current active tab
+      tab = await getActiveTab();
+    }
+    await chrome.tabs.update(tab.id, {
+      url,
     });
+    return tab;
+  };
+
+  const openBookmarkOnGroup = async (nodeId, groupId) => {
+    const tab = await openBookmark(nodeId, mode = 'new');
+    await chrome.tabs.group({
+      groupId,
+      tabIds: tab.id,
+    });
+    return tab;
   };
 
   return {
-    createNewTab,
     getActiveTab,
     openBookmark,
+    openBookmarkOnGroup,
   };
 }
