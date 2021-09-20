@@ -1,5 +1,6 @@
 <template>
   <footer class="w-full px-4 py-2 flex justify-between items-end border-t border-gray-200">
+    <!-- expand window -->
     <button
       title="expand window button"
       class="w-10 h-10 h-center text-gray-400 hover:bg-gray-200 hover:text-gray-800 rounded"
@@ -15,6 +16,7 @@
         />
       </svg>
     </button>
+    <!-- bookmark open setting -->
     <div
       v-show="browserType !== 'pin'"
       class="flex space-x-2"
@@ -26,9 +28,10 @@
         <div class="flex space-x-1">
           <button
             title="set bookmark open mode in single tab"
-            class="p-1 rounded border-2 border-green-400"
+            class="px-1 py-0.5 text-xxs border-2 border-green-400 rounded"
             :class="{
-              'bg-green-400 text-white': bookmarkOpenMode === 'single', 'bg-white text-gray-500': bookmarkOpenMode !== 'single'
+              'text-white bg-green-400 hover:bg-green-600': bookmarkOpenMode === 'single',
+              'text-gray-500 hover:text-white bg-white hover:bg-green-400': bookmarkOpenMode !== 'single'
             }"
             @click="$emit('change-bookmark-open-mode', 'single')"
           >
@@ -36,9 +39,10 @@
           </button>
           <button
             title="set bookmark open mode in multi tabs"
-            class="p-1 rounded border-2 border-green-400"
+            class="px-1 py-0.5 text-xxs border-2 border-green-400 rounded"
             :class="{
-              'bg-green-400 text-white': bookmarkOpenMode === 'multi', 'bg-white text-gray-500': bookmarkOpenMode !== 'multi'
+              'text-white bg-green-400 hover:bg-green-600': bookmarkOpenMode === 'multi',
+              'text-gray-500 hover:text-white bg-white hover:bg-green-400': bookmarkOpenMode !== 'multi'
             }"
             @click="$emit('change-bookmark-open-mode', 'multi')"
           >
@@ -82,7 +86,7 @@
           v-show="bookmarkOpenMode === 'multi'"
           class="space-y-1"
         >
-          <div class="flex items-center space-x-2">
+          <div class="flex items-center space-x-1">
             <div class="flex items-center space-x-0.5">
               <input
                 id="group"
@@ -95,78 +99,119 @@
                 class="text-xxs text-gray-500"
               >在组内打开</label>
             </div>
-            <input
-              class="flex-grow px-1 border border-gray-300 rounded"
-              :class="{ 'opacity-10': !multiOnGroup }"
-              type="text"
-              placeholder="输入 group 名称"
-              :disabled="!multiOnGroup"
-              :value="groupName"
-              @input="$emit('update:groupName', $event.target.value)"
+            <button
+              class="px-1 py-0.5 text-xxxs border-2 border-green-400 rounded"
+              :class="{
+                'opacity-10': !multiOnGroup,
+                'text-white bg-green-400 hover:bg-green-600': groupType === 'new',
+                'text-gray-500 hover:text-white bg-white hover:bg-green-400': groupType !== 'new'
+              }"
+              :disable="!multiOnGroup"
+              @click="groupType = 'new'"
             >
+              新建标签组
+            </button>
+            <button
+              class="px-1 py-0.5 text-xxxs border-2 border-green-400 rounded"
+              :class="{
+                'opacity-10': !multiOnGroup,
+                'text-white bg-green-400 hover:bg-green-600': groupType === 'old',
+                'text-gray-500 hover:text-white bg-white hover:bg-green-400': groupType !== 'old'
+              }"
+              :disable="!multiOnGroup"
+              @click="groupType = 'old'"
+            >
+              已有标签组
+            </button>
+          </div>
+
+          <div
+            class="w-full"
+            :class="{ 'opacity-10': !multiOnGroup }"
+          >
             <div
+              v-show="groupType === 'new'"
+              class="w-full flex items-center space-x-1"
+            >
+              <div class="relative flex items-center">
+                <button
+                  title="select group color"
+                  :disabled="!multiOnGroup && groupType !== 'new'"
+                  class="w-3 h-3 rounded-full"
+                  :style="{
+                    'background': groupColor
+                  }"
+                  @click="showColorPalette = true"
+                />
+                <div
+                  v-show="showColorPalette"
+                  class="absolute -top-10 flex p-2 bg-white space-x-2 rounded-sm shadow"
+                >
+                  <button
+                    v-for="color of colorScheme"
+                    :key="color.name"
+                    :title="color.name"
+                    class="w-4 h-4 rounded-full opacity-80 hover:opacity-100"
+                    :class="{ 'ring-2 ring-gray-400': groupColor === color.value }"
+                    :style="{
+                      'background': color.value
+                    }"
+                    @click="setGroupColorHandler(color.value)"
+                  />
+                </div>
+              </div>
+              <input
+                class="flex-grow h-4 px-1 text-xxxs border border-gray-300 rounded"
+                type="text"
+                placeholder="输入 group 名称"
+                :disabled="!multiOnGroup && groupType !== 'new'"
+                :value="groupName"
+                @input="$emit('update:groupName', $event.target.value)"
+              >
+            </div>
+
+            <div
+              v-show="groupType === 'old'"
               class="relative"
-              :class="{ 'opacity-10': !multiOnGroup }"
             >
               <button
-                title="select group color"
-                :disabled="!multiOnGroup"
-                class="w-3 h-3 rounded-full"
-                :style="{
-                  'background': groupColor
-                }"
-                @click="showColorPalette = true"
-              />
+                title="select old groups"
+                :disabled="!multiOnGroup && groupType !== 'old'"
+                class="p-0.5 flex items-center hover:bg-gray-200 space-x-0.5 rounded"
+                @click="showOldGroups = true"
+              >
+                <div
+                  class="w-3 h-3 rounded-full"
+                  :style="{
+                    'background': colorMap(currentGroup.color)
+                  }"
+                />
+                <span class="text-xxxs text-gray-500">{{ currentGroup.title }}</span>
+              </button>
               <div
-                v-show="showColorPalette"
-                class="absolute -top-10 flex p-2 bg-white space-x-2 rounded-sm shadow"
+                v-show="showOldGroups"
+                class="p-2 absolute -top-0 transform -translate-y-full bg-white space-y-1 rounded shadow"
               >
                 <button
-                  v-for="color of colorScheme"
-                  :key="color.name"
-                  :title="color.name"
-                  :disabled="!multiOnGroup"
-                  class="w-4 h-4 rounded-full opacity-80 hover:opacity-100"
-                  :class="{ 'ring-2 ring-gray-400': groupColor === color.value }"
+                  v-for="group of oldGroups"
+                  :key="group.title"
+                  :title="group.title"
+                  class="group-btn w-full p-1 flex items-center text-xxs text-white opacity-80 hover:opacity-100 rounded"
+                  :class="{ 'ring-2 ring-gray-400': currentGroup.id === group.id }"
                   :style="{
-                    'background': color.value
+                    'background': colorMap(group.color)
                   }"
-                  @click="setGroupColorHandler(color.value)"
-                />
+                  @click="setGroupHandler(group)"
+                >
+                  {{ group.title }}
+                </button>
               </div>
-            </div>
-          </div>
-          <div class="flex items-center space-x-2">
-            <div class="flex items-center space-x-0.5">
-              <input
-                id="switchon"
-                type="radio"
-                :value="true"
-                :checked="multiSwitch"
-                @change="$emit('update:multiSwitch', true)"
-              >
-              <label
-                for="switchon"
-                class="text-xxs text-gray-500"
-              >切换到新打开的标签页</label>
-            </div>
-            <div class="flex items-center space-x-0.5">
-              <input
-                id="switchoff"
-                type="radio"
-                :value="false"
-                :checked="!multiSwitch"
-                @change="$emit('update:multiSwitch', false)"
-              >
-              <label
-                for="switchoff"
-                class="text-xxs text-gray-500"
-              >不切换标签页</label>
             </div>
           </div>
         </div>
       </div>
     </div>
+    <!-- edit bookmark -->
     <div class="flex space-x-2">
       <button
         title="edit bookmark"
@@ -266,13 +311,11 @@ export default {
       type: String,
       default: '#1A73E8',
     },
-    multiSwitch: Boolean,
   },
   emits: [
     'change-bookmark-open-mode',
     'update:singleTab',
     'update:multiOnGroup',
-    'update:multiSwitch',
     'update:groupName',
     'set-group-color',
   ],
@@ -282,7 +325,41 @@ export default {
      */
     const showColorPalette = ref(false);
 
-    // group color
+    // group
+    const currentGroup = ref({});
+    currentGroup.value = {
+      id: 4,
+      color: 'blue',
+      title: 'oldGroup',
+    };
+    const groupType = ref('new'); // new, old
+
+    const oldGroups = ref([]);
+    const showOldGroups = ref(false);
+    oldGroups.value = [
+      {
+        id: 1,
+        color: 'pink',
+        title: '',
+      },
+      {
+        id: 2,
+        color: 'yellow',
+        title: 'test',
+      },
+      {
+        id: 3,
+        color: 'green',
+        title: 'test2',
+      },
+    ];
+
+    const setGroupHandler = (group) => {
+      currentGroup.value = group;
+      showOldGroups.value = false;
+    };
+
+    // group color scheme
     const colorScheme = [
       {
         name: 'grey',
@@ -317,6 +394,11 @@ export default {
         value: '#007B83',
       },
     ];
+    const colorMap = (name) => {
+      const item = colorScheme.find((color) => color.name === name);
+      if (item) { return item.value; }
+      return name;
+    };
 
     function setGroupColorHandler(value) {
       context.emit('set-group-color', value);
@@ -335,8 +417,14 @@ export default {
     const changePage = inject('changePage');
 
     return {
+      currentGroup,
+      groupType,
+      showOldGroups,
+      oldGroups,
+      setGroupHandler,
       showColorPalette,
       colorScheme,
+      colorMap,
       setGroupColorHandler,
       bookmarkState,
       deleteBookmarkHandler,
@@ -348,10 +436,20 @@ export default {
 <style lang="css" scoped>
 .text-xxs {
   font-size: 10px;
+  line-height: 14px;
+}
+
+.text-xxxs {
+  font-size: 8px;
+  line-height: 12px;
 }
 
 .h-center {
   @apply flex justify-center items-center;
+}
+
+.group-btn {
+  min-height: 16px;
 }
 
 .edit-bookmark-btn:hover::before {

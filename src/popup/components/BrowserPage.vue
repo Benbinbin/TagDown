@@ -59,7 +59,6 @@
     <BrowserFooter
       v-model:multi-on-group="multiOnGroup"
       v-model:group-name="groupName"
-      v-model:multi-switch="multiSwitch"
       v-model:single-tab="singleTab"
       :browser-type="browserType"
       :bookmark-open-mode="bookmarkOpenMode"
