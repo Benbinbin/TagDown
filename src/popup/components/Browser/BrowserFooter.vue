@@ -107,7 +107,7 @@
                 'text-gray-500 hover:text-white bg-white hover:bg-green-400': groupType !== 'new'
               }"
               :disabled="!multiOnGroup"
-              @click="groupType = 'new'"
+              @click="$emit('update:groupType','new')"
             >
               新建标签组
             </button>
@@ -119,7 +119,7 @@
                 'text-gray-500 hover:text-white bg-white hover:bg-green-400': groupType !== 'old'
               }"
               :disabled="!multiOnGroup"
-              @click="groupType = 'old'"
+              @click="$emit('update:groupType','old')"
             >
               已有标签组
             </button>
@@ -139,7 +139,7 @@
                   :disabled="!multiOnGroup || groupType !== 'new'"
                   class="w-3 h-3 rounded-full"
                   :style="{
-                    'background': groupColor
+                    'background': colorMap(newGroupColor)
                   }"
                   @click="showColorPalette = !showColorPalette"
                 />
@@ -152,11 +152,11 @@
                     :key="color.name"
                     :title="color.name"
                     class="w-4 h-4 rounded-full opacity-80 hover:opacity-100"
-                    :class="{ 'ring-2 ring-yellow-400': groupColor === color.value }"
+                    :class="{ 'ring-2 ring-yellow-400': newGroupColor === color.name }"
                     :style="{
                       'background': color.value
                     }"
-                    @click="setGroupColorHandler(color.value)"
+                    @click="setGroupColorHandler(color.name)"
                   />
                 </div>
               </div>
@@ -165,8 +165,8 @@
                 type="text"
                 placeholder="输入 group 名称"
                 :disabled="!multiOnGroup || groupType !== 'new'"
-                :value="groupName"
-                @input="$emit('update:groupName', $event.target.value)"
+                :value="newGroupName"
+                @input="$emit('update:newGroupName', $event.target.value)"
               >
             </div>
 
@@ -175,19 +175,27 @@
               class="relative"
             >
               <button
+                v-if="oldGroups.length > 0"
                 title="select old groups"
                 :disabled="!multiOnGroup || groupType !== 'old'"
                 class="p-0.5 flex items-center hover:bg-gray-200 space-x-0.5 rounded"
                 @click="showOldGroups = !showOldGroups"
               >
                 <div
+                  v-if="currentGroup.color"
                   class="w-3 h-3 rounded-full"
                   :style="{
                     'background': colorMap(currentGroup.color)
                   }"
                 />
-                <span class="text-xxxs text-gray-500">{{ currentGroup.title }}</span>
+                <span class="text-xxxs text-gray-500">{{ currentGroup.id ? currentGroup.title : '请选择标签组' }}</span>
               </button>
+              <p
+                v-if="oldGroups.length === 0"
+                class="p-0.5 text-xxxs text-gray-500"
+              >
+                没有标签组
+              </p>
               <div
                 v-show="showOldGroups"
                 class="p-2 absolute -top-0 transform -translate-y-full bg-white space-y-1 rounded shadow"
@@ -201,7 +209,7 @@
                   :style="{
                     'background': colorMap(group.color)
                   }"
-                  @click="setGroupHandler(group)"
+                  @click="setCurrentGroupIdHandler(group)"
                 >
                   {{ group.title }}
                 </button>
@@ -286,7 +294,8 @@
   </footer>
 </template>
 <script>
-import { ref, inject } from 'vue';
+import { ref, watch, inject } from 'vue';
+import useTab from '@/composables/useTab';
 
 export default {
   props: {
@@ -303,62 +312,75 @@ export default {
       default: 'new',
     },
     multiOnGroup: Boolean,
-    groupName: {
+    groupType: {
       type: String,
-      default: '',
+      default: 'new',
     },
-    groupColor: {
+    newGroupName: {
       type: String,
-      default: '#1A73E8',
+      default: 'new',
+    },
+    newGroupColor: {
+      type: String,
+      default: 'blue',
+    },
+    currentGroupId: {
+      type: Number,
+      default: NaN,
     },
   },
   emits: [
     'change-bookmark-open-mode',
     'update:singleTab',
     'update:multiOnGroup',
-    'update:groupName',
-    'set-group-color',
+    'update:groupType',
+    'update:newGroupName',
+    'set-new-group-color',
+    'update:current-group-id',
   ],
   setup(props, context) {
+    const {
+      createNewTab, getAllTabGroups, watchTabGroups, createTabInGroup,
+    } = useTab();
+
     /**
      * open bookmarks setting
      */
-    const showColorPalette = ref(false);
 
     // group
-    const currentGroup = ref({});
-    currentGroup.value = {
-      id: 4,
-      color: 'blue',
-      title: 'oldGroup',
-    };
-    const groupType = ref('new'); // new, old
-
+    // old groups
     const oldGroups = ref([]);
     const showOldGroups = ref(false);
-    oldGroups.value = [
-      {
-        id: 1,
-        color: 'pink',
-        title: '',
-      },
-      {
-        id: 2,
-        color: 'yellow',
-        title: 'test',
-      },
-      {
-        id: 3,
-        color: 'green',
-        title: 'test2',
-      },
-    ];
 
-    const setGroupHandler = (group) => {
-      currentGroup.value = group;
+    const getOldGroups = async () => {
+      const tabGroups = await getAllTabGroups();
+      oldGroups.value = tabGroups;
+    };
+
+    getOldGroups();
+    watchTabGroups(getOldGroups);
+
+    const currentGroup = ref({});
+    const setCurrentGroupIdHandler = (group) => {
+      context.emit('update:current-group-id', group.id);
       showOldGroups.value = false;
     };
 
+    watch(
+      () => props.currentGroupId,
+      async () => {
+        if (!props.currentGroupId) return;
+        await getOldGroups();
+        const group = oldGroups.value.find((item) => item.id === props.currentGroupId);
+        if (group) currentGroup.value = group;
+      },
+      {
+        immediate: true,
+      },
+    );
+
+    // new group
+    const showColorPalette = ref(false);
     // group color scheme
     const colorScheme = [
       {
@@ -394,6 +416,7 @@ export default {
         value: '#007B83',
       },
     ];
+
     const colorMap = (name) => {
       const item = colorScheme.find((color) => color.name === name);
       if (item) { return item.value; }
@@ -401,7 +424,7 @@ export default {
     };
 
     function setGroupColorHandler(value) {
-      context.emit('set-group-color', value);
+      context.emit('set-new-group-color', value);
       showColorPalette.value = false;
     }
 
@@ -418,10 +441,9 @@ export default {
 
     return {
       currentGroup,
-      groupType,
       showOldGroups,
       oldGroups,
-      setGroupHandler,
+      setCurrentGroupIdHandler,
       showColorPalette,
       colorScheme,
       colorMap,

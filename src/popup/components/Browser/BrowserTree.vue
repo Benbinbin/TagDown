@@ -285,7 +285,6 @@ export default {
     watch(
       () => props.currentNode,
       (newValues, prevValues) => {
-        console.log(props.currentNode);
         setTreeData();
         buildTree();
       },
@@ -350,11 +349,7 @@ export default {
     const clickHandler = (node) => {
       if (!node._children) {
         // bookmark
-        console.log('click bookmark');
-        console.log(node);
       } else {
-        console.log('click folder');
-        console.log(node);
         // cann't fold/unfold, "currentNode" node
         // because we should move the tree to its parent node when the folder be folded
         if (node.data.id === props.currentNode.id) return; // node.id is Number, props.currentNode.id is String

@@ -431,7 +431,6 @@ import PopupMenu from '../Modal/PopupMenu.vue';
 import InputModal from '../Modal/InputModal.vue';
 import PromptModal from '../Modal/PromptModal.vue';
 import useTab from '@/composables/useTab';
-import useBookmark from '@/composables/useBookmark';
 
 export default {
   components: {
@@ -461,19 +460,28 @@ export default {
       default: 'current',
     },
     multiOnGroup: Boolean,
+    groupType: {
+      type: String,
+      default: 'new',
+    },
     newGroupName: {
       type: String,
-      default: '',
+      default: 'new',
     },
     newGroupColor: {
       type: String,
       default: 'blue',
     },
+    currentGroupId: {
+      type: Number,
+      default: NaN,
+    },
   },
-  emits: ['set-current-node', 'toggle-pin-node', 'update:singleTab'],
+  emits: ['set-current-node', 'toggle-pin-node', 'update:singleTab', 'update:groupType', 'change-current-group-id'],
   setup(props, context) {
-    const { createNewTab, getAllTabGroups, createTabInGroup } = useTab();
-    const { getActiveTab, openBookmark, openBookmarkOnGroup } = useBookmark();
+    const {
+      createNewTab, getAllTabGroups, createTabInGroup, getActiveTab, openBookmark, openBookmarkOnGroup,
+    } = useTab();
 
     /**
      * node
@@ -510,7 +518,22 @@ export default {
           openBookmark(node.id, 'current');
         }
       } else if (props.bookmarkOpenMode === 'multi') {
-        console.log('multi');
+        if (props.multiOnGroup) {
+          if (props.groupType === 'new' || !props.currentGroupId) {
+            const tab = await openBookmark(node.id, 'new', false);
+
+            const groupId = await createTabInGroup(tab.id, {
+              color: props.newGroupColor,
+              title: props.newGroupName,
+            });
+            context.emit('change-current-group-id', groupId);
+            context.emit('update:groupType', 'old');
+          } else if (props.groupType === 'old' && props.currentGroupId) {
+            openBookmarkOnGroup(node.id, props.currentGroupId);
+          }
+        } else {
+          openBookmark(node.id, 'new', false);
+        }
       }
     };
     /**

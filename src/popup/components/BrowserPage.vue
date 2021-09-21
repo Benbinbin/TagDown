@@ -34,14 +34,17 @@
         v-show="browserType === 'all' && browserMode === 'grid'"
         ref="grid"
         v-model:single-tab="singleTab"
+        v-model:group-type="groupType"
         :nodes="childrenNodes"
         :pin-nodes-id="pinNodesId"
         :bookmark-open-mode="bookmarkOpenMode"
         :multi-on-group="multiOnGroup"
-        :new-group-name="groupName"
-        :new-group-color="groupColor"
+        :current-group-id="currentGroupId"
+        :new-group-name="newGroupName"
+        :new-group-color="newGroupColor"
         @set-current-node="setCurrentNodeIdHandler"
         @toggle-pin-node="togglePinNodeHandler"
+        @change-current-group-id="currentGroupId = $event"
       />
       <BrowserTree
         v-show="browserType==='all' && browserMode==='tree'"
@@ -62,14 +65,16 @@
 
     <!-- footer -->
     <BrowserFooter
-      v-model:multi-on-group="multiOnGroup"
-      v-model:group-name="groupName"
       v-model:single-tab="singleTab"
+      v-model:multi-on-group="multiOnGroup"
+      v-model:new-group-name="newGroupName"
+      v-model:group-type="groupType"
+      v-model:currentGroupId="currentGroupId"
       :browser-type="browserType"
       :bookmark-open-mode="bookmarkOpenMode"
-      :group-color="groupColor"
+      :new-group-color="newGroupColor"
       @change-bookmark-open-mode="bookmarkOpenMode = $event"
-      @set-group-color="groupColor = $event"
+      @set-new-group-color="newGroupColor = $event"
     />
   </div>
 </template>
@@ -141,7 +146,6 @@ export default {
     const pinNodes = ref([]);
     const togglePinNodeHandler = (nodeId) => {
       const index = pinNodesId.value.indexOf(nodeId);
-      // console.log(nodeId);
       if (index === -1) {
         pinNodesId.value.push(nodeId);
         chrome.bookmarks.getSubTree(nodeId).then((nodes) => {
@@ -152,8 +156,6 @@ export default {
         pinNodesId.value.splice(index, 1);
         pinNodes.value.splice(index, 1);
       }
-      // console.log(pinNodesId.value);
-      // console.log(pinNodes.value);
     };
 
     // unfold or fold all folder
@@ -179,8 +181,10 @@ export default {
     const bookmarkOpenMode = ref('single'); // single, multi
     const singleTab = ref('current'); // new, current
     const multiOnGroup = ref(false);
-    const groupName = ref('');
-    const groupColor = ref('#1A73E8'); // grey, blue, red, yellow, green, pink, purple, cyan
+    const groupType = ref('new'); // new, old
+    const newGroupName = ref('new');
+    const newGroupColor = ref('blue'); // grey, blue, red, yellow, green, pink, purple, cyan
+    const currentGroupId = ref(NaN);
 
     return {
       currentNodeId,
@@ -200,8 +204,10 @@ export default {
       bookmarkOpenMode,
       singleTab,
       multiOnGroup,
-      groupName,
-      groupColor,
+      groupType,
+      newGroupName,
+      newGroupColor,
+      currentGroupId,
     };
   },
 };
