@@ -48,10 +48,17 @@
       />
       <BrowserTree
         v-show="browserType==='all' && browserMode==='tree'"
+        v-model:single-tab="singleTab"
+        v-model:group-type="groupType"
         :current-node="currentNode"
         :pin-nodes-id="pinNodesId"
         :width="800"
         :height="422"
+        :bookmark-open-mode="bookmarkOpenMode"
+        :multi-on-group="multiOnGroup"
+        :current-group-id="currentGroupId"
+        :new-group-name="newGroupName"
+        :new-group-color="newGroupColor"
         @toggle-pin-node="togglePinNodeHandler"
       />
       <BrowserStar v-show="browserType === 'star'" />

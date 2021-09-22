@@ -192,6 +192,7 @@ import {
   ref, computed, watch, onMounted,
 } from 'vue';
 import * as d3 from 'd3';
+import useTab from '@/composables/useTab';
 
 export default {
   props: {
@@ -215,9 +216,38 @@ export default {
       type: Number,
       default: 422,
     },
+    bookmarkOpenMode: {
+      type: String,
+      default: 'single',
+    },
+    singleTab: {
+      type: String,
+      default: 'current',
+    },
+    multiOnGroup: Boolean,
+    groupType: {
+      type: String,
+      default: 'new',
+    },
+    newGroupName: {
+      type: String,
+      default: 'new',
+    },
+    newGroupColor: {
+      type: String,
+      default: 'blue',
+    },
+    currentGroupId: {
+      type: Number,
+      default: NaN,
+    },
   },
-  emits: ['toggle-pin-node'],
-  setup(props) {
+  emits: ['toggle-pin-node', 'update:singleTab', 'update:groupType', 'change-current-group-id'],
+  setup(props, context) {
+    const {
+      createNewTab, getAllTabGroups, createTabInGroup, getActiveTab, openBookmark, openBookmarkOnGroup,
+    } = useTab();
+
     /**
      * (horizontal) tree size parameters setting
      */
@@ -346,13 +376,38 @@ export default {
         .call(zoom.transform, d3.zoomIdentity.translate(-x, -y).scale(scale));
     };
 
-    const clickHandler = (node) => {
+    const clickHandler = async (node) => {
       if (!node._children) {
         // bookmark
+        if (props.bookmarkOpenMode === 'single') {
+          if (props.singleTab === 'new') {
+            await openBookmark(node.data.id, 'new');
+            context.emit('update:singleTab', 'current');
+          } else {
+            openBookmark(node.data.id, 'current');
+          }
+        } else if (props.bookmarkOpenMode === 'multi') {
+          if (props.multiOnGroup) {
+            if (props.groupType === 'new' || !props.currentGroupId) {
+              const tab = await openBookmark(node.data.id, 'new', false);
+
+              const groupId = await createTabInGroup(tab.id, {
+                color: props.newGroupColor,
+                title: props.newGroupName,
+              });
+              context.emit('change-current-group-id', groupId);
+              context.emit('update:groupType', 'old');
+            } else if (props.groupType === 'old' && props.currentGroupId) {
+              openBookmarkOnGroup(node.data.id, props.currentGroupId);
+            }
+          } else {
+            openBookmark(node.data.id, 'new', false);
+          }
+        }
       } else {
         // cann't fold/unfold, "currentNode" node
         // because we should move the tree to its parent node when the folder be folded
-        if (node.data.id === props.currentNode.id) return; // node.id is Number, props.currentNode.id is String
+        if (node.data.id === props.currentNode.id) return;
         // folder
         if (node.children) {
           // already unfold folder
