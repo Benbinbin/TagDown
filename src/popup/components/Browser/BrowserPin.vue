@@ -15,8 +15,8 @@
       <div
         class="p-1 flex items-start rounded"
         :class="{
-          'bg-gray-50': !selectNodes.has(node.id),
-          'bg-blue-400': selectNodes.has(node.id),
+          'bg-gray-50': !selectNodesId.has(node.id),
+          'bg-blue-400': selectNodesId.has(node.id),
         }"
       >
         <!-- folder node -->
@@ -24,10 +24,9 @@
           v-if="node.children"
           class="flex-grow p-0.5 flex items-start space-x-0.5 rounded-sm"
           :class="{
-            'text-white hover:bg-blue-600': selectNodes.has(node.id),
-            'text-yellow-400 hover:bg-gray-200 ': !selectNodes.has(node.id)
+            'text-white hover:bg-blue-600': selectNodesId.has(node.id),
+            'text-yellow-400 hover:bg-gray-200 ': !selectNodesId.has(node.id)
           }"
-          @click.ctrl.exact="selectNodeHandler(node.id)"
           @click.exact="toggleFolderState(node)"
         >
           <svg
@@ -69,8 +68,8 @@
           <span
             class="node-title-style text-xs text-left"
             :class="{
-              'text-white': selectNodes.has(node.id),
-              'text-gray-600  ': !selectNodes.has(node.id)
+              'text-white': selectNodesId.has(node.id),
+              'text-gray-600  ': !selectNodesId.has(node.id)
             }"
           >{{ node.title }}</span>
         </button>
@@ -79,8 +78,8 @@
           v-if="!node.children"
           class="flex-grow p-0.5 flex items-start space-x-0.5 rounded-sm"
           :class="{
-            'text-white hover:bg-blue-600': selectNodes.has(node.id),
-            'text-blue-400 hover:bg-gray-200 ': !selectNodes.has(node.id)
+            'text-white hover:bg-blue-600': selectNodesId.has(node.id),
+            'text-blue-400 hover:bg-gray-200 ': !selectNodesId.has(node.id)
           }"
           @click.ctrl.exact="selectNodeHandler(node.id)"
           @click.exact="openBookmarkHandler(node)"
@@ -98,20 +97,20 @@
           <span
             class="node-title-style text-xs text-left"
             :class="{
-              'text-white': selectNodes.has(node.id),
-              'text-gray-600  ': !selectNodes.has(node.id)
+              'text-white': selectNodesId.has(node.id),
+              'text-gray-600  ': !selectNodesId.has(node.id)
             }"
           >{{ node.title }}</span>
         </button>
         <!-- delete button -->
         <button
-          title="copy bookmark url"
+          title="delete pin node"
           class="p-0.5 hover:text-white hover:bg-red-400 rounded-sm "
           :class="{
-            'text-white': selectNodes.has(node.id),
-            'text-red-400': !selectNodes.has(node.id)
+            'text-white': selectNodesId.has(node.id),
+            'text-red-400': !selectNodesId.has(node.id)
           }"
-          @click="$emit('toggle-pin-node', node.id)"
+          @click="deletePinNodeHandler(node.id)"
         >
           <svg
             class="w-4 h-4"
@@ -136,16 +135,18 @@
           :key="childNode.id"
           class="p-1 flex items-start rounded"
           :class="{
-            'bg-blue-400': selectNodes.has(childNode.id),
-            'bg-gray-50': !selectNodes.has(childNode.id)
+            'bg-blue-400': selectNodesId.has(childNode.id),
+            'bg-gray-50': !selectNodesId.has(childNode.id)
           }"
         >
+          <!-- subfolder folder node -->
           <button
             v-if="childNode.children"
+            title="subfolder folder node"
             class="flex-grow p-0.5 flex items-start space-x-0.5 rounded-sm"
             :class="{
-              'text-white hover:bg-blue-600': selectNodes.has(childNode.id),
-              'text-yellow-400 hover:bg-gray-200 ': !selectNodes.has(childNode.id)
+              'text-white hover:bg-blue-600': selectNodesId.has(childNode.id),
+              'text-yellow-400 hover:bg-gray-200 ': !selectNodesId.has(childNode.id)
             }"
           >
             <svg
@@ -175,17 +176,19 @@
             <span
               class="node-title-style text-xs text-left"
               :class="{
-                'text-white': selectNodes.has(childNode.id),
-                'text-gray-600  ': !selectNodes.has(childNode.id)
+                'text-white': selectNodesId.has(childNode.id),
+                'text-gray-600  ': !selectNodesId.has(childNode.id)
               }"
             >{{ childNode.title }}</span>
           </button>
+          <!-- subfolder bookmark node -->
           <button
             v-if="!childNode.children"
+            title="subfolder bookmark node"
             class="flex-grow p-0.5 flex items-start space-x-0.5 rounded-sm"
             :class="{
-              'text-white hover:bg-blue-600': selectNodes.has(childNode.id),
-              'text-blue-400 hover:bg-gray-200 ': !selectNodes.has(childNode.id)
+              'text-white hover:bg-blue-600': selectNodesId.has(childNode.id),
+              'text-blue-400 hover:bg-gray-200 ': !selectNodesId.has(childNode.id)
             }"
             @click.ctrl.exact="selectNodeHandler(childNode.id)"
             @click.exact="openBookmarkHandler(childNode)"
@@ -202,8 +205,8 @@
             <span
               class="node-title-style text-xs text-left"
               :class="{
-                'text-white': selectNodes.has(childNode.id),
-                'text-gray-600  ': !selectNodes.has(childNode.id)
+                'text-white': selectNodesId.has(childNode.id),
+                'text-gray-600  ': !selectNodesId.has(childNode.id)
               }"
             >{{ childNode.title }}</span>
           </button>
@@ -213,7 +216,8 @@
   </div>
 </template>
 <script>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
+import useTab from '@/composables/useTab';
 
 export default {
   props: {
@@ -223,9 +227,34 @@ export default {
         return [];
       },
     },
+    singleTab: {
+      type: String,
+      default: 'current',
+    },
+    multiOnGroup: Boolean,
+    groupType: {
+      type: String,
+      default: 'new',
+    },
+    newGroupName: {
+      type: String,
+      default: 'new',
+    },
+    newGroupColor: {
+      type: String,
+      default: 'blue',
+    },
+    currentGroupId: {
+      type: Number,
+      default: NaN,
+    },
   },
-  emits: ['toggle-pin-node'],
-  setup(props) {
+  emits: ['toggle-pin-node', 'update:singleTab', 'update:groupType', 'change-current-group-id'],
+  setup(props, context) {
+    const {
+      createNewTab, getAllTabGroups, createTabInGroup, getActiveTab, openBookmark, openBookmarkOnGroup,
+    } = useTab();
+
     // unfold or fold folder
     const unfoldFolders = ref(new Set());
     const toggleFolderState = (node) => {
@@ -248,29 +277,96 @@ export default {
       unfoldFolders.value.clear();
     };
 
-    // select nodes
-    const selectNodes = ref(new Set());
+    // all pin bookmarks
+    const allPinBookmarks = computed(() => props.pinNodes.filter((item) => !item.children));
+
+    // select bookmark nodes
+    const selectNodesId = ref(new Set());
+
     const selectNodeHandler = (nodeId) => {
-      if (selectNodes.value.has(nodeId)) {
-        selectNodes.value.delete(nodeId);
+      if (selectNodesId.value.has(nodeId)) {
+        selectNodesId.value.delete(nodeId);
       } else {
-        selectNodes.value.add(nodeId);
+        selectNodesId.value.add(nodeId);
       }
     };
 
+    // delete pin node
+    const deletePinNodeHandler = (nodeId) => {
+      selectNodesId.value.delete(nodeId);
+      context.emit('toggle-pin-node', nodeId);
+    };
+
+    // clear select
+    const clearSelectNodeHandler = () => {
+      selectNodesId.value.clear();
+    };
+
     // open Bookmark
-    const openBookmarkHandler = (node) => {
-      // console.log(node);
+    const openBookmarkHandler = async (node) => {
+      if (props.multiOnGroup) {
+        if (props.groupType === 'new' || !props.currentGroupId) {
+          const tab = await openBookmark(node.id, 'new', false);
+
+          const groupId = await createTabInGroup(tab.id, {
+            color: props.newGroupColor,
+            title: props.newGroupName,
+          });
+          context.emit('change-current-group-id', groupId);
+          context.emit('update:groupType', 'old');
+        } else if (props.groupType === 'old' && props.currentGroupId) {
+          openBookmarkOnGroup(node.id, props.currentGroupId);
+        }
+      } else {
+        openBookmark(node.id, 'new', false);
+      }
+    };
+
+    // open Bookmarks
+    const openBookmarksHandler = async (type) => {
+      // console.log(allPinBookmarks.value);
+      // console.log(selectNodesId.value);
+      const promiseTabs = [];
+      if (type === 'all') {
+        allPinBookmarks.value.forEach((node) => {
+          promiseTabs.push(openBookmark(node.id, 'new', false));
+        });
+      } else if (type === 'select') {
+        selectNodesId.value.forEach((nodeId) => {
+          promiseTabs.push(openBookmark(nodeId, 'new', false));
+        });
+      }
+      const tabs = await Promise.all(promiseTabs);
+      const tabsId = tabs.map((tab) => tab.id);
+      if (props.multiOnGroup) {
+        if (props.groupType === 'new' || !props.currentGroupId) {
+          const groupId = await createTabInGroup(tabsId, {
+            color: props.newGroupColor,
+            title: props.newGroupName,
+          });
+          context.emit('change-current-group-id', groupId);
+          context.emit('update:groupType', 'old');
+        } else if (props.groupType === 'old' && props.currentGroupId) {
+          chrome.tabs.group({
+            groupId: props.currentGroupId,
+            tabIds: tabsId,
+          });
+        }
+      }
     };
 
     return {
+      allPinBookmarks,
       unfoldFolders,
       toggleFolderState,
       unfoldAll,
       foldAll,
-      selectNodes,
+      selectNodesId,
       selectNodeHandler,
+      deletePinNodeHandler,
+      clearSelectNodeHandler,
       openBookmarkHandler,
+      openBookmarksHandler,
     };
   },
 };

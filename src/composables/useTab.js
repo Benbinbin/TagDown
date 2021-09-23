@@ -17,23 +17,24 @@ export default function useTab() {
   };
 
   // open bookmark on current tab or new tab
-  const openBookmark = async (nodeId, mode = 'new', active = true) => {
-    const nodes = await chrome.bookmarks.get(nodeId);
-    const { url } = nodes[0];
-
-    let tab;
-    if (mode === 'new') {
-      // open on new tab
-      tab = await createNewTab(active);
-    } else if (mode === 'current') {
-      // open on current active tab
-      tab = await getActiveTab();
-    }
-    await chrome.tabs.update(tab.id, {
-      url,
-    });
-    return tab;
-  };
+  const openBookmark = (nodeId, mode = 'new', active = true) => new Promise((resolve, reject) => {
+    chrome.bookmarks.get(nodeId)
+      .then(async (nodes) => {
+        const { url } = nodes[0];
+        let tab;
+        if (mode === 'new') {
+          // open on new tab
+          tab = await createNewTab(active);
+        } else if (mode === 'current') {
+          // open on current active tab
+          tab = await getActiveTab();
+        }
+        await chrome.tabs.update(tab.id, {
+          url,
+        });
+        resolve(tab);
+      });
+  });
 
   // get all tab groups
   const getAllTabGroups = async () => {
@@ -49,7 +50,7 @@ export default function useTab() {
     chrome.tabGroups.onUpdated.addListener(callback);
   };
 
-  // create a group with a tab
+  // create a group with tab
   const createTabInGroup = async (tabId, group) => {
     const groupId = await chrome.tabs.group({
       tabIds: tabId,

@@ -15,17 +15,23 @@
       <component
         :is="browserMenuComponent"
         v-model:multi-on-group="multiOnGroup"
-        v-model:group-name="groupName"
+        v-model:group-type="groupType"
+        v-model:new-group-name="newGroupName"
+        v-model:currentGroupId="currentGroupId"
         :browser-type="browserType"
         :browser-mode="browserMode"
-        :group-color="groupColor"
         :current-node-id="currentNodeId"
         :pin-nodes-id="pinNodesId"
+        :new-group-color="newGroupColor"
         @change-browser-type="browserType = $event"
-        @set-group-color="groupColor = $event"
+        @set-new-group-color="newGroupColor = $event"
         @set-current-node="setCurrentNodeIdHandler"
         @unfold-all="unfoldAllHandler"
         @fold-all="foldAllHandler"
+        @open-all-pin-bookmarks="openPinBookmarksHandler('all')"
+        @open-select-bookmarks="openPinBookmarksHandler('select')"
+        @clear-pin-list="clearPinListHandler"
+        @clear-select-pin-nodes="clearSelectPinNodesHandler"
       />
     </div>
     <!-- content -->
@@ -65,8 +71,15 @@
       <BrowserPin
         v-show="browserType === 'pin'"
         ref="pin"
+        v-model:single-tab="singleTab"
+        v-model:group-type="groupType"
         :pin-nodes="pinNodes"
+        :multi-on-group="multiOnGroup"
+        :current-group-id="currentGroupId"
+        :new-group-name="newGroupName"
+        :new-group-color="newGroupColor"
         @toggle-pin-node="togglePinNodeHandler"
+        @change-current-group-id="currentGroupId = $event"
       />
     </div>
 
@@ -74,8 +87,8 @@
     <BrowserFooter
       v-model:single-tab="singleTab"
       v-model:multi-on-group="multiOnGroup"
-      v-model:new-group-name="newGroupName"
       v-model:group-type="groupType"
+      v-model:new-group-name="newGroupName"
       v-model:currentGroupId="currentGroupId"
       :browser-type="browserType"
       :bookmark-open-mode="bookmarkOpenMode"
@@ -165,9 +178,23 @@ export default {
       }
     };
 
+    // open pin bookmarks
+    const pin = ref(null);
+    const openPinBookmarksHandler = (type) => {
+      pin.value.openBookmarksHandler(type);
+    };
+
+    // clear pin list or select pin nodes
+    const clearPinListHandler = () => {
+      pinNodesId.value = [];
+      pinNodes.value = [];
+    };
+    const clearSelectPinNodesHandler = () => {
+      pin.value.clearSelectNodeHandler();
+    };
+
     // unfold or fold all folder
     const grid = ref(null);
-    const pin = ref(null);
     const unfoldAllHandler = () => {
       if (browserType.value === 'all' && browserMode.value === 'grid') {
         grid.value.unfoldAll();
@@ -205,6 +232,9 @@ export default {
       pin,
       unfoldAllHandler,
       foldAllHandler,
+      openPinBookmarksHandler,
+      clearPinListHandler,
+      clearSelectPinNodesHandler,
       browserType,
       browserMode,
       browserMenuComponent,

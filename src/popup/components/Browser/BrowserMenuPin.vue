@@ -2,86 +2,173 @@
   <div class="w-full flex justify-between items-start">
     <div class="flex items-center space-x-2">
       <div class="framework">
-        <p class="flex items-center text-gray-600 space-x-1">
-          <svg
-            class="w-4 h-4"
-            viewBox="0 0 50 50"
-            fill="currentColor"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M41.9232 8H14.232C13.4162 8.00092 12.6342 8.32686 12.0573 8.90632C11.4805 9.48578 11.1561 10.2714 11.1551 11.0909V14.1818H8.07834C7.2626 14.1827 6.48054 14.5087 5.90373 15.0881C5.32691 15.6676 5.00245 16.4532 5.00154 17.2727V21.8791C5.00135 21.8892 5 21.899 5 21.9091C5 21.9191 5.00135 21.929 5.00154 21.939V38.9091C5.00245 39.7286 5.32691 40.5142 5.90373 41.0937C6.48054 41.6731 7.2626 41.9991 8.07834 42H35.7696C36.5853 41.9991 37.3674 41.6731 37.9442 41.0937C38.521 40.5142 38.8455 39.7286 38.8464 38.9091V35.8182H41.9232C42.7389 35.8173 43.521 35.4913 44.0978 34.9119C44.6746 34.3324 44.9991 33.5467 45 32.7273V11.0909C44.9991 10.2714 44.6746 9.48578 44.0978 8.90632C43.521 8.32686 42.7389 8.00092 41.9232 8ZM35.7696 17.2727L35.7698 20.3636H8.07834V17.2727H35.7696ZM35.7696 38.9091H8.07834V23.4545H35.77L35.7709 34.2424C35.7707 34.2526 35.7694 34.2625 35.7694 34.2727C35.7694 34.283 35.7707 34.293 35.7709 34.3032L35.7713 38.9091H35.7696ZM41.9232 32.7273H38.8464V17.2727C38.8455 16.4532 38.521 15.6676 37.9442 15.0881C37.3674 14.5087 36.5853 14.1827 35.7696 14.1818H14.232V11.0909H41.9232V32.7273Z"
-            />
-          </svg>
-          <span class="text-xs">打开</span>
-        </p>
-
-        <div class="flex items-center space-x-1">
-          <div class="flex items-center space-x-0.5">
-            <input
-              id="group"
-              type="checkbox"
-              :checked="multiOnGroup"
-              @change="$emit('update:multiOnGroup', $event.target.checked)"
+        <div class="flex items-start space-x-1">
+          <p class="flex items-center text-gray-600 space-x-1">
+            <svg
+              class="w-4 h-4"
+              viewBox="0 0 50 50"
+              fill="currentColor"
+              xmlns="http://www.w3.org/2000/svg"
             >
-            <label
-              for="group"
-              class="text-xxs text-gray-500"
-            >在组内打开</label>
-          </div>
-          <input
-            class="px-1 border border-gray-300 rounded text-xxs"
-            :class="{ 'opacity-10': !multiOnGroup }"
-            type="text"
-            placeholder="输入 group 名称"
-            :disabled="!multiOnGroup"
-            :value="groupName"
-            @input="$emit('update:groupName', $event.target.value)"
-          >
-          <div
-            class="relative"
-            :class="{ 'opacity-10': !multiOnGroup }"
-          >
-            <button
-              title="select group color"
-              :disabled="!multiOnGroup"
-              class="w-3 h-3 rounded-full"
-              :style="{
-                'background': groupColor
-              }"
-              @click="showColorPalette = true"
-            />
-            <div
-              v-show="showColorPalette"
-              class="absolute -top-10 flex p-2 bg-white space-x-2 rounded-sm shadow"
-            >
-              <button
-                v-for="color of colorScheme"
-                :key="color.name"
-                :title="color.name"
-                :disabled="!multiOnGroup"
-                class="w-4 h-4 rounded-full opacity-80 hover:opacity-100"
-                :class="{ 'ring-2 ring-gray-400': groupColor === color.value }"
-                :style="{
-                  'background': color.value
-                }"
-                @click="setGroupColorHandler(color.value)"
+              <path
+                d="M41.9232 8H14.232C13.4162 8.00092 12.6342 8.32686 12.0573 8.90632C11.4805 9.48578 11.1561 10.2714 11.1551 11.0909V14.1818H8.07834C7.2626 14.1827 6.48054 14.5087 5.90373 15.0881C5.32691 15.6676 5.00245 16.4532 5.00154 17.2727V21.8791C5.00135 21.8892 5 21.899 5 21.9091C5 21.9191 5.00135 21.929 5.00154 21.939V38.9091C5.00245 39.7286 5.32691 40.5142 5.90373 41.0937C6.48054 41.6731 7.2626 41.9991 8.07834 42H35.7696C36.5853 41.9991 37.3674 41.6731 37.9442 41.0937C38.521 40.5142 38.8455 39.7286 38.8464 38.9091V35.8182H41.9232C42.7389 35.8173 43.521 35.4913 44.0978 34.9119C44.6746 34.3324 44.9991 33.5467 45 32.7273V11.0909C44.9991 10.2714 44.6746 9.48578 44.0978 8.90632C43.521 8.32686 42.7389 8.00092 41.9232 8ZM35.7696 17.2727L35.7698 20.3636H8.07834V17.2727H35.7696ZM35.7696 38.9091H8.07834V23.4545H35.77L35.7709 34.2424C35.7707 34.2526 35.7694 34.2625 35.7694 34.2727C35.7694 34.283 35.7707 34.293 35.7709 34.3032L35.7713 38.9091H35.7696ZM41.9232 32.7273H38.8464V17.2727C38.8455 16.4532 38.521 15.6676 37.9442 15.0881C37.3674 14.5087 36.5853 14.1827 35.7696 14.1818H14.232V11.0909H41.9232V32.7273Z"
               />
-            </div>
+            </svg>
+            <span class="text-xs">打开</span>
+          </p>
+          <div class="flex items-center space-x-1">
+            <button
+              title="open all pin bookmarks"
+              class="px-2 py-0.5 rounded bg-green-400 hover:bg-green-600 text-white text-xxs"
+              @click="$emit('open-all-pin-bookmarks')"
+            >
+              所有书签
+            </button>
+            <button
+              title="open select bookmarks"
+              class="px-2 py-0.5 rounded bg-green-400 hover:bg-green-600 text-white text-xxs"
+              @click="$emit('open-select-bookmarks')"
+            >
+              选中书签
+            </button>
           </div>
         </div>
 
-        <div class="flex items-center space-x-1">
-          <button
-            class="px-2 py-0.5 rounded bg-green-400 hover:bg-green-600 text-white text-xxs"
+        <div class="space-y-1">
+          <div class="flex items-center space-x-1">
+            <div class="flex items-center space-x-0.5">
+              <input
+                id="group"
+                type="checkbox"
+                :checked="multiOnGroup"
+                @change="$emit('update:multiOnGroup', $event.target.checked)"
+              >
+              <label
+                for="group"
+                class="text-xxs text-gray-500"
+              >在组内打开</label>
+            </div>
+            <button
+              title="open bookmark in new tab group"
+              class="px-1 py-0.5 text-xxxs border-2 border-green-400 rounded"
+              :class="{
+                'opacity-10': !multiOnGroup,
+                'text-white bg-green-400 hover:bg-green-600': groupType === 'new',
+                'text-gray-500 hover:text-white bg-white hover:bg-green-400': groupType !== 'new'
+              }"
+              :disabled="!multiOnGroup"
+              @click="$emit('update:groupType', 'new')"
+            >
+              新建标签组
+            </button>
+            <button
+              title="open bookmark in old tab group"
+              class="px-1 py-0.5 text-xxxs border-2 border-green-400 rounded"
+              :class="{
+                'opacity-10': !multiOnGroup,
+                'text-white bg-green-400 hover:bg-green-600': groupType === 'old',
+                'text-gray-500 hover:text-white bg-white hover:bg-green-400': groupType !== 'old'
+              }"
+              :disabled="!multiOnGroup"
+              @click="$emit('update:groupType', 'old')"
+            >
+              已有标签组
+            </button>
+          </div>
+
+          <div
+            class="w-full"
+            :class="{ 'opacity-10': !multiOnGroup }"
           >
-            所有书签
-          </button>
-          <button
-            class="px-2 py-0.5 rounded bg-green-400 hover:bg-green-600 text-white text-xxs"
-          >
-            选中书签
-          </button>
+            <div
+              v-show="groupType === 'new'"
+              class="w-full flex items-center space-x-1"
+            >
+              <div class="relative flex items-center">
+                <button
+                  title="select group color"
+                  :disabled="!multiOnGroup || groupType !== 'new'"
+                  class="w-3 h-3 rounded-full"
+                  :style="{
+                    'background': colorMap(newGroupColor)
+                  }"
+                  @click="showColorPalette = !showColorPalette"
+                />
+                <div
+                  v-show="showColorPalette"
+                  class="absolute -top-0 transform -translate-y-full flex p-2 bg-white space-x-2 rounded-sm shadow"
+                >
+                  <button
+                    v-for="color of colorScheme"
+                    :key="color.name"
+                    :title="color.name"
+                    class="w-4 h-4 rounded-full opacity-80 hover:opacity-100"
+                    :class="{ 'ring-2 ring-yellow-400': newGroupColor === color.name }"
+                    :style="{
+                      'background': color.value
+                    }"
+                    @click="setGroupColorHandler(color.name)"
+                  />
+                </div>
+              </div>
+              <input
+                class="flex-grow h-4 px-1 text-xxxs border border-gray-300 rounded"
+                type="text"
+                placeholder="输入 group 名称"
+                :disabled="!multiOnGroup || groupType !== 'new'"
+                :value="newGroupName"
+                @input="$emit('update:newGroupName', $event.target.value)"
+              >
+            </div>
+
+            <div
+              v-show="groupType === 'old'"
+              class="relative"
+            >
+              <button
+                v-if="oldGroups.length > 0"
+                title="select old groups"
+                :disabled="!multiOnGroup || groupType !== 'old'"
+                class="p-0.5 flex items-center hover:bg-gray-200 space-x-0.5 rounded"
+                @click="showOldGroups = !showOldGroups"
+              >
+                <div
+                  v-if="currentGroup.color"
+                  class="w-3 h-3 rounded-full"
+                  :style="{
+                    'background': colorMap(currentGroup.color)
+                  }"
+                />
+                <span
+                  class="text-xxxs text-gray-500"
+                >{{ currentGroup.id ? currentGroup.title : '请选择标签组' }}</span>
+              </button>
+              <p
+                v-if="oldGroups.length === 0"
+                class="p-0.5 text-xxxs text-gray-500"
+              >
+                没有标签组
+              </p>
+              <div
+                v-show="showOldGroups"
+                class="p-2 absolute -top-0 transform -translate-y-full bg-white space-y-1 rounded shadow"
+              >
+                <button
+                  v-for="group of oldGroups"
+                  :key="group.title"
+                  :title="group.title"
+                  class="group-btn w-full p-1 flex items-center text-xxs text-white opacity-80 hover:opacity-100 rounded"
+                  :class="{ 'ring-2 ring-yellow-400': currentGroup.id === group.id }"
+                  :style="{
+                    'background': colorMap(group.color)
+                  }"
+                  @click="setCurrentGroupIdHandler(group)"
+                >
+                  {{ group.title }}
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div class="framework">
@@ -121,10 +208,18 @@
           <span class="text-xs">清空</span>
         </p>
 
-        <button class="px-2 py-0.5 rounded bg-red-400 hover:bg-red-600 text-white text-xxs">
+        <button
+          title="clear pin list"
+          class="px-2 py-0.5 rounded bg-red-400 hover:bg-red-600 text-white text-xxs"
+          @click="$emit('clear-pin-list')"
+        >
           Pin 列表
         </button>
-        <button class="px-2 py-0.5 rounded bg-red-400 hover:bg-red-600 text-white text-xxs">
+        <button
+          title="clear select pin nodes"
+          class="px-2 py-0.5 rounded bg-red-400 hover:bg-red-600 text-white text-xxs"
+          @click="$emit('clear-select-pin-nodes')"
+        >
           选中书签
         </button>
       </div>
@@ -154,9 +249,7 @@
       </div>
     </div>
 
-    <div
-      class="flex items-center space-x-2"
-    >
+    <div class="flex items-center space-x-2">
       <button
         title="fold all folders"
         class="btn p-1 text-gray-400 hover:text-gray-800"
@@ -212,7 +305,8 @@
 </template>
 
 <script>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
+import useTab from '@/composables/useTab';
 
 export default {
   props: {
@@ -220,24 +314,70 @@ export default {
       type: String,
       default: 'all',
     },
-    multiOnGroup: Boolean,
-    groupName: {
-      type: String,
-      default: '',
-    },
-    groupColor: {
-      type: String,
-      default: '#1A73E8',
-    },
     pinNodesId: {
       type: Array,
       default() {
         return [];
       },
     },
+    multiOnGroup: Boolean,
+    groupType: {
+      type: String,
+      default: 'new',
+    },
+    newGroupName: {
+      type: String,
+      default: 'new',
+    },
+    newGroupColor: {
+      type: String,
+      default: 'blue',
+    },
+    currentGroupId: {
+      type: Number,
+      default: NaN,
+    },
   },
-  emits: ['change-browser-type', 'update:multiOnGroup', 'update:groupName', 'set-group-color', 'fold-all', 'unfold-all'],
+  emits: ['change-browser-type', 'update:multiOnGroup', 'update:groupType', 'update:newGroupName', 'set-new-group-color', 'update:current-group-id', 'fold-all', 'unfold-all', 'open-all-pin-bookmarks', 'open-select-bookmarks', 'clear-pin-list', 'clear-select-pin-nodes'],
   setup(props, context) {
+    const {
+      createNewTab, getAllTabGroups, watchTabGroups, createTabInGroup,
+    } = useTab();
+
+    /**
+     * open bookmarks setting
+     */
+    // group
+    // old groups
+    const oldGroups = ref([]);
+    const showOldGroups = ref(false);
+
+    const getOldGroups = async () => {
+      const tabGroups = await getAllTabGroups();
+      oldGroups.value = tabGroups;
+    };
+
+    getOldGroups();
+    watchTabGroups(getOldGroups);
+    const currentGroup = ref({});
+    const setCurrentGroupIdHandler = (group) => {
+      context.emit('update:current-group-id', group.id);
+      showOldGroups.value = false;
+    };
+    watch(
+      () => props.currentGroupId,
+      async () => {
+        if (!props.currentGroupId) return;
+        await getOldGroups();
+        const group = oldGroups.value.find((item) => item.id === props.currentGroupId);
+        if (group) currentGroup.value = group;
+      },
+      {
+        immediate: true,
+      },
+    );
+
+    // new group
     const showColorPalette = ref(false);
     // group color
     const colorScheme = [
@@ -275,14 +415,25 @@ export default {
       },
     ];
 
+    const colorMap = (name) => {
+      const item = colorScheme.find((color) => color.name === name);
+      if (item) { return item.value; }
+      return name;
+    };
+
     function setGroupColorHandler(value) {
-      context.emit('set-group-color', value);
+      context.emit('set-new-group-color', value);
       showColorPalette.value = false;
     }
 
     return {
+      currentGroup,
+      showOldGroups,
+      oldGroups,
+      setCurrentGroupIdHandler,
       showColorPalette,
       colorScheme,
+      colorMap,
       setGroupColorHandler,
     };
   },
@@ -292,6 +443,12 @@ export default {
 <style lang="scss" scoped>
 .text-xxs {
   font-size: 10px;
+  line-height: 14px;
+}
+
+.text-xxxs {
+  font-size: 8px;
+  line-height: 12px;
 }
 
 .btn {
