@@ -344,7 +344,7 @@ export default {
       d3.select('.tree-diagram').call(zoom);
     });
 
-    const resizeTransform = () => {
+    const resetTransform = () => {
       d3.select('.tree-diagram')
         .transition()
         .duration(500)
@@ -442,7 +442,7 @@ export default {
       textGenerator,
       textPathGenerator,
       transform,
-      resizeTransform,
+      resetTransform,
       clickHandler,
       textColor,
     };

@@ -305,7 +305,7 @@
             />
           </svg>
         </div>
-        <span class="text-xs">{{ starState ? '未设为常用' : '已设为常用' }}</span>
+        <span class="text-xs">{{ starState ? '已设为常用' : '未设为常用' }}</span>
       </button>
       <!-- share item(s) -->
       <button

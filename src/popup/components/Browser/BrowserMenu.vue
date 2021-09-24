@@ -54,6 +54,7 @@
       <button
         title="reset tree layout"
         class="btn p-1 text-gray-400 hover:text-gray-800"
+        @click="$emit('reset-tree-layout')"
       >
         <svg
           class="w-4 h-4"
@@ -183,7 +184,7 @@ export default {
       },
     },
   },
-  emits: ['change-browser-type', 'set-current-node', 'fold-all', 'unfold-all', 'back-to-parent', 'back-to-root'],
+  emits: ['change-browser-type', 'set-current-node', 'reset-tree-layout', 'back-to-parent', 'back-to-root', 'fold-all', 'unfold-all'],
   setup(props, context) {
     const breadcrumb = ref([]);
 

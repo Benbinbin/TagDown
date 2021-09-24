@@ -26,6 +26,7 @@
         @change-browser-type="browserType = $event"
         @set-new-group-color="newGroupColor = $event"
         @set-current-node="setCurrentNodeIdHandler"
+        @reset-tree-layout="resetTreeLayoutHandler"
         @unfold-all="unfoldAllHandler"
         @fold-all="foldAllHandler"
         @open-all-pin-bookmarks="openPinBookmarksHandler('all')"
@@ -54,6 +55,7 @@
       />
       <BrowserTree
         v-show="browserType==='all' && browserMode==='tree'"
+        ref="tree"
         v-model:single-tab="singleTab"
         v-model:group-type="groupType"
         :current-node="currentNode"
@@ -211,6 +213,12 @@ export default {
       }
     };
 
+    // reset tree layout
+    const tree = ref(null);
+    const resetTreeLayoutHandler = () => {
+      tree.value.resetTransform();
+    };
+
     // bookmark open setting
     const bookmarkOpenMode = ref('single'); // single, multi
     const singleTab = ref('current'); // new, current
@@ -235,6 +243,8 @@ export default {
       openPinBookmarksHandler,
       clearPinListHandler,
       clearSelectPinNodesHandler,
+      tree,
+      resetTreeLayoutHandler,
       browserType,
       browserMode,
       browserMenuComponent,
