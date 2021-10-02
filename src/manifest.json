@@ -3,9 +3,14 @@
     "manifest_version": 3,
     "version": "2.0.0",
     "description": "__MSG_appDescription__",
-    "permissions": ["bookmarks", "tabs"],
+    "permissions": [
+        "bookmarks",
+        "tabs",
+        "storage"
+    ],
     "background": {
-        "service_worker": "./background/main.js"
+        "service_worker": "./background/main.js",
+        "type": "module"
     },
     "action": {
         "default_title": "__MSG_actionTitle__",

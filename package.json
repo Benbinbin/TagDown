@@ -11,6 +11,7 @@
     "@jlongster/sql.js": "^1.6.7",
     "absurd-sql": "0.0.53",
     "d3": "^7.0.1",
+    "dexie": "^3.0.3",
     "vue": "^3.2.6"
   },
   "devDependencies": {

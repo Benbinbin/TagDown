@@ -1,7 +1,10 @@
+import Dexie from 'dexie';
+
 /**
- * change action icon
+ * change action icon base on url and bookmark state
  */
 // check the given url exist on bookmarks tree or not then change action url
+let tabFaviconUrl = '';
 const checkBookmark = async (url) => {
   const nodes = await chrome.bookmarks.search({
     url,
@@ -9,6 +12,20 @@ const checkBookmark = async (url) => {
   if (nodes.length === 0) {
     return false;
   }
+
+  // set favicon for bookmark tab
+  const nodeId = nodes[0].id;
+  const db = new Dexie('tagdown');
+  await db.version(1).stores({
+    bookmark: 'id, *tags',
+  });
+  const iconBlob = await db.bookmark.get(nodeId);
+  if (iconBlob) {
+    tabFaviconUrl = URL.createObjectURL(iconBlob);
+  } else {
+    tabFaviconUrl = '/icons/icon64_tag.png';
+  }
+
   return true;
 };
 
@@ -39,20 +56,57 @@ const changeActionIcon = async (tag = false) => {
 
 let activeTabID = NaN;
 
+// watching the active tab change event
 chrome.tabs.onActivated.addListener(async (activeInfo) => {
   activeTabID = activeInfo.tabId;
   const tab = await chrome.tabs.get(activeTabID);
-  const { url } = tab;
-  if (!url) return;
-  const tagState = await checkBookmark(url);
-  await changeActionIcon(tagState);
+  const url = tab.url || tab.pendingUrl;
+
+  let bookmarkState = false;
+  if (url) bookmarkState = await checkBookmark(url);
+
+  // set tab bookmark state
+  await chrome.storage.local.set({ bookmarkState });
+
+  // set favicon for no bookmark tab
+  const { favIconUrl } = tab;
+  if (!bookmarkState && favIconUrl) {
+    tabFaviconUrl = favIconUrl;
+  } else if (!bookmarkState && !favIconUrl) {
+    tabFaviconUrl = '/icons/icon64_untag.png';
+  }
+  await chrome.storage.local.set({
+    tabFaviconUrl,
+  });
+
+  // change action icon
+  await changeActionIcon(bookmarkState);
 });
 
+// watching tab update event
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
   if (tabId !== activeTabID || !changeInfo.url) return;
-  // console.log('activeTab', tabId === activeTabID);
-  // console.log('url', changeInfo.url);
+
+  // when tab update url check the bookmark state
   const { url } = changeInfo;
-  const tagState = await checkBookmark(url);
-  await changeActionIcon(tagState);
+  const bookmarkState = await checkBookmark(url);
+
+  // set tab bookmark state
+  await chrome.storage.local.set({
+    bookmarkState,
+  });
+
+  // set favicon for no bookmark tab
+  const { favIconUrl } = tab;
+  if (!bookmarkState && favIconUrl) {
+    tabFaviconUrl = favIconUrl;
+  } else if (!bookmarkState && !favIconUrl) {
+    tabFaviconUrl = '/icons/icon64_untag.png';
+  }
+  await chrome.storage.local.set({
+    tabFaviconUrl,
+  });
+
+  // change action icon
+  await changeActionIcon(bookmarkState);
 });

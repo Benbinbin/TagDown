@@ -16,7 +16,7 @@
               d="M35.8889 5H14.1111C13.2863 5.00093 12.4955 5.32994 11.9122 5.91485C11.329 6.49977 11.0009 7.29281 11 8.12V42.44C11 42.7185 11.0743 42.9919 11.2153 43.2318C11.3562 43.4717 11.5586 43.6694 11.8015 43.8044C12.0443 43.9394 12.3188 44.0068 12.5964 43.9995C12.874 43.9921 13.1445 43.9105 13.38 43.7629L24.9986 36.4796L36.62 43.7629C36.8555 43.9105 37.126 43.9921 37.4036 43.9995C37.6812 44.0068 37.9557 43.9394 38.1985 43.8044C38.4414 43.6694 38.6438 43.4717 38.7847 43.2318C38.9257 42.9919 39 42.7185 39 42.44V8.12C38.9991 7.29281 38.671 6.49977 38.0878 5.91485C37.5045 5.32994 36.7137 5.00093 35.8889 5ZM35.8889 39.6256L25.8229 33.3171C25.5757 33.1622 25.29 33.08 24.9984 33.08C24.7069 33.08 24.4212 33.1622 24.174 33.3171L14.1111 39.6254V8.12H35.8889V39.6256Z"
             />
           </svg>
-          <span class="text-base">名称</span>
+          <span class="text-sm">名称</span>
         </label>
         <input
           id="title"
@@ -42,7 +42,7 @@
               d="M17.0008 23.5707H33.0003C33.354 23.5707 33.6931 23.7212 33.9431 23.9891C34.1932 24.257 34.3336 24.6204 34.3336 24.9993C34.3336 25.3782 34.1932 25.7415 33.9431 26.0094C33.6931 26.2773 33.354 26.4279 33.0003 26.4279H17.0008C16.6472 26.4279 16.3081 26.2773 16.058 26.0094C15.808 25.7415 15.6675 25.3782 15.6675 24.9993C15.6675 24.6204 15.808 24.257 16.058 23.9891C16.3081 23.7212 16.6472 23.5707 17.0008 23.5707ZM20.9995 32.1429H14.3331C12.565 32.1429 10.8694 31.3903 9.61915 30.0508C8.36895 28.7112 7.66659 26.8944 7.66659 25C7.66659 23.1056 8.36895 21.2888 9.61915 19.9492C10.8694 18.6097 12.565 17.8571 14.3331 17.8571H20.9995C21.3531 17.8571 21.6923 17.7066 21.9423 17.4387C22.1924 17.1708 22.3328 16.8075 22.3328 16.4286C22.3328 16.0497 22.1924 15.6863 21.9423 15.4184C21.6923 15.1505 21.3531 15 20.9995 15H14.3331C11.8578 15 9.48388 16.0536 7.73359 17.9289C5.9833 19.8043 5 22.3478 5 25C5 27.6522 5.9833 30.1957 7.73359 32.0711C9.48388 33.9464 11.8578 35 14.3331 35H20.9995C21.3531 35 21.6923 34.8495 21.9423 34.5816C22.1924 34.3137 22.3328 33.9503 22.3328 33.5714C22.3328 33.1925 22.1924 32.8292 21.9423 32.5613C21.6923 32.2934 21.3531 32.1429 20.9995 32.1429ZM35.6669 15H29.0005C28.6469 15 28.3077 15.1505 28.0577 15.4184C27.8076 15.6863 27.6672 16.0497 27.6672 16.4286C27.6672 16.8075 27.8076 17.1708 28.0577 17.4387C28.3077 17.7066 28.6469 17.8571 29.0005 17.8571H35.6669C37.435 17.8571 39.1306 18.6097 40.3808 19.9492C41.6311 21.2888 42.3334 23.1056 42.3334 25C42.3334 26.8944 41.6311 28.7112 40.3808 30.0508C39.1306 31.3903 37.435 32.1429 35.6669 32.1429H29.0005C28.6469 32.1429 28.3077 32.2934 28.0577 32.5613C27.8076 32.8292 27.6672 33.1925 27.6672 33.5714C27.6672 33.9503 27.8076 34.3137 28.0577 34.5816C28.3077 34.8495 28.6469 35 29.0005 35H35.6669C38.1422 35 40.5161 33.9464 42.2664 32.0711C44.0167 30.1957 45 27.6522 45 25C45 22.3478 44.0167 19.8043 42.2664 17.9289C40.5161 16.0536 38.1422 15 35.6669 15Z"
             />
           </svg>
-          <span class="text-base">网址</span>
+          <span class="text-sm">网址</span>
         </label>
         <input
           id="url"
@@ -66,7 +66,7 @@
                 d="M41 14.1818H25.1214L20 8.90545C19.7221 8.61753 19.3915 8.38926 19.0274 8.23384C18.6633 8.07842 18.2729 7.99895 17.8788 8.00001H8C7.20462 8.00093 6.44208 8.32688 5.87967 8.90633C5.31725 9.48579 5.00089 10.2714 5 11.0909V39.0279C5.00084 39.8159 5.30504 40.5713 5.84584 41.1285C6.38664 41.6857 7.11988 41.9991 7.88469 42H41.1667C41.9179 41.9991 42.638 41.6913 43.1692 41.144C43.7004 40.5968 43.9992 39.8548 44 39.0808V17.2727C43.9991 16.4533 43.6827 15.6676 43.1203 15.0881C42.5579 14.5087 41.7954 14.1827 41 14.1818ZM17.8788 11.0909L20.8786 14.1818H8V11.0909H17.8788ZM41 38.9091H8V17.2727H41V38.9091Z"
               />
             </svg>
-            <span class="text-base">文件夹</span>
+            <span class="text-sm">文件夹</span>
           </div>
           <button
             title="add new folder"
@@ -80,63 +80,36 @@
               xmlns="http://www.w3.org/2000/svg"
             >
               <path
-                d="M41.9231 14.1818H25.6373L20.3846 8.90545C20.0996 8.61753 19.7605 8.38926 19.3871 8.23384C19.0137 8.07842 18.6133 7.99895 18.209 8.00001H8.07692C7.26115 8.00093 6.47906 8.32688 5.90222 8.90633C5.32539 9.48579 5.00092 10.2714 5 11.0909V39.0279C5.00087 39.8159 5.31286 40.5713 5.86753 41.1285C6.42219 41.6857 7.17424 41.9991 7.95865 42H42.094C42.8645 41.9991 43.6031 41.6913 44.1479 41.144C44.6927 40.5968 44.9991 39.8548 45 39.0808V17.2727C44.9991 16.4533 44.6746 15.6676 44.0978 15.0881C43.5209 14.5087 42.7388 14.1827 41.9231 14.1818ZM18.209 11.0909L21.2858 14.1818H8.07692V11.0909H18.209ZM41.9231 38.9091H8.07692V17.2727H41.9231V38.9091ZM25 21.9091C25.408 21.9091 25.7993 22.0719 26.0879 22.3617C26.3764 22.6516 26.5385 23.0447 26.5385 23.4546V26.5455H29.6154C30.0234 26.5455 30.4147 26.7083 30.7032 26.9981C30.9918 27.2879 31.1538 27.681 31.1538 28.0909C31.1538 28.5008 30.9918 28.8939 30.7032 29.1837C30.4147 29.4735 30.0234 29.6364 29.6154 29.6364H26.5385V32.7273C26.5385 33.1372 26.3764 33.5302 26.0879 33.8201C25.7993 34.1099 25.408 34.2727 25 34.2727C24.592 34.2727 24.2007 34.1099 23.9121 33.8201C23.6236 33.5302 23.4615 33.1372 23.4615 32.7273V29.6364H20.3846C19.9766 29.6364 19.5853 29.4735 19.2968 29.1837C19.0082 28.8939 18.8462 28.5008 18.8462 28.0909C18.8462 27.681 19.0082 27.2879 19.2968 26.9981C19.5853 26.7083 19.9766 26.5455 20.3846 26.5455H23.4615V23.4546C23.4615 23.0447 23.6236 22.6516 23.9121 22.3617C24.2007 22.0719 24.592 21.9091 25 21.9091Z"
+                d="M41 14H25.1212L20 8.87901C19.7222 8.5995 19.3916 8.37788 19.0276 8.227C18.6635 8.07612 18.2731 7.99896 17.879 8.00001H8C7.20459 8.0008 6.44199 8.31713 5.87956 8.87957C5.31712 9.442 5.00079 10.2046 5 11V38.1157C5.00104 38.8806 5.30544 39.6138 5.84641 40.1545C6.38738 40.6952 7.12075 40.9993 7.88562 41H41.1669C41.918 40.999 42.638 40.7002 43.1691 40.1691C43.7002 39.638 43.999 38.918 44 38.1669V17.0002C43.9992 16.2048 43.6829 15.4422 43.1204 14.8798C42.558 14.3173 41.7954 14.001 41 14.0002V14ZM8 11H17.879L20.879 14H8V11Z"
               />
             </svg>
           </button>
         </div>
 
-        <div class="w-full pb-2 flex flex-wrap border border-gray-300 rounded">
+        <button
+          title="show recently used folders"
+          class="w-full px-2 py-1 flex justify-between items-center text-gray-300 hover:text-gray-800 border border-gray-300 rounded"
+          @click="showRecentFolders = !showRecentFolders"
+        >
+          <p class="text-sm text-gray-800">
+            {{ selectFolder ? selectFolder.title : '请选择文件夹' }}
+          </p>
           <div
-            v-for="folder of selectFolders"
-            :key="folder"
-            class="mt-2 ml-2 flex items-center"
+            class="transition-transform duration-300"
+            :class="{ 'transform rotate-180': showRecentFolders }"
           >
-            <button
-              title="delete folder item"
-              class="p-1 text-red-400 bg-gray-200 hover:text-white hover:bg-red-400 rounded-l-sm"
-              @click="setDeleteFolderCandidate(folder)"
+            <svg
+              class="w-4 h-4"
+              viewBox="0 0 50 50"
+              fill="currentColor"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              <svg
-                class="w-4 h-4"
-                viewBox="0 0 50 50"
-                fill="currentColor
-                  "
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M41.9231 14.1818H25.6371L20.3846 8.90545C20.0996 8.61753 19.7605 8.38926 19.3871 8.23384C19.0137 8.07842 18.6133 7.99895 18.209 8.00001H8.07692C7.26115 8.00093 6.47906 8.32688 5.90222 8.90633C5.32539 9.48579 5.00092 10.2714 5 11.0909V39.0279C5.00087 39.8159 5.31286 40.5713 5.86753 41.1285C6.42219 41.6857 7.17424 41.9991 7.95865 42H42.094C42.8645 41.9991 43.6031 41.6913 44.1479 41.144C44.6927 40.5968 44.9991 39.8548 45 39.0808V17.2727C44.9991 16.4533 44.6746 15.6676 44.0978 15.0881C43.5209 14.5087 42.7388 14.1827 41.9231 14.1818ZM18.209 11.0909L21.286 14.1818H8.07692V11.0909H18.209ZM41.9231 38.9091H8.07692V17.2727H41.9231V38.9091ZM20.3846 26.5455H29.6154C30.0234 26.5455 30.4147 26.7083 30.7032 26.9981C30.9918 27.2879 31.1538 27.681 31.1538 28.0909C31.1538 28.5008 30.9918 28.8939 30.7032 29.1837C30.4147 29.4735 30.0234 29.6364 29.6154 29.6364H20.3846C19.9766 29.6364 19.5853 29.4735 19.2968 29.1837C19.0082 28.8939 18.8462 28.5008 18.8462 28.0909C18.8462 27.681 19.0082 27.2879 19.2968 26.9981C19.5853 26.7083 19.9766 26.5455 20.3846 26.5455Z"
-                />
-              </svg>
-            </button>
-            <button
-              title="locate folder item"
-              class="p-1 text-xs text-white bg-yellow-400 hover:bg-yellow-600 rounded-r-sm"
-              @click="showCardHandler"
-            >
-              {{ folder }}
-            </button>
+              <path
+                d="M6.50594 16.9875L23.7786 34.4874C23.939 34.6499 24.1294 34.7788 24.339 34.8668C24.5485 34.9547 24.7732 35 25 35C25.2268 35 25.4514 34.9547 25.661 34.8668C25.8706 34.7788 26.061 34.6499 26.2214 34.4874L43.4941 16.9875C43.7356 16.7427 43.9002 16.4309 43.9668 16.0914C44.0335 15.7519 43.9993 15.4001 43.8685 15.0803C43.7378 14.7605 43.5164 14.4872 43.2323 14.2949C42.9483 14.1026 42.6143 14 42.2727 14H7.72733C7.3857 14 7.05174 14.1026 6.76768 14.2949C6.48362 14.4872 6.26222 14.7605 6.13148 15.0803C6.00075 15.4001 5.96655 15.7519 6.0332 16.0914C6.09985 16.4309 6.26436 16.7427 6.50594 16.9875Z"
+              />
+            </svg>
           </div>
-          <div class="flex-grow mt-1 ml-1 flex justify-end">
-            <button
-              title="show recently used folders"
-              class="text-gray-300 hover:text-gray-600 transition-transform duration-300"
-              :class="{ 'transform rotate-180': showRecentFolders }"
-              @click="showRecentFolders = !showRecentFolders"
-            >
-              <svg
-                class="w-4 h-4"
-                viewBox="0 0 50 50"
-                fill="currentColor"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M6.50594 16.9875L23.7786 34.4874C23.939 34.6499 24.1294 34.7788 24.339 34.8668C24.5485 34.9547 24.7732 35 25 35C25.2268 35 25.4514 34.9547 25.661 34.8668C25.8706 34.7788 26.061 34.6499 26.2214 34.4874L43.4941 16.9875C43.7356 16.7427 43.9002 16.4309 43.9668 16.0914C44.0335 15.7519 43.9993 15.4001 43.8685 15.0803C43.7378 14.7605 43.5164 14.4872 43.2323 14.2949C42.9483 14.1026 42.6143 14 42.2727 14H7.72733C7.3857 14 7.05174 14.1026 6.76768 14.2949C6.48362 14.4872 6.26222 14.7605 6.13148 15.0803C6.00075 15.4001 5.96655 15.7519 6.0332 16.0914C6.09985 16.4309 6.26436 16.7427 6.50594 16.9875Z"
-                />
-              </svg>
-            </button>
-          </div>
-        </div>
+        </button>
         <div
           v-show="showRecentFolders"
           class="wrapper h-0 absolute -bottom-1 inset-x-0 z-10 select-none"
@@ -146,10 +119,11 @@
           >
             <button
               v-for="folder of recentFolders"
-              :key="folder"
-              class="p-1 ml-2 mt-2 text-xs text-white bg-yellow-400 hover:bg-yellow-600 rounded"
+              :key="folder.id"
+              class="px-2 py-1 ml-2 mt-2 text-xs text-white bg-yellow-400 hover:bg-yellow-600 rounded"
+              @click="setSelectFolderHandler(folder)"
             >
-              {{ folder }}
+              {{ folder.title }}
             </button>
           </div>
         </div>
@@ -217,7 +191,7 @@
           </svg>
         </template>
         <template #labeName>
-          <span class="text-base">标签</span>
+          <span class="text-sm">标签</span>
         </template>
         <template #itemIcon>
           <svg
@@ -252,7 +226,7 @@
           </svg>
         </template>
         <template #labeName>
-          <span class="text-base">分组</span>
+          <span class="text-sm">分组</span>
         </template>
         <template #itemIcon>
           <svg
@@ -283,7 +257,7 @@
               d="M44.9806 26.9083C44.9929 26.8284 44.9994 26.7476 45 26.6667V16.6667C44.9965 13.5735 43.7662 10.6081 41.5791 8.42092C39.3919 6.23375 36.4265 5.00347 33.3333 5H16.6667C13.5735 5.00347 10.6081 6.23375 8.42092 8.42092C6.23375 10.6081 5.00347 13.5735 5 16.6667V33.3333C5.00347 36.4265 6.23375 39.3919 8.42092 41.5791C10.6081 43.7662 13.5735 44.9965 16.6667 45H26.6667C26.7476 44.9994 26.8284 44.9929 26.9083 44.9806C26.9233 44.9783 26.9383 44.9765 26.9533 44.9737C27.0319 44.9603 27.1094 44.9412 27.1852 44.9167L27.1937 44.9146C32.659 43.0927 43.0927 32.659 44.9146 27.1937L44.9167 27.1854C44.9412 27.1095 44.9602 27.032 44.9735 26.9533C44.9762 26.9383 44.9783 26.9233 44.9806 26.9081V26.9083ZM8.33333 33.3333V16.6667C8.33587 14.4573 9.21466 12.3392 10.7769 10.7769C12.3392 9.21466 14.4573 8.33587 16.6667 8.33333H33.3333C35.5427 8.33587 37.6608 9.21466 39.2231 10.7769C40.7853 12.3392 41.6641 14.4573 41.6667 16.6667V25H36.6667C33.5735 25.0035 30.6081 26.2338 28.4209 28.4209C26.2338 30.6081 25.0035 33.5735 25 36.6667V41.6667H16.6667C14.4573 41.6641 12.3392 40.7853 10.7769 39.2231C9.21466 37.6608 8.33587 35.5427 8.33333 33.3333ZM28.3333 40.6537V36.6667C28.3359 34.4573 29.2147 32.3392 30.7769 30.7769C32.3392 29.2147 34.4573 28.3359 36.6667 28.3333H40.6537C38.1194 32.3967 32.3969 38.1196 28.3333 40.6537Z"
             />
           </svg>
-          <span class="text-base">简介</span>
+          <span class="text-sm">简介</span>
         </label>
         <textarea
           id="sticker"
@@ -297,88 +271,75 @@
     </div>
   </div>
   <div
-    v-show="showCard"
+    v-if="showCard"
     class="fixed inset-0 z-10"
   >
     <div
       class="modal-background absolute inset-0 bg-black opacity-25"
-      @click="showSelectFolders = false"
+      @click="showSelectFolder = false"
     />
     <transition
       name="popup-card"
       @after-leave="showCard = false"
     >
       <SelectFolders
-        v-show="showSelectFolders"
+        v-show="showSelectFolder"
         class="select-folders-modal w-full absolute bottom-0 z-30 bg-white shadow"
-        :select-folders="selectFolders"
-        @cancel-folders="showSelectFolders = false"
-        @save-folders="saveFoldersHandler"
+        :select-folder="selectFolder"
+        @cancel-folder="showSelectFolder = false"
+        @save-folder="setSelectFolderHandler"
       />
     </transition>
   </div>
-
-  <PromptModal
-    v-if="showConfirmDeleteFolderModal"
-    v-model:show="showConfirmDeleteFolderModal"
-    @result="getFolderDeleteResult"
-  >
-    <template #title>
-      <h2 class="p-4 text-sm font-bold">
-        是否删除该文件夹
-      </h2>
-    </template>
-    <template #msg>
-      <p class="p-2 text-xs text-center">
-        {{ deleteFolderCandidate }}
-      </p>
-    </template>
-  </PromptModal>
 </template>
 <script>
-import { ref } from 'vue';
+import { ref, inject, onMounted } from 'vue';
 import ItemsInput from './ItemsInput.vue';
 import SelectFolders from './SelectFolders.vue';
-import PromptModal from '../Modal/PromptModal.vue';
+import useTab from '@/composables/useTab';
+import useBookmark from '@/composables/useBookmark';
 
 export default {
   components: {
     ItemsInput,
     SelectFolders,
-    PromptModal,
   },
   setup() {
+    const { getActiveTab } = useTab();
+    const {
+      getBookmarkIcon, getBookmarkDB, getBookmarkShare, getBookmarkStar, createBookmark, updateBookmark,
+    } = useBookmark();
+
     // title
     const title = ref('');
     // url
     const url = ref('');
-
     // folders
-    const selectFolders = ref(['a', 'apple', 'abandan', 'b', 'box', 'c', 'cat', 'dolor', 'sit,', 'amet', 'consectetur', 'consectetur', 'adipisicing', 'elit.', 'Ipsa', 'tempora', 'iusto', 'nobis', 'reiciendis', 'explicabo', 'ea', 'exercitationem']);
-    const deleteFolderCandidate = ref(null);
-    const showConfirmDeleteFolderModal = ref(false);
+    const selectFolder = ref(null);
 
-    const setDeleteFolderCandidate = (folder) => {
-      deleteFolderCandidate.value = folder;
-      showConfirmDeleteFolderModal.value = true;
-    };
-    const getFolderDeleteResult = (value) => {
-      console.log(value);
-      deleteFolderCandidate.value = null;
-    };
+    // recnet folders
+    const recentFolders = ref([]);
+    const showRecentFolders = ref(false);
+    chrome.bookmarks.getRecent(20).then(async (nodes) => {
+      console.log(nodes);
+      const parentNodesId = [...new Set(nodes.map((node) => node.parentId))];
+      console.log(parentNodesId);
+      recentFolders.value = await chrome.bookmarks.get(parentNodesId);
+      console.log(recentFolders.value);
+    });
 
+    // select folder
     const showCard = ref(false);
-    const showSelectFolders = ref(false);
+    const showSelectFolder = ref(false);
     const showCardHandler = () => {
       showCard.value = true;
-      showSelectFolders.value = true;
+      showSelectFolder.value = true;
     };
-    const saveFoldersHandler = (foldersArr) => {
-      showSelectFolders.value = false;
+    const setSelectFolderHandler = (folder) => {
+      selectFolder.value = folder;
+      showRecentFolders.value = false;
+      showSelectFolder.value = false;
     };
-
-    const showRecentFolders = ref(false);
-    const recentFolders = ['a', 'apple', 'abandan', 'b', 'box', 'c', 'cat', 'a', 'apple', 'abandan', 'b', 'box', 'c', 'cat', 'sfhdklasfjkdlj', 'ofhwasif', 'Lorem', 'ipsum', 'dolor', 'sit,', 'amet', 'consectetur', 'adipisicing', 'elit.', 'Ipsa', 'tempora', 'iusto', 'nobis', 'reiciendis', 'explicabo', 'ea', 'exercitationem'];
 
     // share property
     const share = ref(false);
@@ -397,19 +358,99 @@ export default {
     // description
     const description = ref('');
 
+    // favicon
+    const faviconUrl = ref('');
+    const faviconData = ref('');
+
+    let urlBookmarkState = false;
+    const bookmarkNode = {};
+    // base on current tab bookmark state to get init data
+    getActiveTab().then(async (tab) => {
+      const tabUrl = tab.url || tab.pendingUrl;
+      // console.log(tabUrl);
+      const nodes = await chrome.bookmarks.search({
+        url: tabUrl,
+      });
+      if (nodes.length === 0) {
+        // no bookmark
+        urlBookmarkState = false;
+        title.value = tab.title;
+        url.value = tabUrl;
+        // set recent used folder as init folder
+        chrome.bookmarks.getRecent(1).then(async (recentNodes) => {
+          if (recentNodes.length === 0) return;
+          const [recentNode] = recentNodes;
+          const [folderNode] = await chrome.bookmarks.get(recentNode.parentId);
+          selectFolder.value = folderNode;
+        });
+      } else {
+        // already bookmark
+        const [node] = nodes;
+        urlBookmarkState = true;
+        bookmarkNode.id = node.id;
+        bookmarkNode.index = node.index;
+
+        title.value = node.title;
+        url.value = node.url;
+        chrome.bookmarks.get(node.parentId).then(async (parentNodes) => {
+          [selectFolder.value] = parentNodes;
+        });
+
+        const bookmarkDB = await getBookmarkDB(node.id);
+        if (bookmarkDB) {
+          faviconUrl.value = bookmarkDB.faviconUrl;
+          tags.value = bookmarkDB.tags;
+          groups.value = bookmarkDB.groups;
+          description.value = bookmarkDB.description;
+        }
+
+        const shareInit = await getBookmarkShare(node.id);
+        if (shareInit) share.value = shareInit;
+        const starInit = await getBookmarkStar(node.id);
+        if (starInit) star.value = starInit;
+      }
+    });
+
+    // create or update bookmark
+    const finishBookmark = async () => {
+      if (urlBookmarkState) {
+        updateBookmark(bookmarkNode.id, {
+          title: title.value,
+          url: url.value,
+          parentId: selectFolder.value.id,
+          faviconUrl,
+          faviconData,
+          share: share.value,
+          star: star.value,
+          tags: tags.value,
+          groups: groups.value,
+          description: description.value,
+          index: bookmarkNode.index,
+        });
+      } else {
+        createBookmark({
+          title: title.value,
+          url: url.value,
+          parentId: selectFolder.value.id,
+          faviconUrl,
+          faviconData,
+          share: share.value,
+          star: star.value,
+          tags: tags.value,
+          groups: groups.value,
+          description: description.value,
+        });
+      }
+    };
     return {
       title,
       url,
-      selectFolders,
-      deleteFolderCandidate,
-      setDeleteFolderCandidate,
-      showConfirmDeleteFolderModal,
-      getFolderDeleteResult,
-      showCard,
-      showSelectFolders,
-      showCardHandler,
-      saveFoldersHandler,
+      selectFolder,
       showRecentFolders,
+      showCard,
+      showSelectFolder,
+      showCardHandler,
+      setSelectFolderHandler,
       recentFolders,
       share,
       star,
@@ -418,6 +459,7 @@ export default {
       groups,
       allGroups,
       description,
+      finishBookmark,
     };
   },
 };
@@ -432,7 +474,7 @@ export default {
 }
 
 .input-style {
-  @apply w-full p-1 border border-gray-300 rounded;
+  @apply w-full px-2 py-1 text-sm border border-gray-300 rounded;
 }
 
 .btn {

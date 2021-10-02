@@ -19,14 +19,14 @@
           <div class="flex items-center space-x-1">
             <button
               title="open all pin bookmarks"
-              class="px-2 py-0.5 rounded bg-green-400 hover:bg-green-600 text-white text-xxs"
+              class="px-2 py-0.5 rounded bg-green-400 hover:bg-green-600 text-white text-xs"
               @click="$emit('open-all-pin-bookmarks')"
             >
               所有书签
             </button>
             <button
               title="open select bookmarks"
-              class="px-2 py-0.5 rounded bg-green-400 hover:bg-green-600 text-white text-xxs"
+              class="px-2 py-0.5 rounded bg-green-400 hover:bg-green-600 text-white text-xs"
               @click="$emit('open-select-bookmarks')"
             >
               选中书签
@@ -45,12 +45,12 @@
               >
               <label
                 for="group"
-                class="text-xxs text-gray-500"
+                class="text-xs text-gray-500"
               >在组内打开</label>
             </div>
             <button
               title="open bookmark in new tab group"
-              class="px-1 py-0.5 text-xxxs border-2 border-green-400 rounded"
+              class="px-1 py-0.5 text-xs border-2 border-green-400 rounded"
               :class="{
                 'opacity-10': !multiOnGroup,
                 'text-white bg-green-400 hover:bg-green-600': groupType === 'new',
@@ -63,7 +63,7 @@
             </button>
             <button
               title="open bookmark in old tab group"
-              class="px-1 py-0.5 text-xxxs border-2 border-green-400 rounded"
+              class="px-1 py-0.5 text-xs border-2 border-green-400 rounded"
               :class="{
                 'opacity-10': !multiOnGroup,
                 'text-white bg-green-400 hover:bg-green-600': groupType === 'old',
@@ -112,7 +112,7 @@
                 </div>
               </div>
               <input
-                class="flex-grow h-4 px-1 text-xxxs border border-gray-300 rounded"
+                class="flex-grow h-4 px-1 text-xs border border-gray-300 rounded"
                 type="text"
                 placeholder="输入 group 名称"
                 :disabled="!multiOnGroup || groupType !== 'new'"
@@ -140,12 +140,12 @@
                   }"
                 />
                 <span
-                  class="text-xxxs text-gray-500"
+                  class="text-xs text-gray-500"
                 >{{ currentGroup.id ? currentGroup.title : '请选择标签组' }}</span>
               </button>
               <p
                 v-if="oldGroups.length === 0"
-                class="p-0.5 text-xxxs text-gray-500"
+                class="p-0.5 text-xs text-gray-500"
               >
                 没有标签组
               </p>
@@ -157,7 +157,7 @@
                   v-for="group of oldGroups"
                   :key="group.title"
                   :title="group.title"
-                  class="group-btn w-full p-1 flex items-center text-xxs text-white opacity-80 hover:opacity-100 rounded"
+                  class="group-btn w-full p-1 flex items-center text-xs text-white opacity-80 hover:opacity-100 rounded"
                   :class="{ 'ring-2 ring-yellow-400': currentGroup.id === group.id }"
                   :style="{
                     'background': colorMap(group.color)
@@ -186,10 +186,10 @@
           <span class="text-xs">导出为 JSON</span>
         </p>
 
-        <button class="px-2 py-0.5 rounded bg-green-400 hover:bg-green-600 text-white text-xxs">
+        <button class="px-2 py-0.5 rounded bg-green-400 hover:bg-green-600 text-white text-xs">
           所有书签
         </button>
-        <button class="px-2 py-0.5 rounded bg-green-400 hover:bg-green-600 text-white text-xxs">
+        <button class="px-2 py-0.5 rounded bg-green-400 hover:bg-green-600 text-white text-xs">
           选中书签
         </button>
       </div>
@@ -210,14 +210,14 @@
 
         <button
           title="clear pin list"
-          class="px-2 py-0.5 rounded bg-red-400 hover:bg-red-600 text-white text-xxs"
+          class="px-2 py-0.5 rounded bg-red-400 hover:bg-red-600 text-white text-xs"
           @click="$emit('clear-pin-list')"
         >
           Pin 列表
         </button>
         <button
           title="clear select pin nodes"
-          class="px-2 py-0.5 rounded bg-red-400 hover:bg-red-600 text-white text-xxs"
+          class="px-2 py-0.5 rounded bg-red-400 hover:bg-red-600 text-white text-xs"
           @click="$emit('clear-select-pin-nodes')"
         >
           选中书签
@@ -239,11 +239,11 @@
         </p>
 
         <button
-          class="px-2 py-0.5 rounded bg-red-400 hover:bg-red-600 text-white text-xxs"
+          class="px-2 py-0.5 rounded bg-red-400 hover:bg-red-600 text-white text-xs"
         >
           Pin 列表的书签
         </button>
-        <button class="px-2 py-0.5 rounded bg-red-400 hover:bg-red-600 text-white text-xxs">
+        <button class="px-2 py-0.5 rounded bg-red-400 hover:bg-red-600 text-white text-xs">
           选中书签
         </button>
       </div>
@@ -441,15 +441,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.text-xxs {
-  font-size: 10px;
-  line-height: 14px;
-}
-
-.text-xxxs {
-  font-size: 8px;
-  line-height: 12px;
-}
 
 .btn {
   @apply flex justify-center items-center rounded hover:bg-gray-200;

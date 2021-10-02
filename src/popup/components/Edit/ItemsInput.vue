@@ -1,5 +1,5 @@
 <template>
-  <div class="relative">
+  <div class="relative space-y-2">
     <div class="label-style">
       <slot name="labelIcon" />
       <slot name="labeName" />
@@ -12,7 +12,7 @@
       >
         <button
           title="delete folder item"
-          class="p-1 text-red-400 bg-gray-200 hover:text-white hover:bg-red-400 rounded-l-sm"
+          class="p-1 text-red-400 bg-gray-200 hover:text-white hover:bg-red-400 rounded"
           @click="setDeleteCandidate(item)"
         >
           <slot name="itemIcon" />
@@ -25,7 +25,7 @@
         </span>
       </div>
     </div>
-    <div class="input-style mt-2 flex items-center space-x-1">
+    <div class="input-style flex items-center space-x-1">
       <input
         v-model="inputText"
         class="flex-grow border-0"
@@ -54,7 +54,7 @@
 
       <button
         title="clear input text"
-        class="btn text-red-400 hover:text-white hover:bg-red-400"
+        class="text-red-400 hover:text-white hover:bg-red-400"
         :class="{ 'opacity-0': !inputText }"
         @click="inputText = ''"
       >
@@ -178,7 +178,7 @@ export default {
 }
 
 .input-style {
-    @apply w-full p-1 border border-gray-300 rounded;
+    @apply w-full px-2 py-1 text-sm border border-gray-300 rounded;
 }
 
 .btn {

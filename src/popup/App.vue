@@ -5,7 +5,7 @@
   />
 
   <EditPage
-    v-else
+    v-if="page === 'edit'"
     class="tag-mode"
   />
 </template>
@@ -21,28 +21,45 @@ export default {
     EditPage,
   },
   setup() {
-    // page to show: browser or edit
-    const page = ref('browser'); // browser, edit
-    // edit bookmark state
-    // const editBookmark = ref(false);
+    const page = ref(''); // browser, edit
+    const bookmarkState = ref(false);
+    chrome.storage.local.get('bookmarkState', (result) => {
+      bookmarkState.value = result.bookmarkState;
+      if (bookmarkState.value) {
+        page.value = 'browser';
+      } else {
+        page.value = 'edit';
+      }
+    });
 
+    // provide bookmark state and change the bookmarkstate function
+    const setBookmarkState = (value) => {
+      chrome.storage.local.set({ bookmarkState: value });
+    };
+
+    provide('bookmarkState', bookmarkState);
+    provide('setBookmarkState', setBookmarkState);
+
+    // provide page state and change the page state function
     const changePage = (value) => {
       page.value = value;
     };
 
-    // const toggleEditBookmark = () => {
-    //   editBookmark.value = !editBookmark.value;
-    // };
-
     provide('page', page);
     provide('changePage', changePage);
 
-    // provide('editBookmark', editBookmark);
-    // provide('toggleEditBookmark', toggleEditBookmark);
+    // onMounted(async () => {
+    //   const db = new Dexie('tagdown');
+    //   await db.version(1).stores({
+    //     bookmark: 'id, *tags',
+    //   });
+    //   await db.bookmark.toArray((bookmarks) => {
+    //     console.log(bookmarks);
+    //   });
+    // });
 
     return {
       page,
-      // editBookmark,
     };
   },
 };

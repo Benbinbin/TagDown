@@ -156,6 +156,7 @@ export default {
         chrome.bookmarks.getSubTree(currentNodeId.value).then((nodes) => {
           [currentNode.value] = nodes;
           childrenNodes.value = nodes[0].children;
+          console.log(childrenNodes.value);
         });
       },
       {

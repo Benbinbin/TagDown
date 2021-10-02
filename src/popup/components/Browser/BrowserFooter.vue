@@ -22,13 +22,13 @@
       class="flex space-x-2"
     >
       <div class="flex flex-col justify-between items-center">
-        <p class="text-xs text-gray-500">
+        <p class="text-sm text-gray-500">
           书签打开模式
         </p>
         <div class="flex space-x-1">
           <button
             title="set bookmark open mode in single tab"
-            class="px-1 py-0.5 text-xxs border-2 border-green-400 rounded"
+            class="px-1 py-0.5 text-xs border-2 border-green-400 rounded"
             :class="{
               'text-white bg-green-400 hover:bg-green-600': bookmarkOpenMode === 'single',
               'text-gray-500 hover:text-white bg-white hover:bg-green-400': bookmarkOpenMode !== 'single'
@@ -39,7 +39,7 @@
           </button>
           <button
             title="set bookmark open mode in multi tabs"
-            class="px-1 py-0.5 text-xxs border-2 border-green-400 rounded"
+            class="px-1 py-0.5 text-xs border-2 border-green-400 rounded"
             :class="{
               'text-white bg-green-400 hover:bg-green-600': bookmarkOpenMode === 'multi',
               'text-gray-500 hover:text-white bg-white hover:bg-green-400': bookmarkOpenMode !== 'multi'
@@ -50,12 +50,12 @@
           </button>
         </div>
       </div>
-      <div class="p-2 border-2 border-green-400 rounded">
+      <div class="p-1 border-2 border-green-400 rounded">
         <div
           v-show="bookmarkOpenMode === 'single'"
           class="space-y-1"
         >
-          <div class="flex items-center space-x-0.5">
+          <div class="p-1 flex items-center space-x-0.5">
             <input
               id="newtab"
               type="radio"
@@ -65,10 +65,10 @@
             >
             <label
               for="newtab"
-              class="text-xxs text-gray-500"
+              class="text-xs text-gray-500"
             >当前标签页</label>
           </div>
-          <div class="flex items-center space-x-0.5">
+          <div class="p-1 flex items-center space-x-0.5">
             <input
               id="currenttab"
               type="radio"
@@ -78,7 +78,7 @@
             >
             <label
               for="currenttab"
-              class="text-xxs text-gray-500"
+              class="text-xs text-gray-500"
             >新建标签页</label>
           </div>
         </div>
@@ -96,30 +96,33 @@
               >
               <label
                 for="group"
-                class="text-xxs text-gray-500"
+                class="text-xs text-gray-500"
               >在组内打开</label>
             </div>
             <button
-              class="px-1 py-0.5 text-xxxs border-2 border-green-400 rounded"
+              title="open bookmark in new tab group"
+              class="px-1 py-0.5 text-xs border-2 border-green-400 rounded"
               :class="{
                 'opacity-10': !multiOnGroup,
                 'text-white bg-green-400 hover:bg-green-600': groupType === 'new',
                 'text-gray-500 hover:text-white bg-white hover:bg-green-400': groupType !== 'new'
               }"
               :disabled="!multiOnGroup"
-              @click="$emit('update:groupType','new')"
+              @click="$emit('update:groupType', 'new')"
             >
               新建标签组
             </button>
             <button
-              class="px-1 py-0.5 text-xxxs border-2 border-green-400 rounded"
+              title="open bookmark in old tab group"
+              class="px-1 py-0.5 text-xs border-2 border-green-400 rounded"
               :class="{
                 'opacity-10': !multiOnGroup,
                 'text-white bg-green-400 hover:bg-green-600': groupType === 'old',
                 'text-gray-500 hover:text-white bg-white hover:bg-green-400': groupType !== 'old'
               }"
+
               :disabled="!multiOnGroup"
-              @click="$emit('update:groupType','old')"
+              @click="$emit('update:groupType', 'old')"
             >
               已有标签组
             </button>
@@ -161,7 +164,7 @@
                 </div>
               </div>
               <input
-                class="flex-grow h-4 px-1 text-xxxs border border-gray-300 rounded"
+                class="flex-grow px-1 py-0.5 text-xs border-2 border-gray-300 rounded"
                 type="text"
                 placeholder="输入 group 名称"
                 :disabled="!multiOnGroup || groupType !== 'new'"
@@ -178,7 +181,7 @@
                 v-if="oldGroups.length > 0"
                 title="select old groups"
                 :disabled="!multiOnGroup || groupType !== 'old'"
-                class="p-0.5 flex items-center hover:bg-gray-200 space-x-0.5 rounded"
+                class="p-1 flex items-center hover:bg-gray-200 space-x-0.5 rounded"
                 @click="showOldGroups = !showOldGroups"
               >
                 <div
@@ -188,11 +191,13 @@
                     'background': colorMap(currentGroup.color)
                   }"
                 />
-                <span class="text-xxxs text-gray-500">{{ currentGroup.id ? currentGroup.title : '请选择标签组' }}</span>
+                <span
+                  class="text-xs text-gray-500"
+                >{{ currentGroup.id ? currentGroup.title : '请选择标签组' }}</span>
               </button>
               <p
                 v-if="oldGroups.length === 0"
-                class="p-0.5 text-xxxs text-gray-500"
+                class="p-1 text-xs text-gray-500"
               >
                 没有标签组
               </p>
@@ -204,7 +209,7 @@
                   v-for="group of oldGroups"
                   :key="group.title"
                   :title="group.title"
-                  class="group-btn w-full p-1 flex items-center text-xxs text-white opacity-80 hover:opacity-100 rounded"
+                  class="px-1 py-0.5 flex items-center text-xs text-white opacity-80 hover:opacity-100 rounded"
                   :class="{ 'ring-2 ring-yellow-400': currentGroup.id === group.id }"
                   :style="{
                     'background': colorMap(group.color)
@@ -220,13 +225,13 @@
       </div>
     </div>
     <!-- edit bookmark -->
-    <div class="flex space-x-2">
+    <div class="flex items-center space-x-1.5">
       <button
         title="edit bookmark"
-        class="edit-bookmark-btn w-10 h-10 relative h-center bg-cover bg-center bg-no-repeat text-white text-opacity-0 hover:text-opacity-100 rounded"
+        class="edit-bookmark-btn w-8 h-8 relative h-center bg-cover bg-center bg-no-repeat text-white text-opacity-0 hover:text-opacity-100 rounded"
         :style="{
           backgroundImage:
-            'url(' + `https://www.youtube.com/s/desktop/4eebcda0/img/favicon_32x32.png` + ')',
+            'url(' + bgImage + ')',
         }"
         @click="changePage('edit')"
       >
@@ -241,18 +246,18 @@
           />
         </svg>
       </button>
-      <div class="flex flex-col justify-between">
-        <p class="text-base text-gray-600">
+      <div class="flex flex-col space-y-0.5">
+        <p class="text-sm text-gray-600">
           bookmark title
         </p>
         <div
           v-if="bookmarkState"
           class="flex items-center space-x-1"
         >
-          <span class="text-xxs text-green-400">当前页面已收藏</span>
+          <span class="text-xs text-green-400">当前页面已收藏</span>
           <button
             title="delete bookmark"
-            class="p-0.5 h-center rounded-sm bg-red-200 hover:bg-red-400 text-white"
+            class="p-1 h-center bg-red-400 hover:bg-red-600 text-white rounded-sm"
             @click="deleteBookmarkHandler"
           >
             <svg
@@ -271,10 +276,10 @@
           v-else
           class="flex items-center space-x-1"
         >
-          <span class="text-xxs text-blue-400">当前页面未收藏</span>
+          <span class="text-xs text-blue-400">当前页面未收藏</span>
           <button
             title="add bookmark"
-            class="p-px0.5 h-center rounded-sm bg-green-200 hover:bg-green-400 text-white"
+            class="p-1 h-center bg-green-400 hover:bg-green-600 text-white rounded-sm"
             @click="changePage('edit')"
           >
             <svg
@@ -431,10 +436,17 @@ export default {
     /**
      * edit bookmark
     */
+    // bookmark favicon
+    const bgImage = ref('/icons/icon64_tag.png');
+    chrome.storage.local.get('tabFaviconUrl', (result) => {
+      bgImage.value = result.tabFaviconUrl;
+    });
+
     // bookmark tag state
-    const bookmarkState = ref(true);
+    const bookmarkState = inject('bookmarkState');
+
     function deleteBookmarkHandler() {
-      bookmarkState.value = false;
+      // bookmarkState.value = false;
     }
 
     const changePage = inject('changePage');
@@ -448,6 +460,7 @@ export default {
       colorScheme,
       colorMap,
       setGroupColorHandler,
+      bgImage,
       bookmarkState,
       deleteBookmarkHandler,
       changePage,
@@ -456,27 +469,13 @@ export default {
 };
 </script>
 <style lang="css" scoped>
-.text-xxs {
-  font-size: 10px;
-  line-height: 14px;
-}
-
-.text-xxxs {
-  font-size: 8px;
-  line-height: 12px;
-}
-
 .h-center {
   @apply flex justify-center items-center;
 }
 
-.group-btn {
-  min-height: 16px;
-}
-
 .edit-bookmark-btn:hover::before {
   content: "";
-  transform: scale(1.2);
+  transform: scale(1.05);
   background-color: #d1d5db;
   background-size: cover;
   position: absolute;

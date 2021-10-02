@@ -11,7 +11,7 @@
         :class="{ 'opacity-10': !bookmarkState }"
       >
         <svg
-          class="w-6 h-6"
+          class="w-5 h-5"
           viewBox="0 0 50 50"
           fill="currentColor"
           xmlns="http://www.w3.org/2000/svg"
@@ -22,13 +22,14 @@
         </svg>
       </button>
       <div class="flex items-center space-x-0.5">
-        <div class="p-1">
-          <div
-            class="bookmark-favicon w-6 h-6 bg-cover bg-center bg-no-repeat rounded"
+        <div class="p-1 flex justify-center items-center">
+          <button
+            class="bookmark-favicon w-5 h-5 bg-cover bg-center bg-no-repeat rounded"
             :style="{
               backgroundImage:
-                'url(' + `https://www.youtube.com/s/desktop/4eebcda0/img/favicon_32x32.png` + ')',
+                'url(' + bgImage + ')',
             }"
+            @click="refreshFavicon"
           />
         </div>
         <h1 class="text-xl font-bold text-gray-800">
@@ -40,7 +41,7 @@
         class="btn"
       >
         <svg
-          class="w-6 h-6"
+          class="w-5 h-5"
           viewBox="0 0 50 50"
           fill="currentColor"
           xmlns="http://www.w3.org/2000/svg"
@@ -127,17 +128,29 @@ export default {
   components: {
     EditInfo,
   },
-  setup() {
-    // bookmark tag state
-    const bookmarkState = ref(true);
-    function deleteBookmarkHandler() {
-      bookmarkState.value = false;
-    }
+  emits: ['delete-bookmark'],
+  setup(props, context) {
+    const refreshFavicon = () => {
+      // console.log(props.faviconUrl);
+    };
+
+    const bookmarkState = inject('bookmarkState');
+
+    const bgImage = ref('/icons/icon64_tag.png');
+    chrome.storage.local.get('tabFaviconUrl', (result) => {
+      bgImage.value = result.tabFaviconUrl;
+    });
+
+    const deleteBookmarkHandler = () => {
+      context.emit('delete-bookmark');
+    };
 
     const changePage = inject('changePage');
 
     return {
       bookmarkState,
+      bgImage,
+      refreshFavicon,
       deleteBookmarkHandler,
       changePage,
     };
