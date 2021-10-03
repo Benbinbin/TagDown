@@ -155,7 +155,7 @@ export default {
       showDeleteConfirmModal.value = true;
     };
     const getDeleteResult = (value) => {
-      console.log(value);
+      // console.log(value);
       deleteCandidate.value = null;
     };
 

@@ -14,7 +14,6 @@ db.version(1).stores({
 });
 db.open().then((database) => {
   app.provide('db', database);
-  console.log(database);
   app.mount('#app');
 }).catch((err) => {
   // Error occurred

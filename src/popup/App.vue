@@ -22,7 +22,9 @@ export default {
   },
   setup() {
     const page = ref(''); // browser, edit
+
     const bookmarkState = ref(false);
+    // get bookmarkState init data from chrome.storage
     chrome.storage.local.get('bookmarkState', (result) => {
       bookmarkState.value = result.bookmarkState;
       if (bookmarkState.value) {
@@ -33,30 +35,21 @@ export default {
     });
 
     // provide bookmark state and change the bookmarkstate function
-    const setBookmarkState = (value) => {
-      chrome.storage.local.set({ bookmarkState: value });
-    };
-
     provide('bookmarkState', bookmarkState);
+
+    const setBookmarkState = async (value) => {
+      await chrome.storage.local.set({ bookmarkState: value });
+      bookmarkState.value = value;
+    };
     provide('setBookmarkState', setBookmarkState);
 
     // provide page state and change the page state function
+    provide('page', page);
+
     const changePage = (value) => {
       page.value = value;
     };
-
-    provide('page', page);
     provide('changePage', changePage);
-
-    // onMounted(async () => {
-    //   const db = new Dexie('tagdown');
-    //   await db.version(1).stores({
-    //     bookmark: 'id, *tags',
-    //   });
-    //   await db.bookmark.toArray((bookmarks) => {
-    //     console.log(bookmarks);
-    //   });
-    // });
 
     return {
       page,

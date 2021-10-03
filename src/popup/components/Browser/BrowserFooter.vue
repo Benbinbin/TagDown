@@ -120,7 +120,6 @@
                 'text-white bg-green-400 hover:bg-green-600': groupType === 'old',
                 'text-gray-500 hover:text-white bg-white hover:bg-green-400': groupType !== 'old'
               }"
-
               :disabled="!multiOnGroup"
               @click="$emit('update:groupType', 'old')"
             >
@@ -231,7 +230,7 @@
         class="edit-bookmark-btn w-8 h-8 relative h-center bg-cover bg-center bg-no-repeat text-white text-opacity-0 hover:text-opacity-100 rounded"
         :style="{
           backgroundImage:
-            'url(' + bgImage + ')',
+            'url(' + favicon + ')',
         }"
         @click="changePage('edit')"
       >
@@ -300,6 +299,7 @@
 </template>
 <script>
 import { ref, watch, inject } from 'vue';
+import useBookmark from '@/composables/useBookmark';
 import useTab from '@/composables/useTab';
 
 export default {
@@ -345,7 +345,7 @@ export default {
   ],
   setup(props, context) {
     const {
-      createNewTab, getAllTabGroups, watchTabGroups, createTabInGroup,
+      getActiveTab, createNewTab, getAllTabGroups, watchTabGroups, createTabInGroup,
     } = useTab();
 
     /**
@@ -436,18 +436,36 @@ export default {
     /**
      * edit bookmark
     */
-    // bookmark favicon
-    const bgImage = ref('/icons/icon64_tag.png');
-    chrome.storage.local.get('tabFaviconUrl', (result) => {
-      bgImage.value = result.tabFaviconUrl;
-    });
-
-    // bookmark tag state
+    // bookmark state
     const bookmarkState = inject('bookmarkState');
+    const setBookmarkState = inject('setBookmarkState');
 
     function deleteBookmarkHandler() {
-      // bookmarkState.value = false;
+      console.log(bookmarkState);
     }
+
+    // bookmark favicon
+    const { getBookmarkIcon } = useBookmark();
+    const favicon = ref('/icons/icon64_untag.png');
+
+    getActiveTab().then(async (tab) => {
+      const tabUrl = tab.url || tab.pendingUrl;
+      const { favIconUrl } = tab;
+
+      if (bookmarkState.value) {
+        const nodes = await chrome.bookmarks.search({
+          url: tabUrl,
+        });
+        if (nodes.length === 0) return;
+        const nodeId = nodes[0].id;
+        const faviconBlob = await getBookmarkIcon(nodeId);
+        if (faviconBlob) {
+          favicon.value = URL.createObjectURL(faviconBlob);
+        } else {
+          favicon.value = '/icons/icon64_tag.png';
+        }
+      } else if (favIconUrl) favicon.value = favIconUrl;
+    });
 
     const changePage = inject('changePage');
 
@@ -460,7 +478,7 @@ export default {
       colorScheme,
       colorMap,
       setGroupColorHandler,
-      bgImage,
+      favicon,
       bookmarkState,
       deleteBookmarkHandler,
       changePage,

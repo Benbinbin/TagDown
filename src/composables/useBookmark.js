@@ -1,9 +1,7 @@
-// import Dexie from 'dexie';
 import { inject } from 'vue';
 
 export default function useBookmark() {
   const db = inject('db');
-  console.log(db);
 
   // check the given url exist on bookmarks tree or not
   const checkBookmarkState = async (url) => {
@@ -16,17 +14,30 @@ export default function useBookmark() {
     return true;
   };
 
-  // get bookmark icon
-  const getBookmarkIcon = async (nodeId) => {
-    const icon = await db.bookmarkIcon.get(nodeId);
-    // console.log(bookmark);
-    return icon;
+  // bookmark favicon indexedDB
+  const setBookmarkIcon = async (id, blobData) => {
+    // Store the binary data in indexedDB:
+    await db.bookmarkIcon.put({
+      id,
+      icon: blobData,
+    });
+  };
+
+  const getBookmarkIcon = async (id) => {
+    const result = await db.bookmarkIcon.get(id);
+    if (result) return result.icon;
+    return undefined;
+  };
+
+  const deleteBookmarkIcon = async (id) => {
+    await db.bookmarkIcon.delete(id);
   };
 
   // bookmark indexedDB
-  const setBookmarkDB = async (nodeId, bookmark) => {
+  const setBookmarkDB = async (id, bookmark) => {
+    // console.log(bookmark);
     await db.bookmark.put({
-      id: nodeId,
+      id,
       title: bookmark.title,
       url: bookmark.url,
       faviconUrl: bookmark.faviconUrl,
@@ -36,55 +47,51 @@ export default function useBookmark() {
     });
   };
 
-  const getBookmarkDB = async (nodeId) => {
-    console.log('get bookmark db');
-    const bookmark = await db.bookmark.get(nodeId);
-    console.log('bookmark', bookmark);
+  const getBookmarkDB = async (id) => {
+    const bookmark = await db.bookmark.get(id);
 
     return bookmark;
   };
 
-  const deleteBookmarkDB = async (nodeId) => {
-    await db.bookmark.delete(nodeId);
+  const deleteBookmarkDB = async (id) => {
+    await db.bookmark.delete(id);
   };
 
   // share indexedDB
-  const setBookmarkShare = async (nodeId, share) => {
+  const setBookmarkShare = async (id, share) => {
     await db.share.put({
-      id: nodeId,
+      id,
       share,
     });
   };
 
-  const getBookmarkShare = async (nodeId) => {
-    console.log('get share db');
-    const shareState = await db.share.get(nodeId);
-    console.log('share', shareState);
+  const getBookmarkShare = async (id) => {
+    const result = await db.share.get(id);
 
-    return shareState;
+    if (result) return result.share;
+    return undefined;
   };
 
-  const deleteBookmarkShare = async (nodeId) => {
-    await db.share.delete(nodeId);
+  const deleteBookmarkShare = async (id) => {
+    await db.share.delete(id);
   };
 
   // star indexedDB
-  const setBookmarkStar = async (nodeId, star) => {
+  const setBookmarkStar = async (id, star) => {
     await db.star.put({
-      id: nodeId,
+      id,
       star,
     });
   };
 
-  const getBookmarkStar = async (nodeId) => {
-    console.log('get star db');
-    const starState = await db.star.get(nodeId);
-    console.log('star', starState);
-    return starState;
+  const getBookmarkStar = async (id) => {
+    const result = await db.star.get(id);
+    if (result) return result.star;
+    return undefined;
   };
 
-  const deleteBookmarkStar = async (nodeId) => {
-    await db.star.delete(nodeId);
+  const deleteBookmarkStar = async (id) => {
+    await db.star.delete(id);
   };
 
   // create new bookmark and add the bookmark to indexedDB
@@ -96,7 +103,7 @@ export default function useBookmark() {
       parentId: node.parentId,
     });
 
-    // add new bookmark to indexedDB bookmark
+    // add new bookmark to indexedDB bookmarkDB
     await setBookmarkDB(bookmarkNode.id, {
       title: node.title,
       url: node.url,
@@ -105,6 +112,9 @@ export default function useBookmark() {
       groups: node.groups,
       description: node.description,
     });
+
+    // add new bookmark icon to indexedDB bookmarkIcon
+    await setBookmarkIcon(bookmarkNode.id, node.faviconData);
 
     // add bookmark share property to indexedDB share
     await setBookmarkShare(bookmarkNode.id, node.share);
@@ -118,6 +128,7 @@ export default function useBookmark() {
   const updateBookmark = async (nodeId, newNode) => {
     await chrome.bookmarks.remove(nodeId);
     await deleteBookmarkDB(nodeId);
+    await deleteBookmarkIcon(nodeId);
     await deleteBookmarkShare(nodeId);
     await deleteBookmarkStar(nodeId);
     const updateBookmarkNode = await chrome.bookmarks.create({
@@ -127,7 +138,11 @@ export default function useBookmark() {
       index: newNode.index, // create new bookmark node at corresponding index
     });
 
-    // add new bookmark to indexedDB bookmark
+    console.log('update new bookmark', updateBookmarkNode.id);
+
+    // add new bookmark to indexedDB bookmarkDB
+    console.log('update indexedDB bookmarkDB');
+    console.log(newNode);
     await setBookmarkDB(updateBookmarkNode.id, {
       title: newNode.title,
       url: newNode.url,
@@ -137,10 +152,16 @@ export default function useBookmark() {
       description: newNode.description,
     });
 
+    // add new bookmark icon to indexedDB bookmarkIcon
+    console.log('update indexedDB bookmarkIcon');
+    await setBookmarkIcon(updateBookmarkNode.id, newNode.faviconData);
+
     // add new bookmark share property to indexedDB share
+    console.log('update indexedDB share');
     await setBookmarkShare(updateBookmarkNode.id, newNode.share);
 
     // add new bookmark star property to indexedDB star
+    console.log('update indexedDB star');
     await setBookmarkStar(updateBookmarkNode.id, newNode.star);
 
     return updateBookmarkNode;
@@ -148,12 +169,19 @@ export default function useBookmark() {
 
   return {
     checkBookmarkState,
+    // bookmark favicon
     getBookmarkIcon,
+    setBookmarkIcon,
+    deleteBookmarkIcon,
+    // bookmark indexedDB data
     getBookmarkDB,
+    // share state
     getBookmarkShare,
     setBookmarkShare,
+    // star state
     getBookmarkStar,
     setBookmarkStar,
+
     createBookmark,
     updateBookmark,
   };

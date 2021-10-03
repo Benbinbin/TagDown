@@ -356,12 +356,12 @@ export default {
     };
 
     const enterPopupHintHandler = () => {
-      console.log('enter popup hint');
+      // console.log('enter popup hint');
       if (hiddenTimmer) clearTimeout(hiddenTimmer);
     };
 
     const leavePopupHintHandler = () => {
-      console.log('leave popup hint');
+      // console.log('leave popup hint');
       hiddenTimmer = setTimeout(() => {
         showPopupHint.value = false;
       }, 600);

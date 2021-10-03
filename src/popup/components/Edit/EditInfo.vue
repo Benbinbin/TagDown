@@ -293,7 +293,7 @@
   </div>
 </template>
 <script>
-import { ref, inject, onMounted } from 'vue';
+import { ref } from 'vue';
 import ItemsInput from './ItemsInput.vue';
 import SelectFolders from './SelectFolders.vue';
 import useTab from '@/composables/useTab';
@@ -475,10 +475,6 @@ export default {
 
 .input-style {
   @apply w-full px-2 py-1 text-sm border border-gray-300 rounded;
-}
-
-.btn {
-  @apply p-1 text-green-400 hover:text-white hover:bg-green-400 rounded;
 }
 
 .recent-folders-popup {
