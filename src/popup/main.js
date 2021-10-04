@@ -7,7 +7,6 @@ const app = createApp(App);
 
 const db = new Dexie('tagdown');
 db.version(1).stores({
-  bookmarkIcon: 'id',
   bookmark: 'id, *tags, *groups',
   share: 'id',
   star: 'id',

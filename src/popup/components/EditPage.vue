@@ -23,14 +23,11 @@
       </button>
       <div class="flex items-center space-x-0.5">
         <div class="p-1 flex justify-center items-center">
-          <button
-            class="bookmark-favicon w-5 h-5 bg-cover bg-center bg-no-repeat rounded"
-            :style="{
-              backgroundImage:
-                'url(' + favicon + ')',
-            }"
-            @click="refreshFaviconHandler"
-          />
+          <img
+            class="bookmark-favicon w-5 h-5 rounded"
+            :src="favicon"
+            alt="bookmark favicon"
+          >
         </div>
         <h1 class="text-xl font-bold text-gray-800">
           收藏书签
@@ -232,6 +229,8 @@
             :candidates="allTags"
             :placeholder="请输入标签"
             :modal-title="是否删除该标签"
+            @add-item="tags.push($event)"
+            @delete-item="deleteTagsItemHandler"
           >
             <template #labelIcon>
               <svg
@@ -267,6 +266,8 @@
             :candidates="allGroups"
             :placeholder="请输入分组"
             :modal-title="是否删除该分组"
+            @add-item="groups.push($event)"
+            @delete-item="deleteGroupsItemHandler"
           >
             <template #labelIcon>
               <svg
@@ -411,28 +412,43 @@
         />
       </transition>
     </div>
+
+    <PopupMsg
+      v-if="showFinishMsgPopup"
+      v-model:show="showFinishMsgPopup"
+    >
+      <template #msg>
+        <p
+          class="p-4 text-sm font-bold"
+          :class="{
+            'text-green-400': finishMsg === '成功',
+            'text-red-400': finishMsg === '失败'
+          }"
+        >
+          {{ finishMsg }}
+        </p>
+      </template>
+    </PopupMsg>
   </div>
 </template>
 <script>
 import { ref, inject, toRaw } from 'vue';
-// import EditInfo from './Edit/EditInfo.vue';
 import ItemsInput from './Edit/ItemsInput.vue';
 import SelectFolders from './Edit/SelectFolders.vue';
+import PopupMsg from './Modal/PopupMsg.vue';
 import useTab from '@/composables/useTab';
 import useBookmark from '@/composables/useBookmark';
 
 export default {
-  // components: {
-  //   EditInfo,
-  // },
   components: {
     ItemsInput,
     SelectFolders,
+    PopupMsg,
   },
   setup(props, context) {
     const { getActiveTab } = useTab();
     const {
-      getBookmarkIcon, setBookmarkIcon, deleteBookmarkIcon, getBookmarkDB, getBookmarkShare, setBookmarkShare, getBookmarkStar, setBookmarkStar, createBookmark, updateBookmark,
+      getBookmarkDB, getBookmarkShare, setBookmarkShare, getBookmarkStar, setBookmarkStar, createBookmark, updateBookmark,
     } = useBookmark();
 
     // bookmark state
@@ -446,21 +462,10 @@ export default {
     };
 
     // favicon
+    // wait for a new api for favicon
+    // refer to: https://developer.chrome.com/docs/extensions/mv3/intro/mv3-overview/#other-features
     let faviconUrl = '';
-    let faviconData = '';
     const favicon = ref('/icons/icon64_untag.png');
-
-    const refreshFaviconHandler = async () => {
-      console.log('refresh favicon');
-      if (!faviconUrl) return;
-      const res = await fetch(faviconUrl);
-      const blob = await res.blob();
-      console.log(blob);
-      if (blob) {
-        faviconData = blob;
-        favicon.value = URL.createObjectURL(faviconData);
-      }
-    };
 
     // title
     const title = ref('');
@@ -498,11 +503,21 @@ export default {
 
     // tags
     const tags = ref(['a', 'apple', 'abandan', 'b', 'box']);
-    let allTags = [];
+    const allTags = ref([]);
+    const deleteTagsItemHandler = (value) => {
+      const index = tags.value.indexOf(value);
+      if (index === -1) return;
+      tags.value.splice(index, 1);
+    };
 
     // group
     const groups = ref(['a', 'apple', 'abandan', 'b', 'box']);
-    let allGroups = [];
+    const allGroups = ref([]);
+    const deleteGroupsItemHandler = (value) => {
+      const index = groups.value.indexOf(value);
+      if (index === -1) return;
+      groups.value.splice(index, 1);
+    };
 
     // description
     const description = ref('');
@@ -510,21 +525,21 @@ export default {
     // const bookmarkState = inject('bookmarkState');
     let urlBookmarkState = false;
     const bookmarkNode = {};
+    let parentIdInit = '';
 
     // indexedDB
     const db = inject('db');
 
     // base on current tab bookmark state to get init data
     getActiveTab().then(async (tab) => {
-      console.log(tab);
       // current tab url and favicon
       const tabUrl = tab.url || tab.pendingUrl;
       const tabFaviconUrl = tab.favIconUrl;
-      console.log('tabFaviconUrl', tabFaviconUrl);
 
       // favicon
       if (tabFaviconUrl) {
         faviconUrl = tabFaviconUrl;
+        favicon.value = tabFaviconUrl;
       }
 
       // get bookmark node
@@ -535,8 +550,6 @@ export default {
       if (nodes.length === 0) {
         // no bookmark
         urlBookmarkState = false;
-
-        await refreshFaviconHandler();
 
         title.value = tab.title;
         url.value = tabUrl;
@@ -552,27 +565,21 @@ export default {
         // already bookmark
         urlBookmarkState = true;
 
+        if (!tabFaviconUrl) favicon.value = '/icons/icon64_tag.png';
+
         const [node] = nodes;
         bookmarkNode.id = node.id;
         bookmarkNode.index = node.index;
 
-        // favicon
-        faviconData = await getBookmarkIcon(node.id);
-        if (faviconData) {
-          favicon.value = URL.createObjectURL(faviconData);
-        } else {
-          favicon.value = '/icons/icon64_tag.png';
-        }
-
         title.value = node.title;
         url.value = node.url;
+        parentIdInit = node.parentId;
         chrome.bookmarks.get(node.parentId).then(async (parentNodes) => {
           [selectFolder.value] = parentNodes;
         });
 
         const bookmarkDB = await getBookmarkDB(node.id);
         if (bookmarkDB) {
-          faviconUrl = tabFaviconUrl || bookmarkDB.faviconUrl;
           tags.value = bookmarkDB.tags;
           groups.value = bookmarkDB.groups;
           description.value = bookmarkDB.description;
@@ -588,11 +595,13 @@ export default {
       }
 
       // all tags
-      allTags = await db.bookmark.orderBy('tags').uniqueKeys();
+      allTags.value = await db.bookmark.orderBy('tags').uniqueKeys();
       // all groups
-      allGroups = await db.bookmark.orderBy('groups').uniqueKeys();
+      allGroups.value = await db.bookmark.orderBy('groups').uniqueKeys();
     });
 
+    const finishMsg = ref('');
+    const showFinishMsgPopup = ref(false);
     // create or update bookmark
     const finishBookmark = async () => {
       const nodeData = {
@@ -600,7 +609,6 @@ export default {
         url: url.value,
         parentId: selectFolder.value.id,
         faviconUrl,
-        faviconData,
         share: share.value,
         star: star.value,
         // get array value not the Proxy object
@@ -613,9 +621,38 @@ export default {
         updateBookmark(bookmarkNode.id, {
           ...nodeData,
           index: bookmarkNode.index,
+          changeFolder: selectFolder.value.id === parentIdInit,
+        }).then(() => {
+          showFinishMsgPopup.value = true;
+          finishMsg.value = '成功';
+          setTimeout(() => {
+            window.close();
+          }, 1000);
+        }).catch((err) => {
+          showFinishMsgPopup.value = true;
+          finishMsg.value = '失败';
+          let timer = setTimeout(() => {
+            showFinishMsgPopup.value = false;
+            timer = null;
+            console.log(err);
+          }, 500);
         });
       } else {
-        createBookmark(nodeData);
+        createBookmark(nodeData).then(() => {
+          showFinishMsgPopup.value = true;
+          finishMsg.value = '成功';
+          setTimeout(() => {
+            window.close();
+          }, 1000);
+        }).catch((err) => {
+          showFinishMsgPopup.value = true;
+          finishMsg.value = '失败';
+          let timer = setTimeout(() => {
+            showFinishMsgPopup.value = false;
+            timer = null;
+            console.log(err);
+          }, 500);
+        });
       }
     };
 
@@ -624,7 +661,6 @@ export default {
 
     return {
       favicon,
-      refreshFaviconHandler,
       deleteBookmarkHandler,
       title,
       url,
@@ -639,10 +675,14 @@ export default {
       star,
       tags,
       allTags,
+      deleteTagsItemHandler,
       groups,
       allGroups,
+      deleteGroupsItemHandler,
       description,
       finishBookmark,
+      finishMsg,
+      showFinishMsgPopup,
       changePage,
     };
   },

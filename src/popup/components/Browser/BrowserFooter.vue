@@ -445,26 +445,17 @@ export default {
     }
 
     // bookmark favicon
-    const { getBookmarkIcon } = useBookmark();
+    // wait for a new api for favicon
+    // refer to: https://developer.chrome.com/docs/extensions/mv3/intro/mv3-overview/#other-features
     const favicon = ref('/icons/icon64_untag.png');
 
     getActiveTab().then(async (tab) => {
-      const tabUrl = tab.url || tab.pendingUrl;
       const { favIconUrl } = tab;
-
-      if (bookmarkState.value) {
-        const nodes = await chrome.bookmarks.search({
-          url: tabUrl,
-        });
-        if (nodes.length === 0) return;
-        const nodeId = nodes[0].id;
-        const faviconBlob = await getBookmarkIcon(nodeId);
-        if (faviconBlob) {
-          favicon.value = URL.createObjectURL(faviconBlob);
-        } else {
-          favicon.value = '/icons/icon64_tag.png';
-        }
-      } else if (favIconUrl) favicon.value = favIconUrl;
+      if (favIconUrl) {
+        favicon.value = favIconUrl;
+      } else if (bookmarkState.value) {
+        favicon.value = '/icons/icon64_tag.png';
+      }
     });
 
     const changePage = inject('changePage');

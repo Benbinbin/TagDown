@@ -12,7 +12,7 @@
       >
         <button
           title="delete folder item"
-          class="p-1 text-red-400 bg-gray-200 hover:text-white hover:bg-red-400 rounded"
+          class="p-1 text-red-400 bg-gray-200 hover:text-white hover:bg-red-400 rounded-l-sm"
           @click="setDeleteCandidate(item)"
         >
           <slot name="itemIcon" />
@@ -27,16 +27,16 @@
     </div>
     <div class="input-style flex items-center space-x-1">
       <input
-        v-model="inputText"
+        v-model.trim="inputText"
         class="flex-grow border-0"
         type="text"
         :placeholder="placeholder"
         @input="showCandidatePopup = true"
-        @blur="showCandidatePopup = false"
+        @keyup.enter="addItemHandler(inputText)"
       >
 
       <div
-        v-show="showCandidatePopup"
+        v-show="showCandidatePopup && filterCandidates.length>0"
         class="wrapper h-0 absolute -bottom-1 inset-x-0 z-10 select-none"
       >
         <div
@@ -46,6 +46,11 @@
             v-for="candidate of filterCandidates"
             :key="candidate"
             class="p-1 ml-2 mt-2 text-xs text-white bg-green-400 hover:bg-green-600 rounded"
+            :class="{
+              'opacity-10': items.includes(candidate)
+            }"
+            :disabled="items.includes(candidate)"
+            @click="addItemHandler(candidate)"
           >
             {{ candidate }}
           </button>
@@ -135,13 +140,23 @@ export default {
       default: '是否删除该选项',
     },
   },
-  setup(props) {
+  emits: ['add-item', 'delete-item'],
+  setup(props, context) {
     // input
     const inputText = ref('');
     const filterCandidates = computed(() => {
       if (!inputText.value) return props.candidates;
       return props.candidates.filter((candidate) => candidate.toLowerCase().includes(inputText.value.toLowerCase()));
     });
+
+    const addItemHandler = (item) => {
+      if (!item || props.items.includes(item)) {
+        inputText.value = '';
+        return;
+      }
+      context.emit('add-item', item);
+      inputText.value = '';
+    };
 
     // popup
     const showCandidatePopup = ref(false);
@@ -156,12 +171,16 @@ export default {
     };
     const getDeleteResult = (value) => {
       // console.log(value);
+      if (value && deleteCandidate.value) {
+        context.emit('delete-item', deleteCandidate.value);
+      }
       deleteCandidate.value = null;
     };
 
     return {
       inputText,
       filterCandidates,
+      addItemHandler,
       showCandidatePopup,
       deleteCandidate,
       showDeleteConfirmModal,

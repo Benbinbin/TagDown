@@ -71,3 +71,23 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
   // change action icon
   await changeActionIcon(bookmarkState);
 });
+
+// watching bookmark create event
+chrome.bookmarks.onCreated.addListener(async (id, bookmarkNode) => {
+  const [tab] = await chrome.tabs.query({
+    active: true,
+    currentWindow: true,
+  });
+
+  const url = tab.url || tab.pendingUrl;
+
+  let bookmarkState = await chrome.storage.local.get('bookmarkState');
+  if (url === bookmarkNode.url) {
+    bookmarkState = true;
+    // set tab bookmark state
+    await chrome.storage.local.set({ bookmarkState });
+
+    // change action icon
+    await changeActionIcon(bookmarkState);
+  }
+});

@@ -14,25 +14,6 @@ export default function useBookmark() {
     return true;
   };
 
-  // bookmark favicon indexedDB
-  const setBookmarkIcon = async (id, blobData) => {
-    // Store the binary data in indexedDB:
-    await db.bookmarkIcon.put({
-      id,
-      icon: blobData,
-    });
-  };
-
-  const getBookmarkIcon = async (id) => {
-    const result = await db.bookmarkIcon.get(id);
-    if (result) return result.icon;
-    return undefined;
-  };
-
-  const deleteBookmarkIcon = async (id) => {
-    await db.bookmarkIcon.delete(id);
-  };
-
   // bookmark indexedDB
   const setBookmarkDB = async (id, bookmark) => {
     // console.log(bookmark);
@@ -113,9 +94,6 @@ export default function useBookmark() {
       description: node.description,
     });
 
-    // add new bookmark icon to indexedDB bookmarkIcon
-    await setBookmarkIcon(bookmarkNode.id, node.faviconData);
-
     // add bookmark share property to indexedDB share
     await setBookmarkShare(bookmarkNode.id, node.share);
 
@@ -128,21 +106,24 @@ export default function useBookmark() {
   const updateBookmark = async (nodeId, newNode) => {
     await chrome.bookmarks.remove(nodeId);
     await deleteBookmarkDB(nodeId);
-    await deleteBookmarkIcon(nodeId);
     await deleteBookmarkShare(nodeId);
     await deleteBookmarkStar(nodeId);
-    const updateBookmarkNode = await chrome.bookmarks.create({
-      title: newNode.title,
-      url: newNode.url,
-      parentId: newNode.parentId,
-      index: newNode.index, // create new bookmark node at corresponding index
-    });
+    let updateBookmarkNode;
+    if (newNode.changeFolder) {
+      updateBookmarkNode = await chrome.bookmarks.create({
+        title: newNode.title,
+        url: newNode.url,
+        parentId: newNode.parentId,
+        index: newNode.index, // create new bookmark node at corresponding index
+      });
+    } else {
+      updateBookmarkNode = await chrome.bookmarks.create({
+        title: newNode.title,
+        url: newNode.url,
+        parentId: newNode.parentId,
+      });
+    }
 
-    console.log('update new bookmark', updateBookmarkNode.id);
-
-    // add new bookmark to indexedDB bookmarkDB
-    console.log('update indexedDB bookmarkDB');
-    console.log(newNode);
     await setBookmarkDB(updateBookmarkNode.id, {
       title: newNode.title,
       url: newNode.url,
@@ -152,16 +133,12 @@ export default function useBookmark() {
       description: newNode.description,
     });
 
-    // add new bookmark icon to indexedDB bookmarkIcon
-    console.log('update indexedDB bookmarkIcon');
-    await setBookmarkIcon(updateBookmarkNode.id, newNode.faviconData);
-
     // add new bookmark share property to indexedDB share
-    console.log('update indexedDB share');
+    // console.log('update indexedDB share');
     await setBookmarkShare(updateBookmarkNode.id, newNode.share);
 
     // add new bookmark star property to indexedDB star
-    console.log('update indexedDB star');
+    // console.log('update indexedDB star');
     await setBookmarkStar(updateBookmarkNode.id, newNode.star);
 
     return updateBookmarkNode;
@@ -169,10 +146,6 @@ export default function useBookmark() {
 
   return {
     checkBookmarkState,
-    // bookmark favicon
-    getBookmarkIcon,
-    setBookmarkIcon,
-    deleteBookmarkIcon,
     // bookmark indexedDB data
     getBookmarkDB,
     // share state
