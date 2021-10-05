@@ -158,10 +158,10 @@ export default {
       inputText.value = '';
     };
 
-    // popup
+    // candidate items popup
     const showCandidatePopup = ref(false);
 
-    // modal
+    // delete modal
     const deleteCandidate = ref(null);
     const showDeleteConfirmModal = ref(false);
 

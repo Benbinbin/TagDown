@@ -8,45 +8,10 @@
       >
         取消
       </button>
-      <div class="flex items-center text-gray-600 space-x-0.5">
-        <button
-          v-show="foldersMode === 'list'"
-          title="show folders in tree mode"
-          class="p-0.5 hover:bg-gray-200 rounded"
-          @click="foldersMode = 'tree'"
-        >
-          <svg
-            class="w-5 h-5"
-            viewBox="0 0 50 50"
-            fill="currentColor"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M33.1481 22H42.037C42.8226 21.9991 43.5757 21.6827 44.1312 21.1203C44.6867 20.5579 44.9991 19.7954 45 19V10C44.9991 9.20462 44.6867 8.44208 44.1312 7.87967C43.5757 7.31725 42.8226 7.00089 42.037 7H33.1481C32.3626 7.00089 31.6095 7.31725 31.054 7.87967C30.4985 8.44208 30.1861 9.20462 30.1852 10V13H28.7037C27.1326 13.0018 25.6263 13.6345 24.5154 14.7593C23.4044 15.8842 22.7795 17.4092 22.7778 19V23.5H18.3333V21.25C18.3325 20.4546 18.02 19.6921 17.4645 19.1297C16.9091 18.5673 16.1559 18.2509 15.3704 18.25H7.96296C7.17741 18.2509 6.42428 18.5673 5.86881 19.1297C5.31333 19.6921 5.00088 20.4546 5 21.25V28.75C5.00088 29.5454 5.31333 30.3079 5.86881 30.8703C6.42428 31.4327 7.17741 31.7491 7.96296 31.75H15.3704C16.1559 31.7491 16.9091 31.4327 17.4645 30.8703C18.02 30.3079 18.3325 29.5454 18.3333 28.75V26.5H22.7778V31C22.7795 32.5907 23.4044 34.1158 24.5154 35.2407C25.6263 36.3655 27.1326 36.9982 28.7037 37H30.1852V40C30.1861 40.7954 30.4985 41.5579 31.054 42.1203C31.6095 42.6827 32.3626 42.9991 33.1481 43H42.037C42.8226 42.9991 43.5757 42.6827 44.1312 42.1203C44.6867 41.5579 44.9991 40.7954 45 40V31C44.9991 30.2046 44.6867 29.4421 44.1312 28.8797C43.5757 28.3173 42.8226 28.0009 42.037 28H33.1481C32.3626 28.0009 31.6095 28.3173 31.054 28.8797C30.4985 29.4421 30.1861 30.2046 30.1852 31V34H28.7037C27.9181 33.9991 27.165 33.6827 26.6095 33.1203C26.0541 32.5579 25.7416 31.7954 25.7407 31V19C25.7416 18.2046 26.0541 17.4421 26.6095 16.8797C27.165 16.3173 27.9181 16.0009 28.7037 16H30.1852V19C30.1861 19.7954 30.4985 20.5579 31.054 21.1203C31.6095 21.6827 32.3626 21.9991 33.1481 22ZM15.3704 28.75H7.96296V21.25H15.3704L15.3713 24.982C15.3713 24.988 15.3704 24.994 15.3704 25C15.3704 25.0062 15.3713 25.012 15.3713 25.0182L15.3722 28.75H15.3704ZM33.1481 31H42.037L42.0389 40H33.1481V31ZM33.1481 10H42.037L42.0389 19H33.1481V10Z"
-            />
-          </svg>
-        </button>
-        <button
-          v-show="foldersMode === 'tree'"
-          title="show folders in list mode"
-          class="p-0.5 hover:bg-gray-200 rounded"
-          @click="foldersMode = 'list'"
-        >
-          <svg
-            class="w-5 h-5"
-            viewBox="0 0 50 50"
-            fill="currentColor"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M15 11.5263C15 11.0796 15.1756 10.6513 15.4882 10.3354C15.8007 10.0195 16.2246 9.84211 16.6667 9.84211H43.3333C43.7754 9.84211 44.1993 10.0195 44.5118 10.3354C44.8244 10.6513 45 11.0796 45 11.5263C45 11.973 44.8244 12.4014 44.5118 12.7172C44.1993 13.0331 43.7754 13.2105 43.3333 13.2105H16.6667C16.2246 13.2105 15.8007 13.0331 15.4882 12.7172C15.1756 12.4014 15 11.973 15 11.5263ZM43.3333 23.3158H16.6679C16.2259 23.3158 15.802 23.4932 15.4894 23.8091C15.1768 24.1249 15.0013 24.5533 15.0013 25C15.0013 25.4467 15.1768 25.8751 15.4894 26.1909C15.802 26.5068 16.2259 26.6842 16.6679 26.6842H43.3333C43.7754 26.6842 44.1993 26.5068 44.5118 26.1909C44.8244 25.8751 45 25.4467 45 25C45 24.5533 44.8244 24.1249 44.5118 23.8091C44.1993 23.4932 43.7754 23.3158 43.3333 23.3158ZM43.3333 36.7895H16.6679C16.2259 36.7895 15.802 36.9669 15.4894 37.2828C15.1768 37.5986 15.0013 38.027 15.0013 38.4737C15.0013 38.9204 15.1768 39.3488 15.4894 39.6646C15.802 39.9805 16.2259 40.1579 16.6679 40.1579H43.3333C43.7754 40.1579 44.1993 39.9805 44.5118 39.6646C44.8244 39.3488 45 38.9204 45 38.4737C45 38.027 44.8244 37.5986 44.5118 37.2828C44.1993 36.9669 43.7754 36.7895 43.3333 36.7895ZM7.5 9C7.00555 9 6.5222 9.14817 6.11108 9.42576C5.69995 9.70336 5.37952 10.0979 5.1903 10.5595C5.00108 11.0212 4.95157 11.5291 5.04804 12.0192C5.1445 12.5092 5.3826 12.9594 5.73223 13.3127C6.08187 13.666 6.52732 13.9066 7.01228 14.0041C7.49723 14.1016 7.99989 14.0515 8.45671 13.8603C8.91352 13.6691 9.30397 13.3453 9.57867 12.9299C9.85338 12.5144 10 12.026 10 11.5263C10 10.8563 9.73661 10.2137 9.26777 9.73994C8.79893 9.26616 8.16304 9 7.5 9ZM7.5 22.4737C7.00555 22.4737 6.5222 22.6219 6.11108 22.8994C5.69995 23.177 5.37952 23.5716 5.1903 24.0332C5.00108 24.4948 4.95157 25.0028 5.04804 25.4929C5.1445 25.9829 5.3826 26.4331 5.73223 26.7864C6.08187 27.1397 6.52732 27.3803 7.01228 27.4778C7.49723 27.5753 7.99989 27.5252 8.45671 27.334C8.91352 27.1428 9.30397 26.819 9.57867 26.4035C9.85338 25.9881 10 25.4997 10 25C10 24.33 9.73661 23.6874 9.26777 23.2136C8.79893 22.7398 8.16304 22.4737 7.5 22.4737ZM7.5 35.9474C7.00555 35.9474 6.5222 36.0955 6.11108 36.3731C5.69995 36.6507 5.37952 37.0453 5.1903 37.5069C5.00108 37.9685 4.95157 38.4765 5.04804 38.9665C5.1445 39.4566 5.3826 39.9067 5.73223 40.2601C6.08187 40.6134 6.52732 40.854 7.01228 40.9515C7.49723 41.0489 7.99989 40.9989 8.45671 40.8077C8.91352 40.6165 9.30397 40.2927 9.57867 39.8772C9.85338 39.4618 10 38.9733 10 38.4737C10 37.8037 9.73661 37.1611 9.26777 36.6873C8.79893 36.2135 8.16304 35.9474 7.5 35.9474Z"
-            />
-          </svg>
-        </button>
-        <h2 class="text-base">
-          选择文件夹
-        </h2>
-      </div>
+
+      <h2 class="text-gray-600 text-base">
+        选择文件夹
+      </h2>
       <button
         title="save"
         class="px-2 py-1 text-xs text-white bg-green-400 hover:bg-green-600 rounded"
@@ -56,14 +21,20 @@
       </button>
     </header>
     <div class="w-full px-4 py-2 bg-white border-b border-gray-200">
-      <button class="w-full px-2 py-1 text-left text-gray-800 border border-gray-300 rounded">
-        {{ selectFolderCandidate }}
+      <button
+        title="expand folders to show the candidate folder location"
+        class="w-full px-2 py-1 text-left text-gray-800 border border-gray-300 rounded"
+        :disabled="!candidateFolder"
+        @click="showCandidateFolderHandler"
+      >
+        {{ candidateFolder ? candidateFolder.title : '请选择文件夹' }}
       </button>
     </div>
     <div class="px-4 py-2 flex items-center space-x-2">
       <button
         title="back to parent folder"
         class="p-1 flex items-center bg-gray-100 text-gray-600 hover:bg-gray-200 space-x-0.5 rounded"
+        @click="setCurrentNodeIdHandler('parent')"
       >
         <svg
           class="w-4 h-4"
@@ -80,6 +51,7 @@
       <button
         title="back to root folder"
         class="p-1 flex items-center bg-gray-100 text-gray-600 hover:bg-gray-200 space-x-0.5 rounded"
+        @click="setCurrentNodeIdHandler('root')"
       >
         <svg
           class="w-4 h-4"
@@ -95,194 +67,193 @@
       </button>
     </div>
     <div class="main-wrapper overflow-auto w-full h-full p-4">
-      <div class="flex justify-end items-start">
-        <div class="flex items-center space-x-0.5">
-          <!-- triangle toggle button -->
-          <button
-            title="triangle toggle button"
-            class="btn py-1 text-gray-600"
+      <FolderItem
+        :node="currentNode"
+        :show-children-init="true"
+        @expand-folder="expandFolderHandler"
+      />
+    </div>
+
+    <PopupMenu
+      v-if="showPopupMenu"
+      v-model:show="showPopupMenu"
+      :left="menuLeft"
+      :top="menuTop"
+      :menu-width="140"
+      :menu-height="95"
+    >
+      <button
+        title="add subfolder"
+        class="menu-btn-style text-gray-600 hover:text-yellow-600 hover:bg-yellow-50"
+        @click="addSubfolderHandler"
+      >
+        <div class="menu-icon-style text-yellow-400 border-yellow-400">
+          <svg
+            class="w-3 h-3"
+            viewBox="0 0 50 50"
+            fill="currentColor"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            <svg
-              class="w-4 h-4"
-              viewBox="0 0 50 50"
-              fill="currentColor"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M15 7.72733V42.2727C15 42.6143 15.1026 42.9483 15.2949 43.2323C15.4872 43.5164 15.7605 43.7378 16.0803 43.8685C16.4001 43.9993 16.7519 44.0335 17.0914 43.9668C17.4309 43.9002 17.7427 43.7356 17.9875 43.4941L35.4874 26.2214C35.6499 26.061 35.7788 25.8706 35.8668 25.661C35.9547 25.4515 36 25.2268 36 25C36 24.7732 35.9547 24.5486 35.8668 24.339C35.7788 24.1294 35.6499 23.939 35.4874 23.7786L17.9875 6.50594C17.7427 6.26436 17.4309 6.09985 17.0914 6.03319C16.7519 5.96654 16.4001 6.00075 16.0803 6.13148C15.7605 6.26222 15.4872 6.48362 15.2949 6.76768C15.1026 7.05174 15 7.3857 15 7.72733Z"
-              />
-            </svg>
+            <path
+              d="M41.9231 14.1818H25.6373L20.3846 8.90545C20.0996 8.61753 19.7605 8.38926 19.3871 8.23384C19.0137 8.07842 18.6133 7.99895 18.209 8.00001H8.07692C7.26115 8.00093 6.47906 8.32688 5.90222 8.90633C5.32539 9.48579 5.00092 10.2714 5 11.0909V39.0279C5.00087 39.8159 5.31286 40.5713 5.86753 41.1285C6.42219 41.6857 7.17424 41.9991 7.95865 42H42.094C42.8645 41.9991 43.6031 41.6913 44.1479 41.144C44.6927 40.5968 44.9991 39.8548 45 39.0808V17.2727C44.9991 16.4533 44.6746 15.6676 44.0978 15.0881C43.5209 14.5087 42.7388 14.1827 41.9231 14.1818ZM18.209 11.0909L21.2858 14.1818H8.07692V11.0909H18.209ZM41.9231 38.9091H8.07692V17.2727H41.9231V38.9091ZM25 21.9091C25.408 21.9091 25.7993 22.0719 26.0879 22.3617C26.3764 22.6516 26.5385 23.0447 26.5385 23.4546V26.5455H29.6154C30.0234 26.5455 30.4147 26.7083 30.7032 26.9981C30.9918 27.2879 31.1538 27.681 31.1538 28.0909C31.1538 28.5008 30.9918 28.8939 30.7032 29.1837C30.4147 29.4735 30.0234 29.6364 29.6154 29.6364H26.5385V32.7273C26.5385 33.1372 26.3764 33.5302 26.0879 33.8201C25.7993 34.1099 25.408 34.2727 25 34.2727C24.592 34.2727 24.2007 34.1099 23.9121 33.8201C23.6236 33.5302 23.4615 33.1372 23.4615 32.7273V29.6364H20.3846C19.9766 29.6364 19.5853 29.4735 19.2968 29.1837C19.0082 28.8939 18.8462 28.5008 18.8462 28.0909C18.8462 27.681 19.0082 27.2879 19.2968 26.9981C19.5853 26.7083 19.9766 26.5455 20.3846 26.5455H23.4615V23.4546C23.4615 23.0447 23.6236 22.6516 23.9121 22.3617C24.2007 22.0719 24.592 21.9091 25 21.9091Z"
+            />
+          </svg>
+        </div>
+        <span class="text-xs">新增子文件夹</span>
+      </button>
+      <button
+        title="rename folder"
+        class="menu-btn-style text-gray-600 hover:text-blue-600 hover:bg-blue-50"
+        @click="renameFolderHandler"
+      >
+        <div class="menu-icon-style text-blue-400 border-blue-400">
+          <svg
+            class="w-3 h-3"
+            viewBox="0 0 50 50"
+            fill="currentColor"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M43.0724 14.79L34.2112 5.92926C33.9166 5.63465 33.5669 5.40095 33.1819 5.24151C32.797 5.08206 32.3845 5 31.9678 5C31.5512 5 31.1386 5.08206 30.7537 5.24151C30.3688 5.40095 30.019 5.63465 29.7244 5.92926L24.501 11.1525V11.1527L24.5006 11.1529L5.92941 29.7235C5.63386 30.0173 5.39953 30.3669 5.24 30.752C5.08047 31.137 4.9989 31.5499 5.00001 31.9667V40.8274C5.00096 41.6686 5.33552 42.475 5.93032 43.0697C6.52511 43.6645 7.33155 43.9991 8.17271 44H17.6908C17.8991 44 18.1054 43.959 18.2979 43.8793C18.4903 43.7996 18.6652 43.6827 18.8125 43.5354L43.0724 19.2764C43.6664 18.681 44 17.8743 44 17.0332C44 16.1922 43.6664 15.3854 43.0724 14.79ZM17.0338 40.8274H8.17271V31.9667L25.6225 14.5176L34.4837 23.3783L17.0338 40.8274ZM36.727 21.1351L27.866 12.2744L31.9679 8.17246L40.8291 17.0332L36.727 21.1351Z"
+            />
+          </svg>
+        </div>
+        <span class="text-xs">重命名文件夹</span>
+      </button>
+      <button
+        title="delete folder"
+        class="w-full p-1 flex items-center space-x-1 rounded text-red-400 hover:bg-red-400 hover:text-white"
+        @click="deleteItemHandler"
+      >
+        <div class="menu-icon-style border-red-400">
+          <svg
+            class="w-3 h-3"
+            viewBox="0 0 50 50"
+            fill="currentColor"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M41.5 11H34.0007V9.5C33.9994 8.30694 33.5249 7.16312 32.6813 6.3195C31.8376 5.47588 30.6938 5.00134 29.5007 5H20.5007C19.3077 5.00134 18.1639 5.47588 17.3202 6.3195C16.4766 7.16312 16.0021 8.30694 16.0007 9.5V11H8.5C8.10217 11 7.72064 11.158 7.43934 11.4393C7.15804 11.7206 7 12.1022 7 12.5C7 12.8978 7.15804 13.2794 7.43934 13.5607C7.72064 13.842 8.10217 14 8.5 14H10V41C10.0009 41.7954 10.3173 42.5579 10.8797 43.1203C11.4421 43.6827 12.2046 43.9991 13 44H37C37.7954 43.9991 38.5579 43.6827 39.1203 43.1203C39.6827 42.5579 39.9991 41.7954 40 41V14H41.5C41.8978 14 42.2794 13.842 42.5607 13.5607C42.842 13.2794 43 12.8978 43 12.5C43 12.1022 42.842 11.7206 42.5607 11.4393C42.2794 11.158 41.8978 11 41.5 11ZM19.0007 9.5C19.0012 9.10233 19.1594 8.72109 19.4406 8.43989C19.7218 8.15869 20.1031 8.0005 20.5007 8H29.5007C29.8984 8.0005 30.2797 8.15869 30.5609 8.43989C30.8421 8.72109 31.0003 9.10233 31.0007 9.5V11H19.0007V9.5ZM37 41H13V14H37V41ZM22.0007 21.5V33.5C22.0007 33.8978 21.8427 34.2794 21.5614 34.5607C21.2801 34.842 20.8986 35 20.5007 35C20.1029 35 19.7214 34.842 19.4401 34.5607C19.1588 34.2794 19.0007 33.8978 19.0007 33.5V21.5C19.0007 21.1022 19.1588 20.7206 19.4401 20.4393C19.7214 20.158 20.1029 20 20.5007 20C20.8986 20 21.2801 20.158 21.5614 20.4393C21.8427 20.7206 22.0007 21.1022 22.0007 21.5ZM31.0007 21.5V33.5C31.0007 33.8978 30.8427 34.2794 30.5614 34.5607C30.2801 34.842 29.8986 35 29.5007 35C29.1029 35 28.7214 34.842 28.4401 34.5607C28.1588 34.2794 28.0007 33.8978 28.0007 33.5V21.5C28.0007 21.1022 28.1588 20.7206 28.4401 20.4393C28.7214 20.158 29.1029 20 29.5007 20C29.8986 20 30.2801 20.158 30.5614 20.4393C30.8427 20.7206 31.0007 21.1022 31.0007 21.5Z"
+            />
+          </svg>
+        </div>
+        <span class="text-xs">删除文件夹和书签</span>
+      </button>
+    </PopupMenu>
+    <PromptModal
+      v-if="showConfirmDeleteModal"
+      v-model:show="showConfirmDeleteModal"
+      @result="getResultHandler"
+    >
+      <template #title>
+        <h2 class="p-4 text-sm font-bold">
+          是否删除该文件夹及其书签
+        </h2>
+      </template>
+      <template #msg>
+        <p class="p-2 text-xs text-center">
+          folder1
+        </p>
+      </template>
+      <template #btn="{ resultHandler }">
+        <div class="p-2 all-center space-x-2">
+          <button
+            class="p-1 text-white bg-red-400 hover:bg-red-600 rounded"
+            @click="resultHandler(true)"
+          >
+            确定
           </button>
-          <!-- folder button -->
           <button
-            title="folder button left click to select, right click to  show the more setting popup menu"
-            class="btn p-1 flex items-center text-yellow-400 space-x-0.5"
-            @click.right.prevent="showPopupMenuHandler('folder1', $event)"
-            @mouseenter.ctrl="showPopupHintHandler('folder1', $event)"
-            @mouseleave="hidePopupHintHandler"
+            class="p-1 text-white bg-green-400 hover:bg-green-600 rounded"
+            @click="resultHandler(false)"
           >
-            <svg
-              class="w-4 h-4"
-              viewBox="0 0 50 50"
-              fill="currentColor"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M41 14H25.1212L20 8.87901C19.7222 8.5995 19.3916 8.37788 19.0276 8.227C18.6635 8.07612 18.2731 7.99896 17.879 8.00001H8C7.20459 8.0008 6.44199 8.31713 5.87956 8.87957C5.31712 9.442 5.00079 10.2046 5 11V38.1157C5.00104 38.8806 5.30544 39.6138 5.84641 40.1545C6.38738 40.6952 7.12075 40.9993 7.88562 41H41.1669C41.918 40.999 42.638 40.7002 43.1691 40.1691C43.7002 39.638 43.999 38.918 44 38.1669V17.0002C43.9992 16.2048 43.6829 15.4422 43.1204 14.8798C42.558 14.3173 41.7954 14.001 41 14.0002V14ZM8 11H17.879L20.879 14H8V11Z"
-              />
-            </svg>
-            <span class="text-xs text-gray-600">folder1</span>
+            取消
           </button>
         </div>
-
-        <PopupMenu
-          v-if="showPopupMenu"
-          v-model:show="showPopupMenu"
-          :left="menuLeft"
-          :top="menuTop"
-          :menu-width="140"
-          :menu-height="95"
-        >
-          <button
-            title="add subfolder"
-            class="menu-btn-style text-gray-600 hover:text-yellow-600  hover:bg-yellow-50"
-            @click="addSubfolderHandler"
+      </template>
+    </PromptModal>
+    <InputModal
+      v-if="showRenameFolderModal"
+      v-model:show="showRenameFolderModal"
+      :init-value="'folder_name'"
+      :placeholder="'请输入文件夹名称'"
+      @result="getRenameResultHandler"
+    >
+      <template #title>
+        <label
+          for="input-modal"
+          class="block p-4 text-sm text-center font-bold"
+        >重命名文件夹</label>
+      </template>
+    </InputModal>
+    <InputModal
+      v-if="showAddSubfolderModal"
+      v-model:show="showAddSubfolderModal"
+      :init-value="'subfolder_name'"
+      :placeholder="'请输入子文件夹名称'"
+      @result="getSubfolderNameHandler"
+    >
+      <template #title>
+        <label
+          for="input-modal"
+          class="block p-4 text-sm text-center font-bold"
+        >新增子文件夹</label>
+      </template>
+    </InputModal>
+    <transition name="dissolve">
+      <PopupHint
+        v-if="showPopupHint"
+        @enter-popup="enterPopupHintHandler"
+        @leave-popup="leavePopupHintHandler"
+      >
+        <ul>
+          <li
+            v-for="hint of hintContent"
+            :key="hint.id"
+            class="flex items-center"
           >
-            <div class="menu-icon-style text-yellow-400 border-yellow-400">
+            <div
+              v-if="!hint.children"
+              class="flex-shrink-0 p-1 text-gray-400"
+            >
               <svg
-                class="w-3 h-3"
+                class="w-4 h-4"
                 viewBox="0 0 50 50"
                 fill="currentColor"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
-                  d="M41.9231 14.1818H25.6373L20.3846 8.90545C20.0996 8.61753 19.7605 8.38926 19.3871 8.23384C19.0137 8.07842 18.6133 7.99895 18.209 8.00001H8.07692C7.26115 8.00093 6.47906 8.32688 5.90222 8.90633C5.32539 9.48579 5.00092 10.2714 5 11.0909V39.0279C5.00087 39.8159 5.31286 40.5713 5.86753 41.1285C6.42219 41.6857 7.17424 41.9991 7.95865 42H42.094C42.8645 41.9991 43.6031 41.6913 44.1479 41.144C44.6927 40.5968 44.9991 39.8548 45 39.0808V17.2727C44.9991 16.4533 44.6746 15.6676 44.0978 15.0881C43.5209 14.5087 42.7388 14.1827 41.9231 14.1818ZM18.209 11.0909L21.2858 14.1818H8.07692V11.0909H18.209ZM41.9231 38.9091H8.07692V17.2727H41.9231V38.9091ZM25 21.9091C25.408 21.9091 25.7993 22.0719 26.0879 22.3617C26.3764 22.6516 26.5385 23.0447 26.5385 23.4546V26.5455H29.6154C30.0234 26.5455 30.4147 26.7083 30.7032 26.9981C30.9918 27.2879 31.1538 27.681 31.1538 28.0909C31.1538 28.5008 30.9918 28.8939 30.7032 29.1837C30.4147 29.4735 30.0234 29.6364 29.6154 29.6364H26.5385V32.7273C26.5385 33.1372 26.3764 33.5302 26.0879 33.8201C25.7993 34.1099 25.408 34.2727 25 34.2727C24.592 34.2727 24.2007 34.1099 23.9121 33.8201C23.6236 33.5302 23.4615 33.1372 23.4615 32.7273V29.6364H20.3846C19.9766 29.6364 19.5853 29.4735 19.2968 29.1837C19.0082 28.8939 18.8462 28.5008 18.8462 28.0909C18.8462 27.681 19.0082 27.2879 19.2968 26.9981C19.5853 26.7083 19.9766 26.5455 20.3846 26.5455H23.4615V23.4546C23.4615 23.0447 23.6236 22.6516 23.9121 22.3617C24.2007 22.0719 24.592 21.9091 25 21.9091Z"
+                  d="M35.8889 5H14.1111C13.2863 5.00093 12.4955 5.32994 11.9122 5.91485C11.329 6.49977 11.0009 7.29281 11 8.12V42.44C11 42.7185 11.0743 42.9919 11.2153 43.2318C11.3562 43.4717 11.5586 43.6694 11.8015 43.8044C12.0443 43.9394 12.3188 44.0068 12.5964 43.9995C12.874 43.9921 13.1445 43.9105 13.38 43.7629L24.9986 36.4796L36.62 43.7629C36.8555 43.9105 37.126 43.9921 37.4036 43.9995C37.6812 44.0068 37.9557 43.9394 38.1985 43.8044C38.4414 43.6694 38.6438 43.4717 38.7847 43.2318C38.9257 42.9919 39 42.7185 39 42.44V8.12C38.9991 7.29281 38.671 6.49977 38.0878 5.91485C37.5045 5.32994 36.7137 5.00093 35.8889 5ZM35.8889 39.6256L25.8229 33.3171C25.5757 33.1622 25.29 33.08 24.9984 33.08C24.7069 33.08 24.4212 33.1622 24.174 33.3171L14.1111 39.6254V8.12H35.8889V39.6256Z"
                 />
               </svg>
             </div>
-            <span class="text-xs">新增子文件夹</span>
-          </button>
-          <button
-            title="rename folder"
-            class="menu-btn-style text-gray-600 hover:text-blue-600 hover:bg-blue-50"
-            @click="renameFolderHandler"
-          >
-            <div class="menu-icon-style text-blue-400 border-blue-400">
+            <div
+              v-else
+              class="flex-shrink-0 p-1 text-yellow-400"
+            >
               <svg
-                class="w-3 h-3"
+                class="w-4 h-4"
                 viewBox="0 0 50 50"
                 fill="currentColor"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
-                  d="M43.0724 14.79L34.2112 5.92926C33.9166 5.63465 33.5669 5.40095 33.1819 5.24151C32.797 5.08206 32.3845 5 31.9678 5C31.5512 5 31.1386 5.08206 30.7537 5.24151C30.3688 5.40095 30.019 5.63465 29.7244 5.92926L24.501 11.1525V11.1527L24.5006 11.1529L5.92941 29.7235C5.63386 30.0173 5.39953 30.3669 5.24 30.752C5.08047 31.137 4.9989 31.5499 5.00001 31.9667V40.8274C5.00096 41.6686 5.33552 42.475 5.93032 43.0697C6.52511 43.6645 7.33155 43.9991 8.17271 44H17.6908C17.8991 44 18.1054 43.959 18.2979 43.8793C18.4903 43.7996 18.6652 43.6827 18.8125 43.5354L43.0724 19.2764C43.6664 18.681 44 17.8743 44 17.0332C44 16.1922 43.6664 15.3854 43.0724 14.79ZM17.0338 40.8274H8.17271V31.9667L25.6225 14.5176L34.4837 23.3783L17.0338 40.8274ZM36.727 21.1351L27.866 12.2744L31.9679 8.17246L40.8291 17.0332L36.727 21.1351Z"
+                  d="M41 14H25.1212L20 8.87901C19.7222 8.5995 19.3916 8.37788 19.0276 8.227C18.6635 8.07612 18.2731 7.99896 17.879 8.00001H8C7.20459 8.0008 6.44199 8.31713 5.87956 8.87957C5.31712 9.442 5.00079 10.2046 5 11V38.1157C5.00104 38.8806 5.30544 39.6138 5.84641 40.1545C6.38738 40.6952 7.12075 40.9993 7.88562 41H41.1669C41.918 40.999 42.638 40.7002 43.1691 40.1691C43.7002 39.638 43.999 38.918 44 38.1669V17.0002C43.9992 16.2048 43.6829 15.4422 43.1204 14.8798C42.558 14.3173 41.7954 14.001 41 14.0002V14ZM8 11H17.879L20.879 14H8V11Z"
                 />
               </svg>
             </div>
-            <span class="text-xs">重命名文件夹</span>
-          </button>
-          <button
-            title="delete folder"
-            class="w-full p-1 flex items-center space-x-1 rounded text-red-400 hover:bg-red-400 hover:text-white"
-            @click="deleteItemHandler"
-          >
-            <div class="menu-icon-style border-red-400">
-              <svg
-                class="w-3 h-3"
-                viewBox="0 0 50 50"
-                fill="currentColor"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M41.5 11H34.0007V9.5C33.9994 8.30694 33.5249 7.16312 32.6813 6.3195C31.8376 5.47588 30.6938 5.00134 29.5007 5H20.5007C19.3077 5.00134 18.1639 5.47588 17.3202 6.3195C16.4766 7.16312 16.0021 8.30694 16.0007 9.5V11H8.5C8.10217 11 7.72064 11.158 7.43934 11.4393C7.15804 11.7206 7 12.1022 7 12.5C7 12.8978 7.15804 13.2794 7.43934 13.5607C7.72064 13.842 8.10217 14 8.5 14H10V41C10.0009 41.7954 10.3173 42.5579 10.8797 43.1203C11.4421 43.6827 12.2046 43.9991 13 44H37C37.7954 43.9991 38.5579 43.6827 39.1203 43.1203C39.6827 42.5579 39.9991 41.7954 40 41V14H41.5C41.8978 14 42.2794 13.842 42.5607 13.5607C42.842 13.2794 43 12.8978 43 12.5C43 12.1022 42.842 11.7206 42.5607 11.4393C42.2794 11.158 41.8978 11 41.5 11ZM19.0007 9.5C19.0012 9.10233 19.1594 8.72109 19.4406 8.43989C19.7218 8.15869 20.1031 8.0005 20.5007 8H29.5007C29.8984 8.0005 30.2797 8.15869 30.5609 8.43989C30.8421 8.72109 31.0003 9.10233 31.0007 9.5V11H19.0007V9.5ZM37 41H13V14H37V41ZM22.0007 21.5V33.5C22.0007 33.8978 21.8427 34.2794 21.5614 34.5607C21.2801 34.842 20.8986 35 20.5007 35C20.1029 35 19.7214 34.842 19.4401 34.5607C19.1588 34.2794 19.0007 33.8978 19.0007 33.5V21.5C19.0007 21.1022 19.1588 20.7206 19.4401 20.4393C19.7214 20.158 20.1029 20 20.5007 20C20.8986 20 21.2801 20.158 21.5614 20.4393C21.8427 20.7206 22.0007 21.1022 22.0007 21.5ZM31.0007 21.5V33.5C31.0007 33.8978 30.8427 34.2794 30.5614 34.5607C30.2801 34.842 29.8986 35 29.5007 35C29.1029 35 28.7214 34.842 28.4401 34.5607C28.1588 34.2794 28.0007 33.8978 28.0007 33.5V21.5C28.0007 21.1022 28.1588 20.7206 28.4401 20.4393C28.7214 20.158 29.1029 20 29.5007 20C29.8986 20 30.2801 20.158 30.5614 20.4393C30.8427 20.7206 31.0007 21.1022 31.0007 21.5Z"
-                />
-              </svg>
-            </div>
-            <span class="text-xs">删除文件夹和书签</span>
-          </button>
-        </PopupMenu>
-        <PromptModal
-          v-if="showConfirmDeleteModal"
-          v-model:show="showConfirmDeleteModal"
-          @result="getResultHandler"
-        >
-          <template #title>
-            <h2 class="p-4 text-sm font-bold">
-              是否删除该文件夹及其书签
-            </h2>
-          </template>
-          <template #msg>
-            <p class="p-2 text-xs text-center">
-              folder1
-            </p>
-          </template>
-          <template #btn="{ resultHandler }">
-            <div class="p-2 all-center space-x-2">
-              <button
-                class="p-1 text-white bg-red-400 hover:bg-red-600 rounded"
-                @click="resultHandler(true)"
-              >
-                确定
-              </button>
-              <button
-                class="p-1 text-white bg-green-400 hover:bg-green-600 rounded"
-                @click="resultHandler(false)"
-              >
-                取消
-              </button>
-            </div>
-          </template>
-        </PromptModal>
-        <InputModal
-          v-if="showRenameFolderModal"
-          v-model:show="showRenameFolderModal"
-          :init-value="'folder_name'"
-          :placeholder="'请输入文件夹名称'"
-          @result="getRenameResultHandler"
-        >
-          <template #title>
-            <label
-              for="input-modal"
-              class="block p-4 text-sm text-center font-bold"
-            >重命名文件夹</label>
-          </template>
-        </InputModal>
-        <InputModal
-          v-if="showAddSubfolderModal"
-          v-model:show="showAddSubfolderModal"
-          :init-value="'subfolder_name'"
-          :placeholder="'请输入子文件夹名称'"
-          @result="getSubfolderNameHandler"
-        >
-          <template #title>
-            <label
-              for="input-modal"
-              class="block p-4 text-sm text-center font-bold"
-            >新增子文件夹</label>
-          </template>
-        </InputModal>
-        <transition name="dissolve">
-          <PopupHint
-            v-if="showPopupHint"
-            @enter-popup="enterPopupHintHandler"
-            @leave-popup="leavePopupHintHandler"
-          >
-            <ul>
-              <li
-                v-for="hint of hintContent"
-                :key="hint"
-              >
-                {{ hint }}
-              </li>
-            </ul>
-          </PopupHint>
-        </transition>
-      </div>
-    </div>
+            <span>{{ hint.title }}</span>
+          </li>
+        </ul>
+      </PopupHint>
+    </transition>
   </div>
 </template>
 <script>
-import { ref } from 'vue';
+import {
+  ref, watch, provide,
+} from 'vue';
+import FolderItem from './FolderItem.vue';
 import PromptModal from '../Modal/PromptModal.vue';
 import PopupMenu from '../Modal/PopupMenu.vue';
 import InputModal from '../Modal/InputModal.vue';
@@ -290,6 +261,7 @@ import PopupHint from '../Modal/PopupHint.vue';
 
 export default {
   components: {
+    FolderItem,
     PromptModal,
     PopupMenu,
     InputModal,
@@ -297,20 +269,69 @@ export default {
   },
   props: {
     selectFolder: {
-      type: String,
-      default: '',
+      type: Object,
+      default() {
+        return {};
+      },
     },
   },
   emits: ['cancel-folder', 'save-folder'],
   setup(props, context) {
-    const foldersMode = ref('list'); // list, tree
+    // current node
+    const currentNodeId = ref('0');
+    if (props.selectFolder.parentId) {
+      currentNodeId.value = props.selectFolder.parentId;
+    }
+    // watch current node id to update the current node and children nodes
+    const currentNode = ref(null);
+    watch(
+      currentNodeId,
+      (newValue, oldValue) => {
+        chrome.bookmarks.getSubTree(currentNodeId.value).then((nodes) => {
+          [currentNode.value] = nodes;
+        });
+      },
+      {
+        immediate: true,
+      },
+    );
 
-    const selectFolderCandidate = ref(props.selectFolder);
+    const setCurrentNodeIdHandler = (value) => {
+      console.log(currentNode.value);
+      if (value === 'parent' && currentNode.value.parentId) {
+        currentNodeId.value = currentNode.value.parentId;
+      } else if (value === 'root') {
+        currentNodeId.value = '0';
+      }
+    };
+
+    provide('setCurrentNodeIdHandler', setCurrentNodeIdHandler);
+
+    // candidate folder
+    const candidateFolder = ref(props.selectFolder);
+    provide('candidateFolder', candidateFolder);
+
+    const setCandidateFolderHandler = (node) => {
+      candidateFolder.value = node;
+    };
+    provide('setCandidateFolderHandler', setCandidateFolderHandler);
+
+    const showCandidateFolder = ref(false);
+    provide('showCandidateFolder', showCandidateFolder);
+
+    const showCandidateFolderHandler = () => {
+      showCandidateFolder.value = true;
+    };
+
+    const expandFolderHandler = () => {
+      showCandidateFolder.value = false;
+    };
+
     const finishFolder = (value) => {
       if (value === 'cancel') {
         context.emit('cancel-folder');
       } else {
-        context.emit('save-folder', 'another_folder');
+        context.emit('save-folder', candidateFolder.value);
       }
     };
 
@@ -334,34 +355,37 @@ export default {
       showPopupMenu.value = true;
     };
 
+    provide('showPopupMenuHandler', showPopupMenuHandler);
+
     // popup hint
     // show state and location
     const showPopupHint = ref(false);
     const hintContent = ref([]);
 
-    const showPopupHintHandler = (value, event) => {
-      const target = event.currentTarget;
-      if (!target) return;
-      // hintContent.value = [value, 'tag1', 'tag2', 'tag3', 'tag4', 'tag5', 'tag2', 'tag3', 'tag4', 'tag5', 'tag2', 'tag3', 'tag4', 'tag5'];
-      hintContent.value = [value, 'tag1', 'tag2', 'tag3', 'tag4', 'tag5', '这是一个很长的 bookmark 名称啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊'];
-      if (hintContent.value.length <= 0) return;
-      showPopupHint.value = true;
+    const showPopupHintHandler = (target) => {
+      hintContent.value = target.children;
+      if (hintContent.value && hintContent.value.length > 0) {
+        showPopupHint.value = true;
+      }
     };
+
+    provide('showPopupHintHandler', showPopupHintHandler);
 
     let hiddenTimmer = null;
     const hidePopupHintHandler = () => {
       hiddenTimmer = setTimeout(() => {
         showPopupHint.value = false;
+        hintContent.value = [];
       }, 600);
     };
 
+    provide('hidePopupHintHandler', hidePopupHintHandler);
+
     const enterPopupHintHandler = () => {
-      // console.log('enter popup hint');
       if (hiddenTimmer) clearTimeout(hiddenTimmer);
     };
 
     const leavePopupHintHandler = () => {
-      // console.log('leave popup hint');
       hiddenTimmer = setTimeout(() => {
         showPopupHint.value = false;
       }, 600);
@@ -398,8 +422,12 @@ export default {
     };
 
     return {
-      selectFolderCandidate,
-      foldersMode,
+      currentNodeId,
+      currentNode,
+      setCurrentNodeIdHandler,
+      candidateFolder,
+      showCandidateFolderHandler,
+      expandFolderHandler,
       finishFolder,
       showPopupMenu,
       menuLeft,
@@ -427,13 +455,22 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 .all-center {
   @apply flex justify-center items-center;
 }
 
-.btn {
-  @apply hover:bg-gray-200 rounded;
+.main-wrapper {
+  overflow: overlay;
+  &::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 2px;
+    background-color: #9ca3af;
+    // border: 3px solid transparent;
+    // background-clip: padding-box;
+  }
 }
 
 .input-style {
@@ -452,20 +489,6 @@ export default {
 //   @apply text-xs text-gray-600;
 // }
 
-.main-wrapper {
-  overflow: overlay;
-  &::-webkit-scrollbar {
-    width: 5px;
-    height: 5px;
-  }
-  &::-webkit-scrollbar-thumb {
-    border-radius: 2px;
-    background-color: #9ca3af;
-    // border: 3px solid transparent;
-    // background-clip: padding-box;
-  }
-}
-
 .select-folders {
   min-height: 2rem;
   max-height: 5rem;
@@ -473,11 +496,11 @@ export default {
 
 .dissolve-enter-from,
 .dissolve-leave-to {
-  opacity: 0
+  opacity: 0;
 }
 
-.dissolve-enter-active, .dissolve-leave-active {
+.dissolve-enter-active,
+.dissolve-leave-active {
   transition: opacity 300ms ease-in-out 500ms;
 }
-
 </style>

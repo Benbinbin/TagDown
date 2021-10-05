@@ -6,9 +6,10 @@
     <header class="w-full p-4 flex justify-between items-center bg-white border-b border-gray-200">
       <button
         title="delete bookmark"
-        :disabled="!bookmarkState"
+        :disabled="!urlBookmarkState"
         class="p-1 text-red-400 hover:text-white bg-white hover:bg-red-400 rounded"
-        :class="{ 'opacity-10': !bookmarkState }"
+        :class="{ 'opacity-10': !urlBookmarkState }"
+        @click="deleteBookmarkHandler"
       >
         <svg
           class="w-5 h-5"
@@ -413,6 +414,23 @@
       </transition>
     </div>
 
+    <PromptModal
+      v-if="showDeleteConfirmModal"
+      v-model:show="showDeleteConfirmModal"
+      @result="getDeleteResult"
+    >
+      <template #title>
+        <h2 class="p-4 text-sm font-bold">
+          删除当前书签
+        </h2>
+      </template>
+      <template #msg>
+        <p class="p-2 text-xs text-center">
+          该操作不可恢复
+        </p>
+      </template>
+    </PromptModal>
+
     <PopupMsg
       v-if="showFinishMsgPopup"
       v-model:show="showFinishMsgPopup"
@@ -432,9 +450,12 @@
   </div>
 </template>
 <script>
-import { ref, inject, toRaw } from 'vue';
+import {
+  ref, inject, toRaw, nextTick,
+} from 'vue';
 import ItemsInput from './Edit/ItemsInput.vue';
 import SelectFolders from './Edit/SelectFolders.vue';
+import PromptModal from './Modal/PromptModal.vue';
 import PopupMsg from './Modal/PopupMsg.vue';
 import useTab from '@/composables/useTab';
 import useBookmark from '@/composables/useBookmark';
@@ -443,22 +464,53 @@ export default {
   components: {
     ItemsInput,
     SelectFolders,
+    PromptModal,
     PopupMsg,
   },
   setup(props, context) {
     const { getActiveTab } = useTab();
     const {
-      getBookmarkDB, getBookmarkShare, setBookmarkShare, getBookmarkStar, setBookmarkStar, createBookmark, updateBookmark,
+      getBookmarkDB, getBookmarkShare, setBookmarkShare, getBookmarkStar, setBookmarkStar, createBookmark, updateBookmark, deleteBookmark,
     } = useBookmark();
+
+    const finishMsg = ref('');
+    const showFinishMsgPopup = ref(false);
 
     // bookmark state
     // const bookmarkState = inject('bookmarkState');
-    const setBookmarkState = inject('setBookmarkState');
+    // const setBookmarkState = inject('setBookmarkState');
 
     // delete bookmark
-    const deleteBookmarkHandler = () => {
+    const showDeleteConfirmModal = ref(false);
+    let currentBookmarkId = '';
+    const deleteBookmarkHandler = async () => {
       console.log('delete-bookmark');
-      setBookmarkState(false);
+      const result = await chrome.storage.local.get('currentBookmarkId');
+      currentBookmarkId = result.currentBookmarkId;
+      if (currentBookmarkId) {
+        // console.log(currentBookmarkId);
+        showDeleteConfirmModal.value = true;
+      }
+    };
+
+    const getDeleteResult = (value) => {
+      if (value && currentBookmarkId) {
+        deleteBookmark(currentBookmarkId).then(() => {
+          showFinishMsgPopup.value = true;
+          finishMsg.value = '成功';
+          setTimeout(() => {
+            window.close();
+          }, 1000);
+        }).catch((err) => {
+          showFinishMsgPopup.value = true;
+          finishMsg.value = '失败';
+          let timer = setTimeout(() => {
+            showFinishMsgPopup.value = false;
+            timer = null;
+            console.log(err);
+          }, 500);
+        });
+      }
     };
 
     // favicon
@@ -485,8 +537,9 @@ export default {
     // select folder
     const showCard = ref(false);
     const showSelectFolder = ref(false);
-    const showCardHandler = () => {
+    const showCardHandler = async () => {
       showCard.value = true;
+      await nextTick();
       showSelectFolder.value = true;
     };
     const setSelectFolderHandler = (folder) => {
@@ -502,7 +555,7 @@ export default {
     const star = ref(false);
 
     // tags
-    const tags = ref(['a', 'apple', 'abandan', 'b', 'box']);
+    const tags = ref([]);
     const allTags = ref([]);
     const deleteTagsItemHandler = (value) => {
       const index = tags.value.indexOf(value);
@@ -511,7 +564,7 @@ export default {
     };
 
     // group
-    const groups = ref(['a', 'apple', 'abandan', 'b', 'box']);
+    const groups = ref([]);
     const allGroups = ref([]);
     const deleteGroupsItemHandler = (value) => {
       const index = groups.value.indexOf(value);
@@ -523,7 +576,7 @@ export default {
     const description = ref('');
 
     // const bookmarkState = inject('bookmarkState');
-    let urlBookmarkState = false;
+    const urlBookmarkState = ref(false);
     const bookmarkNode = {};
     let parentIdInit = '';
 
@@ -549,7 +602,7 @@ export default {
 
       if (nodes.length === 0) {
         // no bookmark
-        urlBookmarkState = false;
+        urlBookmarkState.value = false;
 
         title.value = tab.title;
         url.value = tabUrl;
@@ -563,7 +616,7 @@ export default {
         });
       } else {
         // already bookmark
-        urlBookmarkState = true;
+        urlBookmarkState.value = true;
 
         if (!tabFaviconUrl) favicon.value = '/icons/icon64_tag.png';
 
@@ -600,8 +653,6 @@ export default {
       allGroups.value = await db.bookmark.orderBy('groups').uniqueKeys();
     });
 
-    const finishMsg = ref('');
-    const showFinishMsgPopup = ref(false);
     // create or update bookmark
     const finishBookmark = async () => {
       const nodeData = {
@@ -617,7 +668,7 @@ export default {
         description: description.value,
       };
 
-      if (urlBookmarkState) {
+      if (urlBookmarkState.value) {
         updateBookmark(bookmarkNode.id, {
           ...nodeData,
           index: bookmarkNode.index,
@@ -662,6 +713,8 @@ export default {
     return {
       favicon,
       deleteBookmarkHandler,
+      showDeleteConfirmModal,
+      getDeleteResult,
       title,
       url,
       selectFolder,
@@ -680,6 +733,7 @@ export default {
       allGroups,
       deleteGroupsItemHandler,
       description,
+      urlBookmarkState,
       finishBookmark,
       finishMsg,
       showFinishMsgPopup,
@@ -737,16 +791,16 @@ export default {
   height: 560px;
 }
 
-// .popup-card-enter-from,
-// .popup-card-leave-to {
-//   transform: translateY(560px);
-// }
+.popup-card-enter-from,
+.popup-card-leave-to {
+  transform: translateY(560px);
+}
 
-// .popup-card-enter-active {
-//   transition: transform 350ms ease-in-out;
-// }
+.popup-card-enter-active {
+  transition: transform 350ms ease-in-out;
+}
 
-// .popup-card-leave-active {
-//   transition: transform 200ms ease-in-out;
-// }
+.popup-card-leave-active {
+  transition: transform 200ms ease-in-out;
+}
 </style>

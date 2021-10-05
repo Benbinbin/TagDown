@@ -144,6 +144,10 @@ export default function useBookmark() {
     return updateBookmarkNode;
   };
 
+  const deleteBookmark = async (nodeId) => {
+    await chrome.bookmarks.remove(nodeId);
+  };
+
   return {
     checkBookmarkState,
     // bookmark indexedDB data
@@ -157,5 +161,6 @@ export default function useBookmark() {
 
     createBookmark,
     updateBookmark,
+    deleteBookmark,
   };
 }
