@@ -6,7 +6,9 @@ const checkBookmarkState = async (url) => {
   const nodes = await chrome.bookmarks.search({
     url,
   });
+  console.log(nodes);
   if (nodes.length === 0) {
+    await chrome.storage.local.set({ currentBookmarkId: '' });
     return false;
   }
   const [node] = nodes;
@@ -57,6 +59,28 @@ chrome.tabs.onActivated.addListener(async (activeInfo) => {
   await changeActionIcon(bookmarkState);
 });
 
+// watching the window focus change event
+chrome.windows.onFocusChanged.addListener(async (windowId) => {
+  const [tab] = await chrome.tabs.query({
+    active: true,
+    currentWindow: true,
+  });
+
+  console.log(tab);
+  if (!tab) return;
+
+  const url = tab.url || tab.pendingUrl;
+
+  let bookmarkState = false;
+  if (url) bookmarkState = await checkBookmarkState(url);
+
+  // set tab bookmark state
+  await chrome.storage.local.set({ bookmarkState });
+
+  // change action icon
+  await changeActionIcon(bookmarkState);
+});
+
 // watching tab update event
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
   if (tabId !== activeTabID || !changeInfo.url) return;
@@ -83,15 +107,13 @@ chrome.bookmarks.onCreated.addListener(async (id, bookmarkNode) => {
 
   const url = tab.url || tab.pendingUrl;
 
-  let bookmarkState = await chrome.storage.local.get('bookmarkState');
-  if (url === bookmarkNode.url) {
-    bookmarkState = true;
-    // set tab bookmark state
-    await chrome.storage.local.set({ bookmarkState });
+  const bookmarkState = await checkBookmarkState(url);
 
-    // change action icon
-    await changeActionIcon(bookmarkState);
-  }
+  // set tab bookmark state
+  await chrome.storage.local.set({ bookmarkState });
+
+  // change action icon
+  await changeActionIcon(bookmarkState);
 });
 
 // watching bookmark delete event
@@ -103,11 +125,11 @@ chrome.bookmarks.onRemoved.addListener(async (id, bookmarkNode) => {
 
   const url = tab.url || tab.pendingUrl;
 
-  if (url === bookmarkNode.url) {
-    // set tab bookmark state
-    await chrome.storage.local.set({ bookmarkState: false });
+  const bookmarkState = await checkBookmarkState(url);
 
-    // change action icon
-    await changeActionIcon(false);
-  }
+  // set tab bookmark state
+  await chrome.storage.local.set({ bookmarkState });
+
+  // change action icon
+  await changeActionIcon(bookmarkState);
 });

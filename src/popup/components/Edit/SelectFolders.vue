@@ -175,7 +175,7 @@
     <InputModal
       v-if="showRenameFolderModal"
       v-model:show="showRenameFolderModal"
-      :init-value="'folder_name'"
+      :init-value="initFolderName"
       :placeholder="'请输入文件夹名称'"
       @result="getRenameResultHandler"
     >
@@ -189,7 +189,6 @@
     <InputModal
       v-if="showAddSubfolderModal"
       v-model:show="showAddSubfolderModal"
-      :init-value="'subfolder_name'"
       :placeholder="'请输入子文件夹名称'"
       @result="getSubfolderNameHandler"
     >
@@ -258,6 +257,7 @@ import PromptModal from '../Modal/PromptModal.vue';
 import PopupMenu from '../Modal/PopupMenu.vue';
 import InputModal from '../Modal/InputModal.vue';
 import PopupHint from '../Modal/PopupHint.vue';
+import useFolder from '@/composables/useFolder';
 
 export default {
   components: {
@@ -391,27 +391,45 @@ export default {
       }, 600);
     };
 
-    // rename folder name modal
+    const { createFolder, renameFolder, deleteFolder } = useFolder();
+
+    // rename folder
+    const initFolderName = ref('');
     const showRenameFolderModal = ref(false);
     const renameFolderHandler = () => {
+      initFolderName.value = selectItem.value.title;
       showRenameFolderModal.value = true;
       showPopupMenu.value = false;
     };
-    const getRenameResultHandler = (obj) => {
-      console.log(obj);
+    const getRenameResultHandler = async (obj) => {
+      if (obj.state && selectItem.value) {
+        await renameFolder(selectItem.value.id, obj.value);
+        chrome.bookmarks.getSubTree(currentNodeId.value).then((nodes) => {
+          [currentNode.value] = nodes;
+        });
+      }
+      showRenameFolderModal.value = false;
     };
 
-    // add subfolder modal
+    // add subfolder
     const showAddSubfolderModal = ref(false);
     const addSubfolderHandler = () => {
       showAddSubfolderModal.value = true;
       showPopupMenu.value = false;
     };
-    const getSubfolderNameHandler = (obj) => {
+    const getSubfolderNameHandler = async (obj) => {
       console.log(obj);
+      console.log(selectItem.value);
+      if (obj.state && selectItem.value) {
+        await createFolder(selectItem.value.id, obj.value);
+        chrome.bookmarks.getSubTree(currentNodeId.value).then((nodes) => {
+          [currentNode.value] = nodes;
+        });
+      }
+      showRenameFolderModal.value = false;
     };
 
-    // delete folder modal
+    // delete folder
     const showConfirmDeleteModal = ref(false);
     const deleteItemHandler = () => {
       showConfirmDeleteModal.value = true;
@@ -440,6 +458,7 @@ export default {
       hidePopupHintHandler,
       enterPopupHintHandler,
       leavePopupHintHandler,
+      initFolderName,
       showRenameFolderModal,
       renameFolderHandler,
       getRenameResultHandler,

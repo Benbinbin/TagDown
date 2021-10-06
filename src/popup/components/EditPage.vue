@@ -485,12 +485,14 @@ export default {
     let currentBookmarkId = '';
     const deleteBookmarkHandler = async () => {
       console.log('delete-bookmark');
-      const result = await chrome.storage.local.get('currentBookmarkId');
-      currentBookmarkId = result.currentBookmarkId;
-      if (currentBookmarkId) {
+      chrome.storage.local.get('currentBookmarkId', (result) => {
+        console.log(result);
+        if (result) currentBookmarkId = result.currentBookmarkId;
+        if (currentBookmarkId) {
         // console.log(currentBookmarkId);
-        showDeleteConfirmModal.value = true;
-      }
+          showDeleteConfirmModal.value = true;
+        }
+      });
     };
 
     const getDeleteResult = (value) => {
