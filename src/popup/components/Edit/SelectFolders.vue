@@ -143,7 +143,7 @@
     <PromptModal
       v-if="showConfirmDeleteModal"
       v-model:show="showConfirmDeleteModal"
-      @result="getResultHandler"
+      @result="getConfirmDeleteHandler"
     >
       <template #title>
         <h2 class="p-4 text-sm font-bold">
@@ -152,7 +152,7 @@
       </template>
       <template #msg>
         <p class="p-2 text-xs text-center">
-          folder1
+          {{ selectItem.title }}
         </p>
       </template>
       <template #btn="{ resultHandler }">
@@ -284,12 +284,15 @@ export default {
     }
     // watch current node id to update the current node and children nodes
     const currentNode = ref(null);
+    const refreshCurrentNode = () => {
+      chrome.bookmarks.getSubTree(currentNodeId.value).then((nodes) => {
+        [currentNode.value] = nodes;
+      });
+    };
     watch(
       currentNodeId,
       (newValue, oldValue) => {
-        chrome.bookmarks.getSubTree(currentNodeId.value).then((nodes) => {
-          [currentNode.value] = nodes;
-        });
+        refreshCurrentNode();
       },
       {
         immediate: true,
@@ -404,9 +407,7 @@ export default {
     const getRenameResultHandler = async (obj) => {
       if (obj.state && selectItem.value) {
         await renameFolder(selectItem.value.id, obj.value);
-        chrome.bookmarks.getSubTree(currentNodeId.value).then((nodes) => {
-          [currentNode.value] = nodes;
-        });
+        refreshCurrentNode();
       }
       showRenameFolderModal.value = false;
     };
@@ -418,13 +419,11 @@ export default {
       showPopupMenu.value = false;
     };
     const getSubfolderNameHandler = async (obj) => {
-      console.log(obj);
+      // console.log(obj);
       console.log(selectItem.value);
       if (obj.state && selectItem.value) {
         await createFolder(selectItem.value.id, obj.value);
-        chrome.bookmarks.getSubTree(currentNodeId.value).then((nodes) => {
-          [currentNode.value] = nodes;
-        });
+        refreshCurrentNode();
       }
       showRenameFolderModal.value = false;
     };
@@ -435,8 +434,12 @@ export default {
       showConfirmDeleteModal.value = true;
       showPopupMenu.value = false;
     };
-    const getResultHandlerd = (value) => {
-      console.log(value);
+    const getConfirmDeleteHandler = async (value) => {
+      // console.log(value);
+      if (value && selectItem.value) {
+        await deleteFolder(selectItem.value.id);
+        refreshCurrentNode();
+      }
     };
 
     return {
@@ -467,7 +470,7 @@ export default {
       getSubfolderNameHandler,
       showConfirmDeleteModal,
       deleteItemHandler,
-      getResultHandlerd,
+      getConfirmDeleteHandler,
     };
   },
 };

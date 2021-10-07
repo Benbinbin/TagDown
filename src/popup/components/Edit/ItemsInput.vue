@@ -20,9 +20,7 @@
         <span
           title="locate folder item"
           class="p-1 text-xs text-white bg-green-400 rounded-r-sm"
-        >
-          {{ item }}
-        </span>
+        >{{ item }}</span>
       </div>
     </div>
     <div class="input-style flex items-center space-x-1">
@@ -36,7 +34,7 @@
       >
 
       <div
-        v-show="showCandidatePopup && filterCandidates.length>0"
+        v-show="showCandidatePopup && filterCandidates.length > 0"
         class="wrapper h-0 absolute -bottom-1 inset-x-0 z-10 select-none"
       >
         <div
@@ -111,7 +109,7 @@
   </PromptModal>
 </template>
 <script>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import PromptModal from '../Modal/PromptModal.vue';
 
 export default {
@@ -193,31 +191,31 @@ export default {
 
 <style lang="scss" scoped>
 .label-style {
-    @apply flex items-center text-gray-600 space-x-0.5;
+  @apply flex items-center text-gray-600 space-x-0.5;
 }
 
 .input-style {
-    @apply w-full px-2 py-1 text-sm border border-gray-300 rounded;
+  @apply w-full px-2 py-1 text-sm border border-gray-300 rounded;
 }
 
 .btn {
-    @apply p-1 text-green-400 hover:text-white hover:bg-green-400 rounded;
+  @apply p-1 text-green-400 hover:text-white hover:bg-green-400 rounded;
 }
 
 .candidates-popup {
-    max-height: 5rem;
-    overflow-y: overlay;
-    &::-webkit-scrollbar {
-        width: 5px;
-    }
-    &::-webkit-scrollbar-thumb {
-        border-radius: 2px;
-        background-color: #9ca3af;
-        // border: 3px solid transparent;
-        // background-clip: padding-box;
-    }
-    &::-webkit-scrollbar-thumb:hover {
-        background-color: #4b5563;
-    }
+  max-height: 5rem;
+  overflow-y: overlay;
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 2px;
+    background-color: #9ca3af;
+    // border: 3px solid transparent;
+    // background-clip: padding-box;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: #4b5563;
+  }
 }
 </style>

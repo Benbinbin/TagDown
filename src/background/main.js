@@ -6,7 +6,7 @@ const checkBookmarkState = async (url) => {
   const nodes = await chrome.bookmarks.search({
     url,
   });
-  console.log(nodes);
+  // console.log(nodes);
   if (nodes.length === 0) {
     await chrome.storage.local.set({ currentBookmarkId: '' });
     return false;
@@ -66,7 +66,6 @@ chrome.windows.onFocusChanged.addListener(async (windowId) => {
     currentWindow: true,
   });
 
-  console.log(tab);
   if (!tab) return;
 
   const url = tab.url || tab.pendingUrl;

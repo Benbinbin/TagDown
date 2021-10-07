@@ -23,7 +23,7 @@ export default function useFolder() {
 
   // delete folder
   const deleteFolder = async (nodeId) => {
-    chrome.bookmarks.removeTree(nodeId);
+    await chrome.bookmarks.removeTree(nodeId);
   };
 
   return {

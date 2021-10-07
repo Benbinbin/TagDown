@@ -7,6 +7,7 @@
       />
       <transition
         name="bounce"
+        @after-enter="focusInputHandler"
         @after-leave="$emit('update:show', false)"
       >
         <div
@@ -27,6 +28,7 @@
           >
             <input
               id="input-modal"
+              ref="inputElem"
               v-model="inputValue"
               type="text"
               name="input-modal"
@@ -59,7 +61,7 @@
   </teleport>
 </template>
 <script>
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, nextTick } from 'vue';
 
 export default {
   props: {
@@ -84,6 +86,12 @@ export default {
       }
     });
 
+    // focus input
+    const inputElem = ref(null);
+    const focusInputHandler = () => {
+      if (inputElem.value) inputElem.value.focus();
+    };
+
     // handler result and value
     const inputValue = ref(props.initValue);
     const resultHandler = (value) => {
@@ -103,6 +111,8 @@ export default {
 
     return {
       showModal,
+      inputElem,
+      focusInputHandler,
       inputValue,
       resultHandler,
     };
