@@ -107,6 +107,7 @@
       <button
         title="more menu button"
         class="btn"
+        @click="showSettingHandler"
       >
         <svg
           class="w-6 h-6"
@@ -137,7 +138,12 @@ export default {
   },
   emits: ['change-browser-mode', 'change-browser-type'],
   setup() {
-
+    const showSettingHandler = () => {
+      chrome.runtime.openOptionsPage();
+    };
+    return {
+      showSettingHandler,
+    };
   },
 };
 </script>

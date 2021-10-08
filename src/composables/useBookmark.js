@@ -146,6 +146,9 @@ export default function useBookmark() {
 
   const deleteBookmark = async (nodeId) => {
     await chrome.bookmarks.remove(nodeId);
+    await deleteBookmarkDB(nodeId);
+    await deleteBookmarkShare(nodeId);
+    await deleteBookmarkStar(nodeId);
   };
 
   return {

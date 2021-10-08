@@ -37,6 +37,7 @@
       <button
         title="more menu button"
         class="btn"
+        @click="showSettingHandler"
       >
         <svg
           class="w-5 h-5"
@@ -473,6 +474,10 @@ export default {
       getBookmarkDB, getBookmarkShare, setBookmarkShare, getBookmarkStar, setBookmarkStar, createBookmark, updateBookmark, deleteBookmark,
     } = useBookmark();
 
+    const showSettingHandler = () => {
+      chrome.runtime.openOptionsPage();
+    };
+
     const finishMsg = ref('');
     const showFinishMsgPopup = ref(false);
 
@@ -484,7 +489,7 @@ export default {
     const showDeleteConfirmModal = ref(false);
     let currentBookmarkId = '';
     const deleteBookmarkHandler = async () => {
-      console.log('delete-bookmark');
+      // console.log('delete-bookmark');
       chrome.storage.local.get('currentBookmarkId', (result) => {
         console.log(result);
         if (result) currentBookmarkId = result.currentBookmarkId;
@@ -713,6 +718,7 @@ export default {
     const changePage = inject('changePage');
 
     return {
+      showSettingHandler,
       favicon,
       deleteBookmarkHandler,
       showDeleteConfirmModal,

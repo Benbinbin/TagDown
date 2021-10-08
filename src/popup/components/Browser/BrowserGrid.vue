@@ -32,7 +32,7 @@
         >
           <svg
             v-if="node.children.length > 0 && !unfoldFolders.has(node.id)"
-            class="flex-shrink-0 w-4 h-4"
+            class="flex-shrink-0 w-5 h-5"
             viewBox="0 0 50 50"
             fill="currentColor"
             xmlns="http://www.w3.org/2000/svg"
@@ -44,7 +44,7 @@
 
           <svg
             v-if="node.children.length > 0 && unfoldFolders.has(node.id)"
-            class="flex-shrink-0 w-4 h-4"
+            class="flex-shrink-0 w-5 h-5"
             viewBox="0 0 50 50"
             fill="currentColor"
             xmlns="http://www.w3.org/2000/svg"
@@ -56,7 +56,7 @@
 
           <svg
             v-if="node.children.length === 0"
-            class="flex-shrink-0 w-4 h-4"
+            class="flex-shrink-0 w-5 h-5"
             viewBox="0 0 50 50"
             fill="currentColor"
             xmlns="http://www.w3.org/2000/svg"
@@ -67,7 +67,7 @@
           </svg>
 
           <span
-            class="node-title-style text-xs text-left"
+            class="node-title-style text-sm text-left"
             :class="{
               'text-white': pinNodesId.includes(node.id),
               'text-gray-600  ': !pinNodesId.includes(node.id)
@@ -86,17 +86,23 @@
           @click.exact="openBookmarkHandler(node)"
         >
           <div class="flex-shrink-0 p-0.5">
-            <div
+            <!-- <div
               class="bookmark-favicon w-3 h-3 bg-cover bg-center bg-no-repeat"
               :style="{
                 backgroundImage:
-                  'url(' + `https://www.youtube.com/s/desktop/4eebcda0/img/favicon_32x32.png` + ')',
+                  'url(' + bookmarkFavicon(node.id) + ')',
               }"
-            />
+            /> -->
+            <!-- <img
+              class="w-3 h-3"
+              :src="bookmarkFavicon(node.id)"
+              alt="bookmark favicon"
+            > -->
+            <BookmarkFavicon :id="node.id" />
           </div>
 
           <span
-            class="node-title-style text-xs text-left"
+            class="node-title-style text-sm text-left"
             :class="{
               'text-white': pinNodesId.includes(node.id),
               'text-gray-600  ': !pinNodesId.includes(node.id)
@@ -115,7 +121,7 @@
             }"
           >
             <svg
-              class="w-4 h-4"
+              class="w-5 h-5"
               viewBox="0 0 50 50"
               fill="currentColor"
               xmlns="http://www.w3.org/2000/svg"
@@ -135,7 +141,7 @@
             @click="showPopupMenuHandler(node, $event)"
           >
             <svg
-              class="w-4 h-4"
+              class="w-5 h-5"
               viewBox="0 0 50 50"
               fill="currentColor"
               xmlns="http://www.w3.org/2000/svg"
@@ -174,7 +180,7 @@
           >
             <svg
               v-if="childNode.children.length > 0"
-              class="flex-shrink-0 w-4 h-4"
+              class="flex-shrink-0 w-5 h-5"
               viewBox="0 0 50 50"
               fill="currentColor"
               xmlns="http://www.w3.org/2000/svg"
@@ -186,7 +192,7 @@
 
             <svg
               v-if="childNode.children.length === 0"
-              class="flex-shrink-0 w-4 h-4"
+              class="flex-shrink-0 w-5 h-5"
               viewBox="0 0 50 50"
               fill="currentColor"
               xmlns="http://www.w3.org/2000/svg"
@@ -197,7 +203,7 @@
             </svg>
 
             <span
-              class="node-title-style text-xs text-left"
+              class="node-title-style text-sm text-left"
               :class="{
                 'text-white': pinNodesId.includes(childNode.id),
                 'text-gray-600  ': !pinNodesId.includes(childNode.id)
@@ -214,16 +220,22 @@
             @click.ctrl.exact="$emit('toggle-pin-node', childNode.id)"
           >
             <div class="flex-shrink-0 p-0.5">
-              <div
+              <!-- <div
                 class="bookmark-favicon w-3 h-3 bg-cover bg-center bg-no-repeat"
                 :style="{
                   backgroundImage:
-                    'url(' + `https://www.youtube.com/s/desktop/4eebcda0/img/favicon_32x32.png` + ')',
+                    'url(' + bookmarkFavicon(childNode.id) + ')',
                 }"
-              />
+              /> -->
+              <!-- <img
+                class="w-3 h-3"
+                :src="bookmarkFavicon(childNode.id)"
+                alt="bookmark favicon"
+              > -->
+              <BookmarkFavicon :id="childNode.id" />
             </div>
             <span
-              class="node-title-style text-xs text-left"
+              class="node-title-style text-sm text-left"
               :class="{
                 'text-white': pinNodesId.includes(childNode.id),
                 'text-gray-600  ': !pinNodesId.includes(childNode.id)
@@ -241,7 +253,7 @@
               }"
             >
               <svg
-                class="w-4 h-4"
+                class="w-5 h-5"
                 viewBox="0 0 50 50"
                 fill="currentColor"
                 xmlns="http://www.w3.org/2000/svg"
@@ -261,7 +273,7 @@
               @click="showPopupMenuHandler(childNode, $event)"
             >
               <svg
-                class="w-4 h-4"
+                class="w-5 h-5"
                 viewBox="0 0 50 50"
                 fill="currentColor"
                 xmlns="http://www.w3.org/2000/svg"
@@ -427,6 +439,7 @@
 
 <script>
 import { ref } from 'vue';
+import BookmarkFavicon from './BookmarkFavicon.vue';
 import PopupMenu from '../Modal/PopupMenu.vue';
 import InputModal from '../Modal/InputModal.vue';
 import PromptModal from '../Modal/PromptModal.vue';
@@ -434,6 +447,7 @@ import useTab from '@/composables/useTab';
 
 export default {
   components: {
+    BookmarkFavicon,
     PopupMenu,
     InputModal,
     PromptModal,
@@ -536,6 +550,7 @@ export default {
         }
       }
     };
+
     /**
      * modal
      */

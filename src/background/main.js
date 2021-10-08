@@ -104,6 +104,8 @@ chrome.bookmarks.onCreated.addListener(async (id, bookmarkNode) => {
     currentWindow: true,
   });
 
+  if (!tab) return;
+
   const url = tab.url || tab.pendingUrl;
 
   const bookmarkState = await checkBookmarkState(url);
@@ -116,19 +118,19 @@ chrome.bookmarks.onCreated.addListener(async (id, bookmarkNode) => {
 });
 
 // watching bookmark delete event
-chrome.bookmarks.onRemoved.addListener(async (id, bookmarkNode) => {
-  const [tab] = await chrome.tabs.query({
-    active: true,
-    currentWindow: true,
-  });
+// chrome.bookmarks.onRemoved.addListener(async (id, bookmarkNode) => {
+//   const [tab] = await chrome.tabs.query({
+//     active: true,
+//     currentWindow: true,
+//   });
 
-  const url = tab.url || tab.pendingUrl;
+//   const url = tab.url || tab.pendingUrl;
 
-  const bookmarkState = await checkBookmarkState(url);
+//   const bookmarkState = await checkBookmarkState(url);
 
-  // set tab bookmark state
-  await chrome.storage.local.set({ bookmarkState });
+//   // set tab bookmark state
+//   await chrome.storage.local.set({ bookmarkState });
 
-  // change action icon
-  await changeActionIcon(bookmarkState);
-});
+//   // change action icon
+//   await changeActionIcon(bookmarkState);
+// });

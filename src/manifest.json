@@ -23,6 +23,7 @@
             "128": "./assets/images/icon128_untag.png"
         }
     },
+    "options_page": "./options.html",
     "icons": {
         "16": "./assets/images/icon16_tag.png",
         "32": "./assets/images/icon32_tag.png",

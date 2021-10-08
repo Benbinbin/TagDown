@@ -250,7 +250,7 @@
           bookmark title
         </p>
         <div
-          v-if="bookmarkState"
+          v-if="currentBookmarkState"
           class="flex items-center space-x-1"
         >
           <span class="text-xs text-green-400">当前页面已收藏</span>
@@ -295,14 +295,52 @@
         </div>
       </div>
     </div>
+    <PromptModal
+      v-if="showDeleteConfirmModal"
+      v-model:show="showDeleteConfirmModal"
+      @result="getDeleteResult"
+    >
+      <template #title>
+        <h2 class="p-4 text-sm font-bold">
+          删除当前书签
+        </h2>
+      </template>
+      <template #msg>
+        <p class="p-2 text-xs text-center">
+          该操作不可恢复
+        </p>
+      </template>
+    </PromptModal>
+    <PopupMsg
+      v-if="showFinishMsgPopup"
+      v-model:show="showFinishMsgPopup"
+    >
+      <template #msg>
+        <p
+          class="p-4 text-sm font-bold"
+          :class="{
+            'text-green-400': finishMsg === '成功',
+            'text-red-400': finishMsg === '失败'
+          }"
+        >
+          {{ finishMsg }}
+        </p>
+      </template>
+    </PopupMsg>
   </footer>
 </template>
 <script>
 import { ref, watch, inject } from 'vue';
 import useBookmark from '@/composables/useBookmark';
 import useTab from '@/composables/useTab';
+import PromptModal from '../Modal/PromptModal.vue';
+import PopupMsg from '../Modal/PopupMsg.vue';
 
 export default {
+  components: {
+    PromptModal,
+    PopupMsg,
+  },
   props: {
     browserType: {
       type: String,
@@ -347,6 +385,8 @@ export default {
     const {
       getActiveTab, createNewTab, getAllTabGroups, watchTabGroups, createTabInGroup,
     } = useTab();
+
+    const { deleteBookmark } = useBookmark();
 
     /**
      * open bookmarks setting
@@ -437,12 +477,52 @@ export default {
      * edit bookmark
     */
     // bookmark state
+    const currentBookmarkState = ref(false);
     const bookmarkState = inject('bookmarkState');
+    currentBookmarkState.value = bookmarkState.value;
     const setBookmarkState = inject('setBookmarkState');
 
-    function deleteBookmarkHandler() {
-      console.log(bookmarkState);
-    }
+    // delete bookmark
+    const showDeleteConfirmModal = ref(false);
+    let currentBookmarkId = '';
+
+    const deleteBookmarkHandler = () => {
+      console.log('delete bookmark');
+      chrome.storage.local.get('currentBookmarkId', (result) => {
+        console.log(result);
+        if (result) currentBookmarkId = result.currentBookmarkId;
+        if (currentBookmarkId) {
+          // console.log(currentBookmarkId);
+          showDeleteConfirmModal.value = true;
+        }
+        console.log(showDeleteConfirmModal.value);
+      });
+    };
+
+    const finishMsg = ref('');
+    const showFinishMsgPopup = ref(false);
+
+    const getDeleteResult = (value) => {
+      if (value && currentBookmarkId) {
+        deleteBookmark(currentBookmarkId).then(() => {
+          showFinishMsgPopup.value = true;
+          finishMsg.value = '成功';
+          let timer = setTimeout(() => {
+            showFinishMsgPopup.value = false;
+            currentBookmarkState.value = false;
+            timer = null;
+          }, 500);
+        }).catch((err) => {
+          showFinishMsgPopup.value = true;
+          finishMsg.value = '失败';
+          let timer = setTimeout(() => {
+            showFinishMsgPopup.value = false;
+            timer = null;
+            console.log(err);
+          }, 500);
+        });
+      }
+    };
 
     // bookmark favicon
     // wait for a new api for favicon
@@ -453,7 +533,7 @@ export default {
       const { favIconUrl } = tab;
       if (favIconUrl) {
         favicon.value = favIconUrl;
-      } else if (bookmarkState.value) {
+      } else if (currentBookmarkState.value) {
         favicon.value = '/icons/icon64_tag.png';
       }
     });
@@ -470,8 +550,12 @@ export default {
       colorMap,
       setGroupColorHandler,
       favicon,
-      bookmarkState,
+      currentBookmarkState,
+      showDeleteConfirmModal,
       deleteBookmarkHandler,
+      finishMsg,
+      showFinishMsgPopup,
+      getDeleteResult,
       changePage,
     };
   },

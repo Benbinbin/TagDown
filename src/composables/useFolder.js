@@ -1,5 +1,3 @@
-import { inject } from 'vue';
-
 export default function useFolder() {
   // const db = inject('db');
 
