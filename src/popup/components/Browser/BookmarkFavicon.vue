@@ -1,6 +1,6 @@
 <template>
   <img
-    class="w-5 h-5"
+    class="w-4 h-4"
     :src="favicon"
     alt="bookmark favicon"
   >

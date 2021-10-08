@@ -359,7 +359,7 @@
         <button
           title="browser all bookmarks"
           class="btn flex flex-col justify-center items-center space-y-0.5"
-          @click="changePage('browser')"
+          @click="browserAllBookmarksHandler"
         >
           <div class="p-0.5">
             <svg
@@ -468,6 +468,12 @@ export default {
     PromptModal,
     PopupMsg,
   },
+  props: {
+    bookmarkId: {
+      type: String,
+      default: '',
+    },
+  },
   setup(props, context) {
     const { getActiveTab } = useTab();
     const {
@@ -490,14 +496,14 @@ export default {
     let currentBookmarkId = '';
     const deleteBookmarkHandler = async () => {
       // console.log('delete-bookmark');
-      chrome.storage.local.get('currentBookmarkId', (result) => {
-        console.log(result);
-        if (result) currentBookmarkId = result.currentBookmarkId;
-        if (currentBookmarkId) {
+      // chrome.storage.local.get('currentBookmarkId', (result) => {
+      // console.log(result);
+      // if (result) currentBookmarkId = result.currentBookmarkId;
+      if (currentBookmarkId) {
         // console.log(currentBookmarkId);
-          showDeleteConfirmModal.value = true;
-        }
-      });
+        showDeleteConfirmModal.value = true;
+      }
+      // });
     };
 
     const getDeleteResult = (value) => {
@@ -590,29 +596,53 @@ export default {
     // indexedDB
     const db = inject('db');
 
-    // base on current tab bookmark state to get init data
-    getActiveTab().then(async (tab) => {
-      // current tab url and favicon
-      const tabUrl = tab.url || tab.pendingUrl;
-      const tabFaviconUrl = tab.favIconUrl;
+    // set bookmark init data
+    const setBookmarkInitData = async () => {
+      let node = null;
+      let currentTab = null;
+      let currentTabUrl = '';
+      let tabFaviconUrl = '';
+      let bookmarkDB = null;
 
-      // favicon
-      if (tabFaviconUrl) {
-        faviconUrl = tabFaviconUrl;
-        favicon.value = tabFaviconUrl;
+      if (props.bookmarkId) {
+        const nodes = await chrome.bookmarks.get(props.bookmarkId);
+        if (nodes.length > 0) [node] = nodes;
+
+        // favicon
+        bookmarkDB = await getBookmarkDB(props.bookmarkId);
+
+        if (bookmarkDB) {
+          tabFaviconUrl = bookmarkDB.faviconUrl;
+          faviconUrl = tabFaviconUrl;
+          favicon.value = tabFaviconUrl;
+        }
+      } else {
+        currentTab = await getActiveTab();
+        currentTabUrl = currentTab.url || currentTab.pendingUrl;
+        tabFaviconUrl = currentTab.favIconUrl;
+
+        // favicon
+        if (tabFaviconUrl) {
+          faviconUrl = tabFaviconUrl;
+          favicon.value = tabFaviconUrl;
+        }
+        // get bookmark node
+        const nodes = await chrome.bookmarks.search({
+          url: currentTabUrl,
+        });
+
+        if (nodes.length > 0) {
+          [node] = nodes;
+          bookmarkDB = await getBookmarkDB(node.id);
+        }
       }
 
-      // get bookmark node
-      const nodes = await chrome.bookmarks.search({
-        url: tabUrl,
-      });
-
-      if (nodes.length === 0) {
+      if (!node) {
         // no bookmark
         urlBookmarkState.value = false;
 
-        title.value = tab.title;
-        url.value = tabUrl;
+        title.value = currentTab.title;
+        url.value = currentTabUrl;
 
         // set recent used folder as init folder
         chrome.bookmarks.getRecent(1).then(async (recentNodes) => {
@@ -624,10 +654,10 @@ export default {
       } else {
         // already bookmark
         urlBookmarkState.value = true;
+        currentBookmarkId = node.id;
 
         if (!tabFaviconUrl) favicon.value = '/icons/icon64_tag.png';
 
-        const [node] = nodes;
         bookmarkNode.id = node.id;
         bookmarkNode.index = node.index;
 
@@ -638,7 +668,6 @@ export default {
           [selectFolder.value] = parentNodes;
         });
 
-        const bookmarkDB = await getBookmarkDB(node.id);
         if (bookmarkDB) {
           tags.value = bookmarkDB.tags;
           groups.value = bookmarkDB.groups;
@@ -658,7 +687,79 @@ export default {
       allTags.value = await db.bookmark.orderBy('tags').uniqueKeys();
       // all groups
       allGroups.value = await db.bookmark.orderBy('groups').uniqueKeys();
-    });
+    };
+
+    setBookmarkInitData();
+
+    // getActiveTab().then(async (tab) => {
+    //   // console.log(tab);
+    //   // current tab url and favicon
+    //   const tabUrl = tab.url || tab.pendingUrl;
+    //   const tabFaviconUrl = tab.favIconUrl;
+
+    //   // favicon
+    //   if (tabFaviconUrl) {
+    //     faviconUrl = tabFaviconUrl;
+    //     favicon.value = tabFaviconUrl;
+    //   }
+
+    //   // get bookmark node
+    //   const nodes = await chrome.bookmarks.search({
+    //     url: tabUrl,
+    //   });
+
+    //   if (nodes.length === 0) {
+    //     // no bookmark
+    //     urlBookmarkState.value = false;
+
+    //     title.value = tab.title;
+    //     url.value = tabUrl;
+
+    //     // set recent used folder as init folder
+    //     chrome.bookmarks.getRecent(1).then(async (recentNodes) => {
+    //       if (recentNodes.length === 0) return;
+    //       const [recentNode] = recentNodes;
+    //       const [folderNode] = await chrome.bookmarks.get(recentNode.parentId);
+    //       selectFolder.value = folderNode;
+    //     });
+    //   } else {
+    //     // already bookmark
+    //     urlBookmarkState.value = true;
+
+    //     if (!tabFaviconUrl) favicon.value = '/icons/icon64_tag.png';
+
+    //     const [node] = nodes;
+    //     bookmarkNode.id = node.id;
+    //     bookmarkNode.index = node.index;
+
+    //     title.value = node.title;
+    //     url.value = node.url;
+    //     parentIdInit = node.parentId;
+    //     chrome.bookmarks.get(node.parentId).then(async (parentNodes) => {
+    //       [selectFolder.value] = parentNodes;
+    //     });
+
+    //     const bookmarkDB = await getBookmarkDB(node.id);
+    //     if (bookmarkDB) {
+    //       tags.value = bookmarkDB.tags;
+    //       groups.value = bookmarkDB.groups;
+    //       description.value = bookmarkDB.description;
+    //     }
+
+    //     // share state
+    //     const shareInit = await getBookmarkShare(node.id);
+    //     if (shareInit) share.value = shareInit;
+
+    //     // star state
+    //     const starInit = await getBookmarkStar(node.id);
+    //     if (starInit) star.value = starInit;
+    //   }
+
+    //   // all tags
+    //   allTags.value = await db.bookmark.orderBy('tags').uniqueKeys();
+    //   // all groups
+    //   allGroups.value = await db.bookmark.orderBy('groups').uniqueKeys();
+    // });
 
     // create or update bookmark
     const finishBookmark = async () => {
@@ -716,6 +817,12 @@ export default {
 
     // change page state
     const changePage = inject('changePage');
+    const setBookmarkId = inject('setBookmarkId');
+
+    const browserAllBookmarksHandler = () => {
+      setBookmarkId('');
+      changePage('browser');
+    };
 
     return {
       showSettingHandler,
@@ -745,7 +852,7 @@ export default {
       finishBookmark,
       finishMsg,
       showFinishMsgPopup,
-      changePage,
+      browserAllBookmarksHandler,
     };
   },
 };

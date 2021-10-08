@@ -11,10 +11,10 @@
       >
         <div
           v-show="showModal"
-          class="modal relative z-50 bg-white rounded shadow"
+          class="modal p-4 relative z-50 bg-white rounded shadow"
         >
           <slot name="title">
-            <h2 class="p-4 text-sm font-bold">
+            <h2 class="p-4 text-base text-center font-bold">
               标题
             </h2>
           </slot>
@@ -30,15 +30,15 @@
             name="btn"
             :resultHandler="resultHandler"
           >
-            <div class="p-2 all-center space-x-2">
+            <div class="p-2 all-center space-x-4">
               <button
-                class="p-1 text-white bg-red-400 hover:bg-red-600 rounded"
+                class="px-2 py-1 text-sm text-white bg-red-400 hover:bg-red-600 rounded"
                 @click="resultHandler(true)"
               >
                 确定
               </button>
               <button
-                class="p-1 text-white bg-green-400 hover:bg-green-600 rounded"
+                class="px-2 py-1 text-sm text-white bg-green-400 hover:bg-green-600 rounded"
                 @click="resultHandler(false)"
               >
                 取消

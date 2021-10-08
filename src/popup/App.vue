@@ -7,6 +7,7 @@
   <EditPage
     v-if="page === 'edit'"
     class="tag-mode"
+    :bookmark-id="bookmarkId"
   />
 </template>
 
@@ -43,9 +44,15 @@ export default {
     };
     provide('setBookmarkState', setBookmarkState);
 
+    // provide set bookmark function
+    const bookmarkId = ref('');
+    const setBookmarkId = (nodeId) => {
+      bookmarkId.value = nodeId;
+    };
+    provide('setBookmarkId', setBookmarkId);
+
     // provide page state and change the page state function
     provide('page', page);
-
     const changePage = (value) => {
       page.value = value;
     };
@@ -53,6 +60,7 @@ export default {
 
     return {
       page,
+      bookmarkId,
     };
   },
 };

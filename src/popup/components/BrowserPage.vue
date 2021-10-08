@@ -52,6 +52,7 @@
         @set-current-node="setCurrentNodeIdHandler"
         @toggle-pin-node="togglePinNodeHandler"
         @change-current-group-id="currentGroupId = $event"
+        @refresh-current-node="refreshCurrentNodeHandler"
       />
       <BrowserTree
         v-show="browserType==='all' && browserMode==='tree'"
@@ -150,14 +151,17 @@ export default {
       }
     };
 
+    const refreshCurrentNodeHandler = () => {
+      chrome.bookmarks.getSubTree(currentNodeId.value).then((nodes) => {
+        [currentNode.value] = nodes;
+        childrenNodes.value = nodes[0].children;
+      });
+    };
+
     watch(
       currentNodeId,
       (newValue, oldValue) => {
-        chrome.bookmarks.getSubTree(currentNodeId.value).then((nodes) => {
-          [currentNode.value] = nodes;
-          childrenNodes.value = nodes[0].children;
-          // console.log(childrenNodes.value);
-        });
+        refreshCurrentNodeHandler();
       },
       {
         immediate: true,
@@ -234,6 +238,7 @@ export default {
       currentNode,
       childrenNodes,
       setCurrentNodeIdHandler,
+      refreshCurrentNodeHandler,
       pinNodesId,
       pinNodes,
       togglePinNodeHandler,

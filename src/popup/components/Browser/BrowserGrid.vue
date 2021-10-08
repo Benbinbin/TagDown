@@ -32,7 +32,7 @@
         >
           <svg
             v-if="node.children.length > 0 && !unfoldFolders.has(node.id)"
-            class="flex-shrink-0 w-5 h-5"
+            class="flex-shrink-0 w-4 h-4"
             viewBox="0 0 50 50"
             fill="currentColor"
             xmlns="http://www.w3.org/2000/svg"
@@ -44,7 +44,7 @@
 
           <svg
             v-if="node.children.length > 0 && unfoldFolders.has(node.id)"
-            class="flex-shrink-0 w-5 h-5"
+            class="flex-shrink-0 w-4 h-4"
             viewBox="0 0 50 50"
             fill="currentColor"
             xmlns="http://www.w3.org/2000/svg"
@@ -56,7 +56,7 @@
 
           <svg
             v-if="node.children.length === 0"
-            class="flex-shrink-0 w-5 h-5"
+            class="flex-shrink-0 w-4 h-4"
             viewBox="0 0 50 50"
             fill="currentColor"
             xmlns="http://www.w3.org/2000/svg"
@@ -92,12 +92,12 @@
                 backgroundImage:
                   'url(' + bookmarkFavicon(node.id) + ')',
               }"
-            /> -->
+            />-->
             <!-- <img
               class="w-3 h-3"
               :src="bookmarkFavicon(node.id)"
               alt="bookmark favicon"
-            > -->
+            >-->
             <BookmarkFavicon :id="node.id" />
           </div>
 
@@ -119,6 +119,7 @@
               'text-white hover:bg-blue-600 ': pinNodesId.includes(node.id),
               'text-gray-300 hover:text-gray-600 hover:bg-gray-200': !pinNodesId.includes(node.id)
             }"
+            @click="copyToClipboardHandler(node.url)"
           >
             <svg
               class="w-5 h-5"
@@ -226,12 +227,12 @@
                   backgroundImage:
                     'url(' + bookmarkFavicon(childNode.id) + ')',
                 }"
-              /> -->
+              />-->
               <!-- <img
                 class="w-3 h-3"
                 :src="bookmarkFavicon(childNode.id)"
                 alt="bookmark favicon"
-              > -->
+              >-->
               <BookmarkFavicon :id="childNode.id" />
             </div>
             <span
@@ -251,6 +252,7 @@
                 'text-white hover:bg-blue-600 ': pinNodesId.includes(childNode.id),
                 'text-gray-300 hover:text-gray-600 hover:bg-gray-200': !pinNodesId.includes(childNode.id)
               }"
+              @click="copyToClipboardHandler(childNode.url)"
             >
               <svg
                 class="w-5 h-5"
@@ -296,7 +298,7 @@
       :menu-width="160"
       :menu-height="120"
     >
-      <!-- star item -->
+      <!-- star state -->
       <button
         title="toggle item star state"
         class="btn text-gray-600 hover:text-yellow-600 hover:bg-yellow-50"
@@ -319,11 +321,12 @@
         </div>
         <span class="text-xs">{{ starState ? '已设为常用' : '未设为常用' }}</span>
       </button>
-      <!-- share item(s) -->
+      <!-- share state -->
       <button
+        v-if="selectItemType === 'bookmark'"
         title="toggle item share state"
         class="btn text-gray-600 hover:text-green-600 hover:bg-green-50"
-        @click="toggleShareState"
+        @click="toggleBookmarkShareState"
       >
         <div
           class="menu-icon-style border-green-400"
@@ -342,7 +345,47 @@
         </div>
         <span class="text-xs">{{ shareState ? '已开启共享' : '未开启共享' }}</span>
       </button>
-      <!-- edit folder name -->
+      <button
+        v-if="selectItemType === 'folder'"
+        title="set all bookmarks in this folder share state to true"
+        class="btn text-gray-600 hover:text-green-600 hover:bg-green-50"
+        @click="toggleFolderShareState(true)"
+      >
+        <div class="menu-icon-style border-green-400 bg-green-400 text-white">
+          <svg
+            class="w-3 h-3"
+            viewBox="0 0 50 50"
+            fill="currentColor"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M34.9183 30.7139C33.9734 30.7136 33.0381 30.9046 32.1678 31.2756C31.2974 31.6466 30.5098 32.1901 29.8515 32.8738L21.6901 27.5808C22.331 25.9199 22.331 24.0769 21.6901 22.416L29.8515 17.1232C31.0766 18.3875 32.7235 19.148 34.4728 19.2571C36.2221 19.3662 37.9493 18.8163 39.3196 17.7139C40.6898 16.6114 41.6055 15.0351 41.8892 13.2903C42.1729 11.5455 41.8043 9.75662 40.855 8.27038C39.9056 6.78413 38.4431 5.7064 36.7509 5.24608C35.0586 4.78576 33.2573 4.97564 31.6959 5.77891C30.1346 6.58219 28.9245 7.94165 28.3002 9.59377C27.6759 11.2459 27.6819 13.073 28.317 14.7209L20.1554 20.0139C19.1726 18.9959 17.9111 18.2967 16.5324 18.0057C15.1536 17.7146 13.7201 17.845 12.4151 18.3801C11.1101 18.9153 9.99303 19.8308 9.20656 21.0098C8.42009 22.1887 8 23.5775 8 24.9985C8 26.4196 8.42009 27.8083 9.20656 28.9873C9.99303 30.1662 11.1101 31.0818 12.4151 31.6169C13.7201 32.152 15.1536 32.2824 16.5324 31.9914C17.9111 31.7003 19.1726 31.0011 20.1554 29.9831L28.317 35.2759C27.7706 36.6983 27.6899 38.2598 28.0868 39.7318C28.4837 41.2037 29.3373 42.5089 30.5226 43.4561C31.7079 44.4033 33.1627 44.9428 34.6739 44.9957C36.1852 45.0486 37.6735 44.612 38.921 43.7499C40.1685 42.8877 41.1096 41.6454 41.6066 40.2047C42.1036 38.764 42.1304 37.2006 41.6829 35.7434C41.2355 34.2863 40.3374 33.0119 39.1202 32.1069C37.9029 31.2018 36.4304 30.7137 34.9183 30.7139ZM34.9183 7.85223C35.7587 7.85223 36.5802 8.10363 37.279 8.57465C37.9777 9.04566 38.5224 9.71513 38.844 10.4984C39.1656 11.2817 39.2497 12.1436 39.0858 12.9751C38.9218 13.8066 38.5171 14.5704 37.9229 15.1699C37.3286 15.7693 36.5715 16.1776 35.7472 16.343C34.923 16.5084 34.0686 16.4235 33.2922 16.0991C32.5157 15.7746 31.8521 15.2252 31.3852 14.5203C30.9183 13.8154 30.6691 12.9866 30.6691 12.1388C30.6703 11.0023 31.1184 9.91276 31.915 9.10915C32.7116 8.30554 33.7917 7.85351 34.9183 7.85223ZM15.0888 29.2851C14.2484 29.2851 13.4268 29.0337 12.7281 28.5627C12.0293 28.0916 11.4847 27.4222 11.1631 26.6389C10.8415 25.8556 10.7573 24.9938 10.9213 24.1622C11.0852 23.3307 11.4899 22.5669 12.0842 21.9674C12.6784 21.368 13.4356 20.9597 14.2598 20.7943C15.0841 20.6289 15.9384 20.7138 16.7149 21.0382C17.4913 21.3627 18.1549 21.9121 18.6218 22.617C19.0887 23.3219 19.338 24.1507 19.338 24.9985C19.3367 26.135 18.8886 27.2246 18.092 28.0282C17.2954 28.8318 16.2153 29.2838 15.0888 29.2851ZM34.9183 42.1448C34.0778 42.1448 33.2563 41.8934 32.5575 41.4224C31.8588 40.9514 31.3141 40.2819 30.9925 39.4986C30.6709 38.7153 30.5868 37.8535 30.7507 37.0219C30.9147 36.1904 31.3194 35.4266 31.9136 34.8272C32.5079 34.2277 33.265 33.8194 34.0893 33.654C34.9135 33.4886 35.7679 33.5735 36.5443 33.8979C37.3208 34.2224 37.9844 34.7718 38.4513 35.4767C38.9182 36.1817 39.1674 37.0104 39.1674 37.8582C39.1662 38.9947 38.7181 40.0843 37.9215 40.8879C37.1249 41.6915 36.0448 42.1435 34.9183 42.1448Z"
+            />
+          </svg>
+        </div>
+        <span class="text-xs">内部书签开启共享</span>
+      </button>
+      <button
+        v-if="selectItemType === 'folder'"
+        title="set all bookmarks in this folder share state to true"
+        class="btn text-gray-600 hover:text-green-600 hover:bg-green-50"
+        @click="toggleFolderShareState(false)"
+      >
+        <div class="menu-icon-style border-green-400 text-green-400">
+          <svg
+            class="w-3 h-3"
+            viewBox="0 0 50 50"
+            fill="currentColor"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M34.9183 30.7139C33.9734 30.7136 33.0381 30.9046 32.1678 31.2756C31.2974 31.6466 30.5098 32.1901 29.8515 32.8738L21.6901 27.5808C22.331 25.9199 22.331 24.0769 21.6901 22.416L29.8515 17.1232C31.0766 18.3875 32.7235 19.148 34.4728 19.2571C36.2221 19.3662 37.9493 18.8163 39.3196 17.7139C40.6898 16.6114 41.6055 15.0351 41.8892 13.2903C42.1729 11.5455 41.8043 9.75662 40.855 8.27038C39.9056 6.78413 38.4431 5.7064 36.7509 5.24608C35.0586 4.78576 33.2573 4.97564 31.6959 5.77891C30.1346 6.58219 28.9245 7.94165 28.3002 9.59377C27.6759 11.2459 27.6819 13.073 28.317 14.7209L20.1554 20.0139C19.1726 18.9959 17.9111 18.2967 16.5324 18.0057C15.1536 17.7146 13.7201 17.845 12.4151 18.3801C11.1101 18.9153 9.99303 19.8308 9.20656 21.0098C8.42009 22.1887 8 23.5775 8 24.9985C8 26.4196 8.42009 27.8083 9.20656 28.9873C9.99303 30.1662 11.1101 31.0818 12.4151 31.6169C13.7201 32.152 15.1536 32.2824 16.5324 31.9914C17.9111 31.7003 19.1726 31.0011 20.1554 29.9831L28.317 35.2759C27.7706 36.6983 27.6899 38.2598 28.0868 39.7318C28.4837 41.2037 29.3373 42.5089 30.5226 43.4561C31.7079 44.4033 33.1627 44.9428 34.6739 44.9957C36.1852 45.0486 37.6735 44.612 38.921 43.7499C40.1685 42.8877 41.1096 41.6454 41.6066 40.2047C42.1036 38.764 42.1304 37.2006 41.6829 35.7434C41.2355 34.2863 40.3374 33.0119 39.1202 32.1069C37.9029 31.2018 36.4304 30.7137 34.9183 30.7139ZM34.9183 7.85223C35.7587 7.85223 36.5802 8.10363 37.279 8.57465C37.9777 9.04566 38.5224 9.71513 38.844 10.4984C39.1656 11.2817 39.2497 12.1436 39.0858 12.9751C38.9218 13.8066 38.5171 14.5704 37.9229 15.1699C37.3286 15.7693 36.5715 16.1776 35.7472 16.343C34.923 16.5084 34.0686 16.4235 33.2922 16.0991C32.5157 15.7746 31.8521 15.2252 31.3852 14.5203C30.9183 13.8154 30.6691 12.9866 30.6691 12.1388C30.6703 11.0023 31.1184 9.91276 31.915 9.10915C32.7116 8.30554 33.7917 7.85351 34.9183 7.85223ZM15.0888 29.2851C14.2484 29.2851 13.4268 29.0337 12.7281 28.5627C12.0293 28.0916 11.4847 27.4222 11.1631 26.6389C10.8415 25.8556 10.7573 24.9938 10.9213 24.1622C11.0852 23.3307 11.4899 22.5669 12.0842 21.9674C12.6784 21.368 13.4356 20.9597 14.2598 20.7943C15.0841 20.6289 15.9384 20.7138 16.7149 21.0382C17.4913 21.3627 18.1549 21.9121 18.6218 22.617C19.0887 23.3219 19.338 24.1507 19.338 24.9985C19.3367 26.135 18.8886 27.2246 18.092 28.0282C17.2954 28.8318 16.2153 29.2838 15.0888 29.2851ZM34.9183 42.1448C34.0778 42.1448 33.2563 41.8934 32.5575 41.4224C31.8588 40.9514 31.3141 40.2819 30.9925 39.4986C30.6709 38.7153 30.5868 37.8535 30.7507 37.0219C30.9147 36.1904 31.3194 35.4266 31.9136 34.8272C32.5079 34.2277 33.265 33.8194 34.0893 33.654C34.9135 33.4886 35.7679 33.5735 36.5443 33.8979C37.3208 34.2224 37.9844 34.7718 38.4513 35.4767C38.9182 36.1817 39.1674 37.0104 39.1674 37.8582C39.1662 38.9947 38.7181 40.0843 37.9215 40.8879C37.1249 41.6915 36.0448 42.1435 34.9183 42.1448Z"
+            />
+          </svg>
+        </div>
+        <span class="text-xs">内部书签取消共享</span>
+      </button>
+      <!-- rename folder -->
       <button
         v-if="selectItemType === 'folder'"
         title="edit folder name"
@@ -368,6 +411,7 @@
         v-if="selectItemType === 'bookmark'"
         title="edit bookmark"
         class="btn text-gray-600 hover:text-blue-600 hover:bg-blue-50"
+        @click="editBookmarkHandler"
       >
         <div class="menu-icon-style text-blue-400 border-blue-400">
           <svg
@@ -407,7 +451,7 @@
     <InputModal
       v-if="showRenameFolderModal"
       v-model:show="showRenameFolderModal"
-      :init-value="'folder_name'"
+      :init-value="selectItem.title"
       :placeholder="'请输入文件夹名称'"
       @result="getRenameResultHandler"
     >
@@ -424,26 +468,40 @@
       @result="getDeleteResult"
     >
       <template #title>
-        <h2 class="p-4 text-sm font-bold">
+        <h2 class="p-4 text-base text-center font-bold">
           是否删除
         </h2>
       </template>
       <template #msg>
         <p class="p-2 text-xs text-center">
-          {{ selectItem }}
+          {{ selectItem.title }}
         </p>
       </template>
     </PromptModal>
+    <transition name="dissolve">
+      <div
+        v-if="showMsg && msg"
+        class="fixed top-4 right-4 z-10 px-4 py-2 text-white text-xs rounded shadow"
+        :class="{
+          'bg-green-400': msg.state === true,
+          'bg-red-400': msg.state === false
+        }"
+      >
+        {{ msg.title }}
+      </div>
+    </transition>
   </div>
 </template>
 
 <script>
-import { ref } from 'vue';
+import { ref, inject } from 'vue';
 import BookmarkFavicon from './BookmarkFavicon.vue';
 import PopupMenu from '../Modal/PopupMenu.vue';
 import InputModal from '../Modal/InputModal.vue';
 import PromptModal from '../Modal/PromptModal.vue';
 import useTab from '@/composables/useTab';
+import useBookmark from '@/composables/useBookmark';
+import useFolder from '@/composables/useFolder';
 
 export default {
   components: {
@@ -491,11 +549,34 @@ export default {
       default: NaN,
     },
   },
-  emits: ['set-current-node', 'toggle-pin-node', 'update:singleTab', 'update:groupType', 'change-current-group-id'],
+  emits: ['set-current-node', 'toggle-pin-node', 'update:singleTab', 'update:groupType', 'change-current-group-id', 'refresh-current-node'],
   setup(props, context) {
     const {
       createNewTab, getAllTabGroups, createTabInGroup, getActiveTab, openBookmark, openBookmarkOnGroup,
     } = useTab();
+
+    const {
+      getBookmarkStar, setBookmarkStar, getBookmarkShare, setBookmarkShare, deleteBookmark,
+    } = useBookmark();
+
+    const { renameFolder, deleteFolder } = useFolder();
+
+    // msg
+    const showMsg = ref(false);
+    const msg = ref(null);
+
+    const setMsg = (state, title, duration = 1000) => {
+      msg.value = {
+        state,
+        title,
+      };
+      showMsg.value = true;
+      let timer = setTimeout(() => {
+        showMsg.value = false;
+        msg.value = null;
+        timer = null;
+      }, duration);
+    };
 
     /**
      * node
@@ -551,51 +632,121 @@ export default {
       }
     };
 
+    // copy bookmark url to clipboard
+    const copyToClipboardHandler = (text) => {
+      if (!text || !navigator.clipboard) return;
+
+      navigator.clipboard.writeText(text).then(() => {
+        console.log('Copy text to clipboard successful!');
+        setMsg(true, '成功');
+      }, (err) => {
+        console.error(err);
+        setMsg(false, '失败');
+      });
+    };
+
     /**
      * modal
      */
 
     // popup menu
-    // show state and location
     const showPopupMenu = ref(false);
     const left = ref(0);
     const top = ref(0);
     const selectItem = ref('');
     const selectItemType = ref('folder'); // folder, bookmark
 
-    const showPopupMenuHandler = (value, event) => {
+    // star
+    const starState = ref(false);
+    const toggleStarState = async () => {
+      console.log('toggle star state');
+      const value = !starState.value;
+      await setBookmarkStar(selectItem.value.id, value).then(async () => {
+        starState.value = await getBookmarkStar(selectItem.value.id);
+        console.log(starState.value);
+      }).catch((err) => {
+        console.log(err);
+      });
+    };
+
+    // share
+    const shareState = ref(false);
+    const toggleBookmarkShareState = async () => {
+      console.log('toggle share state');
+      const value = !shareState.value;
+      await setBookmarkShare(selectItem.value.id, value).then(async () => {
+        shareState.value = await getBookmarkShare(selectItem.value.id);
+        // console.log(shareState.value);
+      }).catch((err) => {
+        console.log(err);
+      });
+    };
+
+    const toggleFolderShareState = (value) => {
+      const promiseArr = [];
+      selectItem.value.children.forEach((child) => {
+        if (!child.children) {
+          promiseArr.push(setBookmarkShare(child.id, value));
+        }
+      });
+
+      Promise.all(promiseArr).then(() => {
+        setMsg(true, '成功');
+      }).catch((err) => {
+        console.log(err);
+        setMsg(false, '失败');
+      });
+    };
+
+    // set popup menu init data and location
+    const showPopupMenuHandler = async (node, event) => {
       const target = event.currentTarget;
       if (!target) return;
-      selectItem.value = value;
-      selectItemType.value = 'folder';
-      // left.value = target.offsetLeft;
-      // top.value = target.offsetTop;
+      selectItem.value = node;
+      if (node.children) {
+        selectItemType.value = 'folder';
+      } else {
+        selectItemType.value = 'bookmark';
+        const shareInit = await getBookmarkShare(node.id);
+        if (shareInit) {
+          shareState.value = shareInit;
+        } else {
+          shareState.value = false;
+        }
+      }
+
+      const starInit = await getBookmarkStar(node.id);
+      if (starInit) {
+        starState.value = starInit;
+      } else {
+        starState.value = false;
+      }
+
       left.value = event.clientX;
       top.value = event.clientY;
       showPopupMenu.value = true;
     };
 
-    // popup menu items
-    // star
-    const starState = ref('false');
-    const toggleStarState = () => {
-      starState.value = !starState.value;
-    };
-
-    // share
-    const shareState = ref('false');
-    const toggleShareState = () => {
-      shareState.value = !shareState.value;
-    };
-
-    // rename folder name modal
+    // rename folder modal
     const showRenameFolderModal = ref(false);
     const renameFolderHandler = () => {
       showRenameFolderModal.value = true;
       showPopupMenu.value = false;
     };
-    const getRenameResultHandler = (obj) => {
-      // console.log(obj);
+    const getRenameResultHandler = async (obj) => {
+      if (obj.state && selectItem.value) {
+        await renameFolder(selectItem.value.id, obj.value);
+        context.emit('refresh-current-node');
+      }
+      showRenameFolderModal.value = false;
+    };
+
+    // edit bookmark
+    const setBookmarkId = inject('setBookmarkId');
+    const changePage = inject('changePage');
+    const editBookmarkHandler = () => {
+      setBookmarkId(selectItem.value.id);
+      changePage('edit');
     };
 
     // delete prompt modal
@@ -605,7 +756,23 @@ export default {
       showPopupMenu.value = false;
     };
     const getDeleteResult = (value) => {
-      // console.log(value);
+      if (value) {
+        if (selectItemType.value === 'bookmark') {
+          deleteBookmark(selectItem.value.id).then(() => {
+            console.log(`bookmark ${selectItem.value.title} delete!`);
+            context.emit('refresh-current-node');
+          }).catch((err) => {
+            console.log(err);
+          });
+        } else if (selectItemType.value === 'folder') {
+          deleteFolder(selectItem.value.id).then(() => {
+            console.log(`bookmark ${selectItem.value.title} delete!`);
+            context.emit('refresh-current-node');
+          }).catch((err) => {
+            console.log(err);
+          });
+        }
+      }
     };
 
     return {
@@ -614,6 +781,9 @@ export default {
       unfoldAll,
       foldAll,
       openBookmarkHandler,
+      showMsg,
+      msg,
+      copyToClipboardHandler,
       showPopupMenu,
       left,
       top,
@@ -623,10 +793,12 @@ export default {
       starState,
       toggleStarState,
       shareState,
-      toggleShareState,
+      toggleBookmarkShareState,
+      toggleFolderShareState,
       showRenameFolderModal,
       renameFolderHandler,
       getRenameResultHandler,
+      editBookmarkHandler,
       showConfirmDeleteModal,
       deleteItemHandler,
       getDeleteResult,
@@ -672,5 +844,15 @@ export default {
 
 .node-title-style {
   word-break: break-all;
+}
+
+.dissolve-enter-from,
+.dissolve-leave-to {
+  opacity: 0;
+}
+
+.dissolve-enter-active,
+.dissolve-leave-active {
+  transition: opacity 0.5s ease-out;
 }
 </style>

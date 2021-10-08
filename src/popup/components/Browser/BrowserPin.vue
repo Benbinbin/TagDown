@@ -66,7 +66,7 @@
           </svg>
 
           <span
-            class="node-title-style text-xs text-left"
+            class="node-title-style text-sm text-left"
             :class="{
               'text-white': selectNodesId.has(node.id),
               'text-gray-600  ': !selectNodesId.has(node.id)
@@ -85,17 +85,18 @@
           @click.exact="openBookmarkHandler(node)"
         >
           <div class="flex-shrink-0 p-0.5">
-            <div
+            <!-- <div
               class="bookmark-favicon w-3 h-3 bg-cover bg-center bg-no-repeat"
               :style="{
                 backgroundImage:
                   'url(' + `https://www.youtube.com/s/desktop/4eebcda0/img/favicon_32x32.png` + ')',
               }"
-            />
+            /> -->
+            <BookmarkFavicon :id="node.id" />
           </div>
 
           <span
-            class="node-title-style text-xs text-left"
+            class="node-title-style text-sm text-left"
             :class="{
               'text-white': selectNodesId.has(node.id),
               'text-gray-600  ': !selectNodesId.has(node.id)
@@ -174,7 +175,7 @@
             </svg>
 
             <span
-              class="node-title-style text-xs text-left"
+              class="node-title-style text-sm text-left"
               :class="{
                 'text-white': selectNodesId.has(childNode.id),
                 'text-gray-600  ': !selectNodesId.has(childNode.id)
@@ -194,16 +195,17 @@
             @click.exact="openBookmarkHandler(childNode)"
           >
             <div class="flex-shrink-0 p-0.5">
-              <div
+              <!-- <div
                 class="bookmark-favicon w-3 h-3 bg-cover bg-center bg-no-repeat"
                 :style="{
                   backgroundImage:
                     'url(' + `https://www.youtube.com/s/desktop/4eebcda0/img/favicon_32x32.png` + ')',
                 }"
-              />
+              /> -->
+              <BookmarkFavicon :id="childNode.id" />
             </div>
             <span
-              class="node-title-style text-xs text-left"
+              class="node-title-style text-sm text-left"
               :class="{
                 'text-white': selectNodesId.has(childNode.id),
                 'text-gray-600  ': !selectNodesId.has(childNode.id)
@@ -217,9 +219,13 @@
 </template>
 <script>
 import { ref, computed } from 'vue';
+import BookmarkFavicon from './BookmarkFavicon.vue';
 import useTab from '@/composables/useTab';
 
 export default {
+  components: {
+    BookmarkFavicon,
+  },
   props: {
     pinNodes: {
       type: Array,
