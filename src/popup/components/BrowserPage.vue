@@ -38,10 +38,11 @@
     <!-- content -->
     <div class="main flex-grow w-full overflow-y-auto">
       <BrowserGrid
-        v-show="browserType === 'all' && browserMode === 'grid'"
+        v-show="browserMode === 'grid' && (browserType === 'all' || browserType === 'star')"
         ref="grid"
         v-model:single-tab="singleTab"
         v-model:group-type="groupType"
+        :browser-type="browserType"
         :nodes="childrenNodes"
         :pin-nodes-id="pinNodesId"
         :bookmark-open-mode="bookmarkOpenMode"
@@ -53,9 +54,10 @@
         @toggle-pin-node="togglePinNodeHandler"
         @change-current-group-id="currentGroupId = $event"
         @refresh-current-node="refreshCurrentNodeHandler"
+        @refresh-star-bookmark="refreashStarBookmarkHandler"
       />
       <BrowserTree
-        v-show="browserType==='all' && browserMode==='tree'"
+        v-show="browserType === 'all' && browserMode === 'tree'"
         ref="tree"
         v-model:single-tab="singleTab"
         v-model:group-type="groupType"
@@ -70,7 +72,7 @@
         :new-group-color="newGroupColor"
         @toggle-pin-node="togglePinNodeHandler"
       />
-      <BrowserStar v-show="browserType === 'star'" />
+      <!-- <BrowserStar v-show="browserType === 'star'" /> -->
       <BrowserPin
         v-show="browserType === 'pin'"
         ref="pin"
@@ -102,7 +104,9 @@
   </div>
 </template>
 <script>
-import { ref, computed, watch } from 'vue';
+import {
+  ref, computed, watch, inject,
+} from 'vue';
 import BrowserHeader from './Browser/BrowserHeader.vue';
 import BrowserFooter from './Browser/BrowserFooter.vue';
 import BrowserGrid from './Browser/BrowserGrid.vue';
@@ -168,6 +172,51 @@ export default {
       },
     );
 
+    const db = inject('db');
+    const getNodeChildren = (nodeId) => new Promise((resolve, reject) => {
+      chrome.bookmarks.getChildren(nodeId).then((children) => {
+        resolve({
+          id: nodeId,
+          children,
+        });
+      });
+    });
+
+    const refreashStarBookmarkHandler = async () => {
+      const starNodes = await db.star.where({ star: 1 }).toArray();
+      if (starNodes.length === 0) return;
+      const nodes = await chrome.bookmarks.get(starNodes.map((node) => node.id));
+      // console.log(nodes);
+      const promiseArr = [];
+      starNodes.forEach((node) => {
+        if (node.type === 'folder') {
+          promiseArr.push(getNodeChildren(node.id));
+        }
+      });
+      const folderNodes = await Promise.all(promiseArr);
+      // console.log(folderNodes);
+      folderNodes.forEach((folder) => {
+        const result = nodes.find((item) => item.id === folder.id);
+
+        if (result) {
+          const children = folder.children.filter((child) => 'url' in child);
+          result.children = children;
+        }
+      });
+      // console.log(nodes);
+      childrenNodes.value = nodes;
+    };
+
+    watch(browserType, async (newValue, oldValue) => {
+      if (browserType.value === 'all') {
+        refreshCurrentNodeHandler();
+      } else if (browserType.value === 'star') {
+        refreashStarBookmarkHandler();
+      }
+    }, {
+      immediate: true,
+    });
+
     // pin nodes
     const pinNodesId = ref([]);
     const pinNodes = ref([]);
@@ -203,7 +252,7 @@ export default {
     // unfold or fold all folder
     const grid = ref(null);
     const unfoldAllHandler = () => {
-      if (browserType.value === 'all' && browserMode.value === 'grid') {
+      if ((browserType.value === 'all' || browserType.value === 'star') && browserMode.value === 'grid') {
         grid.value.unfoldAll();
       } else if (browserType.value === 'pin') {
         pin.value.unfoldAll();
@@ -211,7 +260,7 @@ export default {
     };
 
     const foldAllHandler = () => {
-      if (browserType.value === 'all' && browserMode.value === 'grid') {
+      if ((browserType.value === 'all' || browserType.value === 'star') && browserMode.value === 'grid') {
         grid.value.foldAll();
       } else if (browserType.value === 'pin') {
         pin.value.foldAll();
@@ -239,6 +288,7 @@ export default {
       childrenNodes,
       setCurrentNodeIdHandler,
       refreshCurrentNodeHandler,
+      refreashStarBookmarkHandler,
       pinNodesId,
       pinNodes,
       togglePinNodeHandler,

@@ -42,14 +42,14 @@ export default function useBookmark() {
   const setBookmarkShare = async (id, share) => {
     await db.share.put({
       id,
-      share,
+      share: share ? 1 : 0,
     });
   };
 
   const getBookmarkShare = async (id) => {
     const result = await db.share.get(id);
 
-    if (result) return result.share;
+    if (result) return Boolean(result.share);
     return undefined;
   };
 
@@ -61,13 +61,14 @@ export default function useBookmark() {
   const setBookmarkStar = async (id, star) => {
     await db.star.put({
       id,
-      star,
+      star: star ? 1 : 0,
+      type: 'bookmark',
     });
   };
 
   const getBookmarkStar = async (id) => {
     const result = await db.star.get(id);
-    if (result) return result.star;
+    if (result) return Boolean(result.star);
     return undefined;
   };
 

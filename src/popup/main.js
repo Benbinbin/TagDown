@@ -8,8 +8,8 @@ const app = createApp(App);
 const db = new Dexie('tagdown');
 db.version(1).stores({
   bookmark: 'id, *tags, *groups',
-  share: 'id',
-  star: 'id',
+  share: 'id, share',
+  star: 'id, star',
 });
 db.open().then((database) => {
   app.provide('db', database);

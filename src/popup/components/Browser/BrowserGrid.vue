@@ -28,7 +28,7 @@
           }"
           @click.ctrl.exact="$emit('toggle-pin-node', node.id)"
           @click.shift.exact="toggleFolderState(node)"
-          @click.exact="$emit('set-current-node', node.id)"
+          @click.exact="clickFolderHandler(node)"
         >
           <svg
             v-if="node.children.length > 0 && !unfoldFolders.has(node.id)"
@@ -86,18 +86,6 @@
           @click.exact="openBookmarkHandler(node)"
         >
           <div class="flex-shrink-0 p-0.5">
-            <!-- <div
-              class="bookmark-favicon w-3 h-3 bg-cover bg-center bg-no-repeat"
-              :style="{
-                backgroundImage:
-                  'url(' + bookmarkFavicon(node.id) + ')',
-              }"
-            />-->
-            <!-- <img
-              class="w-3 h-3"
-              :src="bookmarkFavicon(node.id)"
-              alt="bookmark favicon"
-            >-->
             <BookmarkFavicon :id="node.id" />
           </div>
 
@@ -176,7 +164,7 @@
               'text-white hover:bg-blue-600': pinNodesId.includes(childNode.id),
               'text-yellow-400 hover:bg-gray-200 ': !pinNodesId.includes(childNode.id)
             }"
-            @click.exact="$emit('set-current-node', childNode.id)"
+            @click.exact="clickFolderHandler(childNode)"
             @click.ctrl.exact="$emit('toggle-pin-node', childNode.id)"
           >
             <svg
@@ -219,20 +207,9 @@
               'text-blue-400 hover:bg-gray-200 ': !pinNodesId.includes(childNode.id)
             }"
             @click.ctrl.exact="$emit('toggle-pin-node', childNode.id)"
+            @click.exact="openBookmarkHandler(childNode)"
           >
             <div class="flex-shrink-0 p-0.5">
-              <!-- <div
-                class="bookmark-favicon w-3 h-3 bg-cover bg-center bg-no-repeat"
-                :style="{
-                  backgroundImage:
-                    'url(' + bookmarkFavicon(childNode.id) + ')',
-                }"
-              />-->
-              <!-- <img
-                class="w-3 h-3"
-                :src="bookmarkFavicon(childNode.id)"
-                alt="bookmark favicon"
-              >-->
               <BookmarkFavicon :id="childNode.id" />
             </div>
             <span
@@ -511,6 +488,10 @@ export default {
     PromptModal,
   },
   props: {
+    browserType: {
+      type: String,
+      default: '',
+    },
     nodes: {
       type: Array,
       default() {
@@ -549,7 +530,7 @@ export default {
       default: NaN,
     },
   },
-  emits: ['set-current-node', 'toggle-pin-node', 'update:singleTab', 'update:groupType', 'change-current-group-id', 'refresh-current-node'],
+  emits: ['set-current-node', 'toggle-pin-node', 'update:singleTab', 'update:groupType', 'change-current-group-id', 'refresh-current-node', 'refresh-star-bookmark'],
   setup(props, context) {
     const {
       createNewTab, getAllTabGroups, createTabInGroup, getActiveTab, openBookmark, openBookmarkOnGroup,
@@ -559,7 +540,9 @@ export default {
       getBookmarkStar, setBookmarkStar, getBookmarkShare, setBookmarkShare, deleteBookmark,
     } = useBookmark();
 
-    const { renameFolder, deleteFolder } = useFolder();
+    const {
+      setFolderStar, getFolderStar, renameFolder, deleteFolder,
+    } = useFolder();
 
     // msg
     const showMsg = ref(false);
@@ -581,6 +564,7 @@ export default {
     /**
      * node
      */
+
     // unfold or fold folder
     const unfoldFolders = ref(new Set());
     const toggleFolderState = (node) => {
@@ -591,6 +575,7 @@ export default {
         unfoldFolders.value.add(node.id);
       }
     };
+
     const unfoldAll = () => {
       props.nodes.forEach((node) => {
         if (node.children && node.children.length > 0) {
@@ -601,6 +586,14 @@ export default {
 
     const foldAll = () => {
       unfoldFolders.value.clear();
+    };
+
+    const clickFolderHandler = (node) => {
+      if (props.browserType === 'all') {
+        context.emit('set-current-node', node.id);
+      } else if (props.browserType === 'star') {
+        toggleFolderState(node);
+      }
     };
 
     // open bookmark
@@ -659,20 +652,33 @@ export default {
     // star
     const starState = ref(false);
     const toggleStarState = async () => {
-      console.log('toggle star state');
+      // console.log('toggle star state');
       const value = !starState.value;
-      await setBookmarkStar(selectItem.value.id, value).then(async () => {
-        starState.value = await getBookmarkStar(selectItem.value.id);
-        console.log(starState.value);
-      }).catch((err) => {
-        console.log(err);
-      });
+      if (selectItemType.value === 'bookmark') {
+        await setBookmarkStar(selectItem.value.id, value).then(async () => {
+          starState.value = await getBookmarkStar(selectItem.value.id);
+          console.log(starState.value);
+        }).catch((err) => {
+          console.log(err);
+        });
+      } else {
+        await setFolderStar(selectItem.value.id, value).then(async () => {
+          starState.value = await getFolderStar(selectItem.value.id);
+          console.log(starState.value);
+        }).catch((err) => {
+          console.log(err);
+        });
+      }
+      if (props.browserType === 'star') {
+        showPopupMenu.value = false;
+        context.emit('refresh-star-bookmark');
+      }
     };
 
     // share
     const shareState = ref(false);
     const toggleBookmarkShareState = async () => {
-      console.log('toggle share state');
+      // console.log('toggle share state');
       const value = !shareState.value;
       await setBookmarkShare(selectItem.value.id, value).then(async () => {
         shareState.value = await getBookmarkShare(selectItem.value.id);
@@ -703,10 +709,14 @@ export default {
       const target = event.currentTarget;
       if (!target) return;
       selectItem.value = node;
+      let starInit = false;
       if (node.children) {
         selectItemType.value = 'folder';
+        starInit = await getFolderStar(node.id);
       } else {
         selectItemType.value = 'bookmark';
+        starInit = await getBookmarkStar(node.id);
+
         const shareInit = await getBookmarkShare(node.id);
         if (shareInit) {
           shareState.value = shareInit;
@@ -715,12 +725,7 @@ export default {
         }
       }
 
-      const starInit = await getBookmarkStar(node.id);
-      if (starInit) {
-        starState.value = starInit;
-      } else {
-        starState.value = false;
-      }
+      starState.value = starInit;
 
       left.value = event.clientX;
       top.value = event.clientY;
@@ -776,6 +781,7 @@ export default {
     };
 
     return {
+      clickFolderHandler,
       unfoldFolders,
       toggleFolderState,
       unfoldAll,
