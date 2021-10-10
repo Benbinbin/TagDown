@@ -75,14 +75,130 @@
           </button>
         </div>
       </section>
+      <section class="p-8 border-b-2 border-gray-200">
+        <div class="flex justify-between items-center">
+          <h2 class="text-2xl font-bold py-4 text-gray-800">
+            按标签导出书签
+          </h2>
+          <div class="flex items-center space-x-2">
+            <button
+              titile="select all tags"
+              class="px-2 py-1 text-sm text-white bg-green-400 hover:bg-green-600 rounded"
+              @click="selectTags = new Set(allTags)"
+            >
+              全选
+            </button>
+            <button
+              title="unselect all tags"
+              class="px-2 py-1 text-sm text-white bg-red-400 hover:bg-red-600 rounded"
+              @click="selectTags.clear()"
+            >
+              全不选
+            </button>
+            <button
+              title="export bookmarks order by tags"
+              class="px-2 py-1 text-sm text-white bg-green-400 hover:bg-green-600 rounded"
+              @click="exportBookmarks('tag')"
+            >
+              导出书签
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <div class="flex flex-wrap">
+            <button
+              v-for="tag of allTags"
+              :key="tag"
+              title="toggle select tag"
+              class="p-1 mt-2 ml-2 flex items-center border-2 border-green-400 space-x-1 rounded"
+              :class="{
+                'text-green-600 hover:text-white hover:bg-green-400 ': !selectTags.has(tag),
+                'text-white bg-green-400': selectTags.has(tag)
+              }"
+              @click="toggleTagHandler(tag)"
+            >
+              <svg
+                class="w-5 h-5"
+                viewBox="0 0 50 50"
+                fill="currentColor"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M43.1947 23.754L25.2464 5.80594C24.9268 5.48534 24.5327 5.24888 24.0993 5.11767C23.666 4.98646 23.2069 4.96459 22.7631 5.05401L8.90377 7.82581C8.63772 7.87911 8.39338 8.00993 8.20151 8.2018C8.00964 8.39366 7.87882 8.638 7.82552 8.90405L5.05386 22.7632C4.96461 23.2071 4.98654 23.6661 5.11771 24.0993C5.24888 24.5326 5.48521 24.9267 5.80563 25.2465L23.7537 43.1944C24.009 43.4498 24.3121 43.6524 24.6457 43.7906C24.9793 43.9288 25.3369 44 25.698 44C26.0591 44 26.4166 43.9289 26.7502 43.7907C27.0839 43.6525 27.387 43.45 27.6423 43.1946L43.1945 27.6424C43.4499 27.3871 43.6524 27.084 43.7906 26.7504C43.9288 26.4168 44 26.0593 44 25.6982C44 25.3372 43.9289 24.9796 43.7907 24.646C43.6526 24.3124 43.45 24.0093 43.1947 23.754ZM25.6982 41.2505L7.74974 23.3024L10.3418 10.3423L23.3023 7.75021L41.2506 25.6983L25.6982 41.2505ZM18.4508 16.389C18.4508 16.7968 18.3299 17.1955 18.1033 17.5346C17.8767 17.8737 17.5547 18.1379 17.1779 18.294C16.8011 18.4501 16.3865 18.4909 15.9865 18.4114C15.5865 18.3318 15.2191 18.1354 14.9308 17.847C14.6424 17.5587 14.446 17.1913 14.3664 16.7913C14.2869 16.3913 14.3277 15.9767 14.4838 15.5999C14.6398 15.2231 14.9041 14.9011 15.2432 14.6745C15.5823 14.448 15.981 14.327 16.3888 14.327C16.9355 14.3276 17.4596 14.5451 17.8462 14.9316C18.2328 15.3182 18.4502 15.8423 18.4508 16.389Z"
+                />
+              </svg>
+              <span class="text-sm">{{ tag }}</span>
+            </button>
+          </div>
+        </div>
+      </section>
+      <section class="p-8 border-b-2 border-gray-200">
+        <div class="flex justify-between items-center">
+          <h2 class="text-2xl font-bold py-4 text-gray-800">
+            按分组导出书签
+          </h2>
+          <div class="flex items-center space-x-2">
+            <button
+              titile="select all groups"
+              class="px-2 py-1 text-sm text-white bg-green-400 hover:bg-green-600 rounded"
+              @click="selectGroups = new Set(allGroups)"
+            >
+              全选
+            </button>
+            <button
+              title="unselect all groups"
+              class="px-2 py-1 text-sm text-white bg-red-400 hover:bg-red-600 rounded"
+              @click="selectGroups.clear()"
+            >
+              全不选
+            </button>
+            <button
+              title="export bookmarks order by groups"
+              class="px-2 py-1 text-sm text-white bg-green-400 hover:bg-green-600 rounded"
+              @click="exportBookmarks('group')"
+            >
+              导出书签
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <div class="flex flex-wrap">
+            <button
+              v-for="group of allGroups"
+              :key="group"
+              title="toggle select group"
+              class="p-1 mt-2 ml-2 flex items-center border-2 border-green-400 space-x-1 rounded"
+              :class="{
+                'text-green-600 hover:text-white hover:bg-green-400 ': !selectGroups.has(group),
+                'text-white bg-green-400': selectGroups.has(group)
+              }"
+              @click="toggleGroupHandler(group)"
+            >
+              <svg
+                class="w-5 h-5"
+                viewBox="0 0 50 50"
+                fill="currentColor"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M42.6412 15.0387C42.6367 15.0302 42.6333 15.0215 42.6284 15.0131C42.6265 15.0096 42.6239 15.0062 42.6218 15.0027C42.374 14.5747 42.0172 14.221 41.5882 13.9781L26.3576 5.35549C25.9426 5.12238 25.4753 5 25 5C24.5247 5 24.0574 5.12238 23.6424 5.35549L8.41144 13.9781C7.98088 14.2222 7.6231 14.5778 7.37523 15.0081C7.37263 15.0128 7.36935 15.017 7.36658 15.0218C7.3626 15.0293 7.35948 15.0372 7.35533 15.0448C7.12275 15.4609 7.00039 15.9302 7 16.4075V33.5903C7.00036 34.0848 7.13125 34.5703 7.37928 34.9972C7.62731 35.424 7.98358 35.7769 8.41162 36.0196L23.6426 44.6422C24.0262 44.8581 24.4555 44.9788 24.8948 44.9944C24.9263 44.9969 24.9576 44.9997 24.9896 45H25.0021C25.0457 45 25.0888 44.9976 25.1314 44.9936C25.5617 44.9743 25.9817 44.854 26.3576 44.6422L41.5884 36.0196C42.0165 35.7769 42.3728 35.424 42.6209 34.9971C42.8689 34.5701 42.9998 34.0845 43 33.59V16.4075C42.9996 15.9278 42.876 15.4564 42.6412 15.0389V15.0387ZM25 7.78479L38.8017 15.5984L33.5021 18.6287L19.5377 10.8771L25 7.78479ZM25.1575 23.3998L11.2194 15.5864L16.6991 12.4842L30.6774 20.2436L25.1575 23.3998ZM26.4057 41.417L26.5418 25.8138L32.1 22.6358V29.2684C32.1 29.638 32.2458 29.9925 32.5055 30.2538C32.7652 30.5151 33.1174 30.662 33.4846 30.662C33.8518 30.662 34.204 30.5151 34.4636 30.2538C34.7233 29.9925 34.8692 29.638 34.8692 29.2684V21.0524L40.2308 17.9868V33.5902L26.4057 41.417Z"
+                />
+              </svg>
+              <span class="text-sm">{{ group }}</span>
+            </button>
+          </div>
+        </div>
+      </section>
     </main>
     <transition name="dissolve">
       <div
         v-if="showMsg && msg"
         class="fixed top-4 right-4 z-10 p-4 text-white rounded shadow"
         :class="{
-          'bg-green-400': msg.state===true,
-          'bg-red-400': msg.state===false
+          'bg-green-400': msg.state === true,
+          'bg-red-400': msg.state === false
         }"
       >
         {{ msg.title }}
@@ -92,7 +208,7 @@
 </template>
 
 <script>
-import { ref, inject } from 'vue';
+import { ref, inject, onMounted } from 'vue';
 import {
   importDB, exportDB, importInto, peakImportFile,
 } from 'dexie-export-import';
@@ -118,18 +234,23 @@ export default {
       }, duration);
     };
 
+    const exportJsonFile = (blob, fileName) => {
+      if (!blob) return;
+      const a = document.createElement('a');
+      const url = window.URL.createObjectURL(blob);
+      a.href = url;
+      a.download = `${fileName}.json`;
+      a.click();
+    };
+
     // export indexedDb
     const exportDatabase = async () => {
       const blob = await exportDB(db, {
         prettyJson: true,
       });
-
       const date = new Date();
-      const a = document.createElement('a');
-      const url = window.URL.createObjectURL(blob);
-      a.href = url;
-      a.download = `tagdown_${date.toLocaleDateString()}.json`;
-      a.click();
+      const filename = `tagdown_${date.toLocaleDateString()}`;
+      exportJsonFile(blob, filename);
     };
 
     // import indexedDb
@@ -163,6 +284,78 @@ export default {
       });
     };
 
+    // export bookmarks by tags
+    const allTags = ref([]);
+    const selectTags = ref(new Set());
+    onMounted(async () => {
+      allTags.value = await db.bookmark.orderBy('tags').uniqueKeys();
+    });
+    const toggleTagHandler = (tag) => {
+      if (selectTags.value.has(tag)) {
+        selectTags.value.delete(tag);
+      } else {
+        selectTags.value.add(tag);
+      }
+    };
+
+    const getBookmarksByTag = (tag) => new Promise((resolve, reject) => {
+      db.bookmark.where('tags').equals(tag).toArray().then((result) => {
+        resolve({
+          tag,
+          bookmarks: result,
+        });
+      });
+    });
+
+    // export bookmarks by groups
+    const allGroups = ref([]);
+    const selectGroups = ref(new Set());
+    onMounted(async () => {
+      allGroups.value = await db.bookmark.orderBy('groups').uniqueKeys();
+    });
+    const toggleGroupHandler = (group) => {
+      if (selectGroups.value.has(group)) {
+        selectGroups.value.delete(group);
+      } else {
+        selectGroups.value.add(group);
+      }
+    };
+
+    const getBookmarksByGroup = (group) => new Promise((resolve, reject) => {
+      db.bookmark.where('groups').equals(group).toArray().then((result) => {
+        resolve({
+          group,
+          bookmarks: result,
+        });
+      });
+    });
+
+    const exportBookmarks = async (type) => {
+      console.log('export bookmarks');
+      let result = [];
+      const promiseArr = [];
+      if (type === 'tag' && selectTags.value.size > 0) {
+        const selectTagsArr = [...selectTags.value];
+
+        selectTagsArr.forEach((tag) => {
+          promiseArr.push(getBookmarksByTag(tag));
+        });
+        result = await Promise.all(promiseArr);
+      } else if (type === 'group' && selectGroups.value.size > 0) {
+        const selectGroupsArr = [...selectGroups.value];
+        selectGroupsArr.forEach((group) => {
+          promiseArr.push(getBookmarksByGroup(group));
+        });
+        result = await Promise.all(promiseArr);
+      }
+      if (result.length === 0) return;
+      const jsonFile = JSON.stringify(result, null, 2);
+      const blob = new Blob([jsonFile], { type: 'application/json' });
+      const date = new Date();
+      const filename = `bookmarks_by_${type}_${date.toLocaleDateString()}`;
+      exportJsonFile(blob, filename);
+    };
+
     return {
       showMsg,
       msg,
@@ -171,6 +364,13 @@ export default {
       importDatabaseHandler,
       inputFile,
       deleteDatabaseHandler,
+      allTags,
+      selectTags,
+      toggleTagHandler,
+      allGroups,
+      selectGroups,
+      toggleGroupHandler,
+      exportBookmarks,
     };
   },
 };
@@ -179,7 +379,7 @@ export default {
 <style lang="scss" scoped>
 .dissolve-enter-from,
 .dissolve-leave-to {
-  opacity: 0
+  opacity: 0;
 }
 
 .dissolve-enter-active,

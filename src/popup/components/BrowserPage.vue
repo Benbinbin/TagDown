@@ -31,8 +31,10 @@
         @fold-all="foldAllHandler"
         @open-all-pin-bookmarks="openPinBookmarksHandler('all')"
         @open-select-bookmarks="openPinBookmarksHandler('select')"
+        @export-bookmarks="exportBookmarksHandler"
         @clear-pin-list="clearPinListHandler"
         @clear-select-pin-nodes="clearSelectPinNodesHandler"
+        @delete-pin-bookmarks="deletePinBookmarksHandler"
       />
     </div>
     <!-- content -->
@@ -184,7 +186,10 @@ export default {
 
     const refreashStarBookmarkHandler = async () => {
       const starNodes = await db.star.where({ star: 1 }).toArray();
-      if (starNodes.length === 0) return;
+      if (starNodes.length === 0) {
+        childrenNodes.value = [];
+        return;
+      }
       const nodes = await chrome.bookmarks.get(starNodes.map((node) => node.id));
       // console.log(nodes);
       const promiseArr = [];
@@ -240,6 +245,11 @@ export default {
       pin.value.openBookmarksHandler(type);
     };
 
+    // export pin or select bookmarks
+    const exportBookmarksHandler = (type) => {
+      pin.value.exportBookmarksHandler(type);
+    };
+
     // clear pin list or select pin nodes
     const clearPinListHandler = () => {
       pinNodesId.value = [];
@@ -247,6 +257,11 @@ export default {
     };
     const clearSelectPinNodesHandler = () => {
       pin.value.clearSelectNodeHandler();
+    };
+
+    // delete pin bookmarks
+    const deletePinBookmarksHandler = () => {
+      pin.value.deletePinBookmarksHandler();
     };
 
     // unfold or fold all folder
@@ -297,8 +312,10 @@ export default {
       unfoldAllHandler,
       foldAllHandler,
       openPinBookmarksHandler,
+      exportBookmarksHandler,
       clearPinListHandler,
       clearSelectPinNodesHandler,
+      deletePinBookmarksHandler,
       tree,
       resetTreeLayoutHandler,
       browserType,

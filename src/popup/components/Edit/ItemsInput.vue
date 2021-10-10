@@ -18,7 +18,6 @@
           <slot name="itemIcon" />
         </button>
         <span
-          title="locate folder item"
           class="p-1 text-xs text-white bg-green-400 rounded-r-sm"
         >{{ item }}</span>
       </div>

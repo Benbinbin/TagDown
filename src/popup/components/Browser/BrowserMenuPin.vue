@@ -1,6 +1,6 @@
 <template>
   <div class="w-full flex justify-between items-start">
-    <div class="flex items-center space-x-2">
+    <div class="flex items-start space-x-2">
       <div class="framework">
         <div class="flex items-start space-x-1">
           <p class="flex items-center text-gray-600 space-x-1">
@@ -186,10 +186,18 @@
           <span class="text-xs">导出为 JSON</span>
         </p>
 
-        <button class="px-2 py-0.5 rounded bg-green-400 hover:bg-green-600 text-white text-xs">
+        <button
+          title="export all pin bookmarks as json"
+          class="px-2 py-0.5 rounded bg-green-400 hover:bg-green-600 text-white text-xs"
+          @click="$emit('export-bookmarks','pin')"
+        >
           所有书签
         </button>
-        <button class="px-2 py-0.5 rounded bg-green-400 hover:bg-green-600 text-white text-xs">
+        <button
+          title="export all select bookmarks as json"
+          class="px-2 py-0.5 rounded bg-green-400 hover:bg-green-600 text-white text-xs"
+          @click="$emit('export-bookmarks', 'select')"
+        >
           选中书签
         </button>
       </div>
@@ -239,13 +247,19 @@
         </p>
 
         <button
+          title="delete all pin bookmarks"
           class="px-2 py-0.5 rounded bg-red-400 hover:bg-red-600 text-white text-xs"
+          @click="$emit('delete-pin-bookmarks')"
         >
           Pin 列表的书签
         </button>
-        <button class="px-2 py-0.5 rounded bg-red-400 hover:bg-red-600 text-white text-xs">
+        <!-- <button
+          title="delete all select bookmarks"
+          class="px-2 py-0.5 rounded bg-red-400 hover:bg-red-600 text-white text-xs"
+          @click="$emit('delete-bookmarks', 'select')"
+        >
           选中书签
-        </button>
+        </button> -->
       </div>
     </div>
 
@@ -338,7 +352,7 @@ export default {
       default: NaN,
     },
   },
-  emits: ['change-browser-type', 'update:multiOnGroup', 'update:groupType', 'update:newGroupName', 'set-new-group-color', 'update:current-group-id', 'fold-all', 'unfold-all', 'open-all-pin-bookmarks', 'open-select-bookmarks', 'clear-pin-list', 'clear-select-pin-nodes'],
+  emits: ['change-browser-type', 'update:multiOnGroup', 'update:groupType', 'update:newGroupName', 'set-new-group-color', 'update:current-group-id', 'fold-all', 'unfold-all', 'open-all-pin-bookmarks', 'open-select-bookmarks', 'export-bookmarks', 'clear-pin-list', 'clear-select-pin-nodes', 'delete-pin-bookmarks'],
   setup(props, context) {
     const {
       createNewTab, getAllTabGroups, watchTabGroups, createTabInGroup,
@@ -451,6 +465,6 @@ export default {
 }
 
 .framework {
-  @apply flex flex-col space-y-1 p-2 rounded border border-gray-200 border-dashed;
+  @apply flex flex-col space-y-1 p-2 rounded border border-gray-300 border-dashed;
 }
 </style>

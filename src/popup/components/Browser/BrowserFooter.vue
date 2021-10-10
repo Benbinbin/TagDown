@@ -478,9 +478,10 @@ export default {
     */
     // bookmark state
     const currentBookmarkState = ref(false);
-    const bookmarkState = inject('bookmarkState');
-    currentBookmarkState.value = bookmarkState.value;
-    const setBookmarkState = inject('setBookmarkState');
+    // const bookmarkState = inject('bookmarkState');
+    // currentBookmarkState.value = bookmarkState.value;
+    // console.log('bookmarkState', bookmarkState);
+    // console.log('currentBookmarkState', currentBookmarkState.value);
 
     // delete bookmark
     const showDeleteConfirmModal = ref(false);
@@ -502,6 +503,8 @@ export default {
     const finishMsg = ref('');
     const showFinishMsgPopup = ref(false);
 
+    const setBookmarkState = inject('setBookmarkState');
+
     const getDeleteResult = (value) => {
       if (value && currentBookmarkId) {
         deleteBookmark(currentBookmarkId).then(() => {
@@ -510,6 +513,8 @@ export default {
           let timer = setTimeout(() => {
             showFinishMsgPopup.value = false;
             currentBookmarkState.value = false;
+            setBookmarkState(false);
+
             timer = null;
           }, 500);
         }).catch((err) => {
@@ -529,7 +534,19 @@ export default {
     // refer to: https://developer.chrome.com/docs/extensions/mv3/intro/mv3-overview/#other-features
     const favicon = ref('/icons/icon64_untag.png');
 
+    // get tab bookmark state
     getActiveTab().then(async (tab) => {
+      const currentTabUrl = tab.url || tab.pendingUrl;
+      // get bookmark node
+      const nodes = await chrome.bookmarks.search({
+        url: currentTabUrl,
+      });
+
+      if (nodes.length > 0) {
+        currentBookmarkState.value = true;
+      }
+
+      // favicon
       const { favIconUrl } = tab;
       if (favIconUrl) {
         favicon.value = favIconUrl;

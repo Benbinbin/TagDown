@@ -22,17 +22,17 @@ export default {
     EditPage,
   },
   setup() {
-    const page = ref(''); // browser, edit
+    const page = ref('browser'); // browser, edit
 
     const bookmarkState = ref(false);
     // get bookmarkState init data from chrome.storage
     chrome.storage.local.get('bookmarkState', (result) => {
       bookmarkState.value = result.bookmarkState;
-      if (bookmarkState.value) {
-        page.value = 'browser';
-      } else {
-        page.value = 'edit';
-      }
+      // if (bookmarkState.value) {
+      //   page.value = 'browser';
+      // } else {
+      //   page.value = 'edit';
+      // }
     });
 
     // provide bookmark state and change the bookmarkstate function

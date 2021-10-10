@@ -81,17 +81,10 @@
             'text-white hover:bg-blue-600': selectNodesId.has(node.id),
             'text-blue-400 hover:bg-gray-200 ': !selectNodesId.has(node.id)
           }"
-          @click.ctrl.exact="selectNodeHandler(node.id)"
+          @click.ctrl.exact="selectNodeHandler(node)"
           @click.exact="openBookmarkHandler(node)"
         >
           <div class="flex-shrink-0 p-0.5">
-            <!-- <div
-              class="bookmark-favicon w-3 h-3 bg-cover bg-center bg-no-repeat"
-              :style="{
-                backgroundImage:
-                  'url(' + `https://www.youtube.com/s/desktop/4eebcda0/img/favicon_32x32.png` + ')',
-              }"
-            /> -->
             <BookmarkFavicon :id="node.id" />
           </div>
 
@@ -103,15 +96,15 @@
             }"
           >{{ node.title }}</span>
         </button>
-        <!-- delete button -->
+        <!-- clear button -->
         <button
-          title="delete pin node"
-          class="p-0.5 hover:text-white hover:bg-red-400 rounded-sm "
+          title="clear pin node"
+          class="p-0.5 hover:text-white hover:bg-red-400 rounded-sm"
           :class="{
             'text-white': selectNodesId.has(node.id),
             'text-red-400': !selectNodesId.has(node.id)
           }"
-          @click="deletePinNodeHandler(node.id)"
+          @click="clearPinNodeHandler(node.id)"
         >
           <svg
             class="w-4 h-4"
@@ -191,17 +184,10 @@
               'text-white hover:bg-blue-600': selectNodesId.has(childNode.id),
               'text-blue-400 hover:bg-gray-200 ': !selectNodesId.has(childNode.id)
             }"
-            @click.ctrl.exact="selectNodeHandler(childNode.id)"
+            @click.ctrl.exact="selectNodeHandler(childNode)"
             @click.exact="openBookmarkHandler(childNode)"
           >
             <div class="flex-shrink-0 p-0.5">
-              <!-- <div
-                class="bookmark-favicon w-3 h-3 bg-cover bg-center bg-no-repeat"
-                :style="{
-                  backgroundImage:
-                    'url(' + `https://www.youtube.com/s/desktop/4eebcda0/img/favicon_32x32.png` + ')',
-                }"
-              /> -->
               <BookmarkFavicon :id="childNode.id" />
             </div>
             <span
@@ -215,16 +201,35 @@
         </div>
       </div>
     </div>
+    <PromptModal
+      v-if="showDeleteConfirmModal"
+      v-model:show="showDeleteConfirmModal"
+      @result="getDeleteResult"
+    >
+      <template #title>
+        <h2 class="p-4 text-sm font-bold">
+          删除 {{ bookmarksCount }} 个书签
+        </h2>
+      </template>
+      <template #msg>
+        <p class="p-2 text-xs text-center">
+          该操作不可恢复
+        </p>
+      </template>
+    </PromptModal>
   </div>
 </template>
 <script>
-import { ref, computed } from 'vue';
+import { ref, computed, toRaw } from 'vue';
 import BookmarkFavicon from './BookmarkFavicon.vue';
+import PromptModal from '../Modal/PromptModal.vue';
+import useBookmark from '@/composables/useBookmark';
 import useTab from '@/composables/useTab';
 
 export default {
   components: {
     BookmarkFavicon,
+    PromptModal,
   },
   props: {
     pinNodes: {
@@ -258,6 +263,10 @@ export default {
   emits: ['toggle-pin-node', 'update:singleTab', 'update:groupType', 'change-current-group-id'],
   setup(props, context) {
     const {
+      deleteBookmark,
+    } = useBookmark();
+
+    const {
       createNewTab, getAllTabGroups, createTabInGroup, getActiveTab, openBookmark, openBookmarkOnGroup,
     } = useTab();
 
@@ -288,24 +297,75 @@ export default {
 
     // select bookmark nodes
     const selectNodesId = ref(new Set());
+    const selectNodes = [];
 
-    const selectNodeHandler = (nodeId) => {
-      if (selectNodesId.value.has(nodeId)) {
-        selectNodesId.value.delete(nodeId);
+    const selectNodeHandler = (node) => {
+      if (selectNodesId.value.has(node.id)) {
+        selectNodesId.value.delete(node.id);
+        const index = selectNodes.findIndex((item) => item.id === node.id);
+        if (index === -1) return;
+        selectNodes.splice(index, 1);
       } else {
-        selectNodesId.value.add(nodeId);
+        selectNodesId.value.add(node.id);
+        selectNodes.push(node);
       }
     };
 
-    // delete pin node
-    const deletePinNodeHandler = (nodeId) => {
+    // export pin or select bookmarks
+    const exportBookmarksHandler = (type) => {
+      let blob = null;
+      if (type === 'pin' && allPinBookmarks.value.length > 0) {
+        const jsonFile = JSON.stringify(toRaw(allPinBookmarks.value), null, 2);
+        console.log(jsonFile);
+        blob = new Blob([jsonFile], { type: 'application/json' });
+      } else if (type === 'select' && selectNodes.length > 0) {
+        const jsonFile = JSON.stringify(selectNodes, null, 2);
+        console.log(jsonFile);
+
+        blob = new Blob([jsonFile], { type: 'application/json' });
+      }
+
+      if (!blob) return;
+      const date = new Date();
+      const a = document.createElement('a');
+      const url = window.URL.createObjectURL(blob);
+      a.href = url;
+      a.download = `${type}_bookmarks_${date.toLocaleDateString()}.json`;
+      a.click();
+    };
+
+    // clear pin node
+    const clearPinNodeHandler = (nodeId) => {
       selectNodesId.value.delete(nodeId);
       context.emit('toggle-pin-node', nodeId);
     };
 
-    // clear select
+    // clear select nodes
     const clearSelectNodeHandler = () => {
       selectNodesId.value.clear();
+    };
+
+    // delete pin bookmarks
+    const showDeleteConfirmModal = ref(false);
+    const bookmarksCount = ref(0);
+    const deletePinBookmarksHandler = () => {
+      bookmarksCount.value = allPinBookmarks.value.length;
+      showDeleteConfirmModal.value = true;
+    };
+
+    const getDeleteResult = (value) => {
+      if (!value || bookmarksCount.value.length === 0) return;
+      const promiseArr = [];
+
+      allPinBookmarks.value.forEach((pinBookmark) => {
+        promiseArr.push(deleteBookmark(pinBookmark.id));
+      });
+
+      Promise.all(promiseArr).then(() => {
+        allPinBookmarks.value.forEach((item) => {
+          clearPinNodeHandler(item.id);
+        });
+      });
     };
 
     // open Bookmark
@@ -369,8 +429,13 @@ export default {
       foldAll,
       selectNodesId,
       selectNodeHandler,
-      deletePinNodeHandler,
+      exportBookmarksHandler,
+      clearPinNodeHandler,
       clearSelectNodeHandler,
+      showDeleteConfirmModal,
+      bookmarksCount,
+      deletePinBookmarksHandler,
+      getDeleteResult,
       openBookmarkHandler,
       openBookmarksHandler,
     };
