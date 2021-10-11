@@ -35,14 +35,14 @@ TagDown provides an `export` and `import` feature, you can export the whole Inde
 
 :bulb: Each bookmark will be assigned a unique ID by Chrome, TagDown use this unique ID as the index at IndexedDB to connect different part of the data to different bookmark.
 
-:warning: Please using TagDown all the time when you create a new bookmark, if you want to create a relative record at IndexedDB at the same time. But it will be fine, if there're a lot of bookmarks in the browser before installing TagDown, or create bookmark with the Chrome default tool. You can open the bookmark at any time and click the edit button on the TagDown, then save the relative data to IndexedDB manually.
+:warning: Please using TagDown all the time when you create a new bookmark, if you want to create a relative record at IndexedDB at the same time. But it will be fine, if there're a lot of bookmarks in the browser before installing TagDown, or [create bookmark with the Chrome default tool](https://support.google.com/chrome/answer/188842). You can open the bookmark at any time and click the edit button on the TagDown, then save the relative data to IndexedDB manually.
 
 ## FAQ
 
 * Why the TagDown uses **IndexedDB** as a database?
     Although all bookmarks save inside the browser, they only contain the `id`, `title`, `url` and `folder` information, TagDown wants to attach more information to bookmark, like `tags`, `description` about the bookmark, so TagDown use an local database to save these data.
 
-* If I uninstall the extension which data will lose?
+* If I **uninstall** the extension which data will lose?
     The bookmarks save inside the browser and sync by Google (if you use Chrome and turn sync on), so all the bookmarks will be fine if you uninstall the extension.
     But the relative data create by TagDown and save in IndexedDB will be lost. You can **export** these data before uninstall the extension, the `json` file can be a backup database, you can import it if you install the extension again in the next time.
     By the way, the JSON format is so popular and you can open it with other text editors, like [Visual Studio Code](https://code.visualstudio.com/), and read or get the information directly.
