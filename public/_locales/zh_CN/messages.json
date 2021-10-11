@@ -1,0 +1,14 @@
+{
+    "appTitle": {
+        "message": "TagDown",
+        "description": "扩展程序的名称"
+    },
+    "appDescription": {
+        "message": "TagDown 是一个管理书签的浏览器扩展，可以更快捷、方便地浏览书签",
+        "description": "扩展程序的描述"
+    },
+    "actionTitle": {
+        "message": "TagDown",
+        "description": "当鼠标悬停在浏览器工具栏的扩展程序图标时会显示的内容"
+    }
+}

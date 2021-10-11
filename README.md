@@ -1,7 +1,7 @@
 # TagDown
 
 <p align="center">
-    <img style="width: 60%; padding:5rem" src="./screenshot/logo-text.png"/>
+    <img style="width: 60%; padding:5rem" src="https://user-images.githubusercontent.com/40909550/132101266-ebb79e42-4f1d-45bb-ba61-4013c9fb63ed.png"/>
 </p>
 
 <p align="center">An Enhance Bookmarks Manager</p>
@@ -25,10 +25,8 @@ TagDown is a browser extension to manage bookmarks, you can browse the bookmarks
 
 * [v1.0.0](https://github.com/Benbinbin/BookDown/releases/tag/v1.0.0) provide two modes to visualize the hierarchy data, you can browse the bookmarks fast and conveniently.
 
-## Design
-You can access to this [site](https://www.figma.com/community/file/1014891055524312843) of Figma community to get the design file and try the [prototype](https://www.figma.com/proto/2Rtmm9uWs4LOAqLviyvveX/TagDown?node-id=1447%3A7484&scaling=scale-down&page-id=1403%3A1050&starting-point-node-id=1447%3A7484&show-proto-sidebar=1).
 ## Todos
-- [ ] redesign the UI
+- [x] redesign the [UI](https://www.figma.com/community/file/1014891055524312843) (Figma [prototype](https://www.figma.com/proto/2Rtmm9uWs4LOAqLviyvveX/TagDown?node-id=1447%3A7484&scaling=scale-down&page-id=1403%3A1050&starting-point-node-id=1447%3A7484&show-proto-sidebar=1))
 - [ ] support to add new bookmark
 - [ ] support to add tags and group to classify the bookmarks
 - [ ] support to add memo to describe bookmark

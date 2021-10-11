@@ -1,21 +1,22 @@
 module.exports = {
-  root: true,
   env: {
+    browser: true,
+    es2021: true,
     node: true,
-    webextensions: true,
   },
   extends: [
-    'plugin:vue/essential',
-    '@vue/airbnb',
+    'plugin:vue/vue3-recommended',
+    'airbnb-base',
   ],
   parserOptions: {
-    parser: 'babel-eslint',
+    ecmaVersion: 12,
+    sourceType: 'module',
   },
+  plugins: [
+    'vue',
+  ],
   rules: {
-    'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
-    'no-unused-vars': 'off',
-    'no-param-reassign': 'off',
-    'no-underscore-dangle': 'off'
+    'max-len': 0,
+    // 'no-undef': 0,
   },
 };

@@ -1,35 +1,35 @@
 {
-  "manifest_version": 2,
-  "name": "__MSG_extName__",
-  "homepage_url": "http://localhost:8080/",
-  "description": "A enhanced bookmark manager",
-  "default_locale": "en",
+  "name": "__MSG_appTitle__",
+  "manifest_version": 3,
+  "version": "2.0.0",
+  "description": "__MSG_appDescription__",
   "permissions": [
-    "activeTab",
-    "<all_urls>",
-    "*://*/*",
-    "tabs",
     "bookmarks",
+    "tabs",
     "storage"
   ],
-  "icons": {
-    "16": "icons/16.png",
-    "48": "icons/48.png",
-    "128": "icons/128.png"
-  },
   "background": {
-    "scripts": [
-      "js/background.js"
-    ],
-    "persistent": false
+    "service_worker": "./background/main.js",
+    "type": "module"
   },
-  "browser_action": {
-    "default_popup": "popup.html",
-    "default_title": "__MSG_extName__",
+  "action": {
+    "default_title": "__MSG_actionTitle__",
+    "default_popup": "./popup.html",
     "default_icon": {
-      "19": "icons/19.png",
-      "38": "icons/38.png"
+      "16": "./assets/images/icon16_untag.png",
+      "32": "./assets/images/icon32_untag.png",
+      "48": "./assets/images/icon48_untag.png",
+      "64": "./assets/images/icon64_untag.png",
+      "128": "./assets/images/icon128_untag.png"
     }
   },
-  "options_page": "options.html"
+  "options_page": "./options.html",
+  "icons": {
+    "16": "./assets/images/icon16_tag.png",
+    "32": "./assets/images/icon32_tag.png",
+    "48": "./assets/images/icon48_tag.png",
+    "64": "./assets/images/icon64_tag.png",
+    "128": "./assets/images/icon128_tag.png"
+  },
+  "default_locale": "zh_CN"
 }
