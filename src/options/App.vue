@@ -237,6 +237,33 @@
           </div>
         </div>
       </section>
+      <section class="p-8">
+        <h2 class="text-2xl font-bold py-4 text-gray-800">
+          相关信息
+        </h2>
+        <ul class="list-disc">
+          <li class="text-base">
+            代码仓库：<a
+              class="text-blue-400"
+              href="https://github.com/Benbinbin/TagDown"
+              target="_blank"
+            >Github</a>
+          </li>
+          <li class="text-base">
+            许可协议：<a
+              class="text-blue-400"
+              href="https://github.com/Benbinbin/TagDown/blob/main/LICENSE"
+              target="_blank"
+            >MIT License</a>
+          </li>
+          <li class="text-base">
+            反馈邮箱：<a
+              class="text-blue-400"
+              href="mailto:benthomsonbin@gmail.com"
+            >benthomsonbin@gmail.com</a>
+          </li>
+        </ul>
+      </section>
     </main>
     <transition name="dissolve">
       <div
