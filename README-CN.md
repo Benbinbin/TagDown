@@ -9,6 +9,8 @@
 ## 简介
 TagDown 是一款开源的书签管理插件， 您可以使用扩展程序*浏览*、*新增*、*修改*书签，它也支持以不同方式*导出*书签。
 
+![UI](https://user-images.githubusercontent.com/40909550/137291507-f04ce62e-82fc-4835-ad9d-7c98aa07cdbd.png)
+
 :link: [Introduction English Version](./README.md)
 
 ## 特点
@@ -58,12 +60,12 @@ TagDown 提供了 :clapper: [`export` 和 `import` 功能](https://www.bilibili.
 
 ## 如果重新安装扩展程序会丢失哪一部分数据？
 
-当安装解压后的扩展时，Chrome 会给每个扩展分配一个唯一的 ID，而 IndexedDB 遵循[同源策略](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API/Basic_Terminology)限制，如果Chrome 为 TagDown 分配了另一个 ID，那么在重新安装扩展后，**可能会导致 IndexedDB 数据丢失。
+当安装解压后的扩展时，Chrome 会给每个扩展分配一个唯一的 ID，而 IndexedDB 遵循[同源策略](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API/Basic_Terminology)限制，如果Chrome 为 TagDown 分配了另一个 ID，那么在重新安装扩展后，**可能会导致 IndexedDB 数据丢失**。
 
 您可以在卸载扩展之前**导出**这些数据，这个 `json` 文件可以作为一个备份数据库，您可以在下次重新安装扩展时导入它。
 
 ## 如何升级 TagDown？
-因为重新安装扩展可能会导致 IndexedDB 数据丢失，所以升级扩展程序时，您只需要直接**用新版本的文件夹覆盖替换**原来的扩展的文件夹。
+如果从 TagDown v1.0.0 升级到 v2.0.0 可以直接卸载原有旧版本，安装新版本。但是从 v2.0.0 版本开始 TagDown 使用数据库，而重新安装扩展程序可能会导致 IndexedDB 数据丢失，所以之后的升级，您只需要直接**用新版本的文件夹覆盖替换**原来的扩展的文件夹。
 
 ## 在浏览器中保存的书签数据与 IndexedDB 中保存的数据的区别
 IndexedDB 数据是浏览器书签数据的副本，它在书签上都附加有其他信息。

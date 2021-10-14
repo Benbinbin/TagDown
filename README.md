@@ -10,6 +10,8 @@
 
 TagDown is an open source browser extension to manage bookmarks, you can *browse*, *add*, *edit* the bookmarks, it also supports for *exporting* bookmarks in different ways.
 
+![UI](https://user-images.githubusercontent.com/40909550/137291507-f04ce62e-82fc-4835-ad9d-7c98aa07cdbd.png)
+
 :link: [中文版本的简介](./README-CN.md)
 
 ## Highlight
@@ -69,8 +71,7 @@ When install the unpacked extension, Chrome will assign a unique ID for each ext
 You can **export** these data before uninstall the extension, the `json` file can be a backup database, you can import it if you install the extension again in the next time.
 
 ### How to upgrade TagDown?
-
-Because re-install the extension may cause IndexedDB data lost, so you only need to **replace the folder** of the extension source code with the new version directly in file system.
+If you upgrade TagDown from v1.0.0 to v2.0.0, you can uninstall the old version directly, then install the new version. But TagDown use IndexedDB from v2.0.0, and  re-install the extension may cause IndexedDB data lost, so you only need to **replace the folder** of the extension source code with the new version directly in file system.
 
 ### The difference between bookmarks data save in Browser and the IndexedDB.
 IndexedDB data is a copy of the browser bookmark data, which has other information attached to each bookmark.
@@ -89,6 +90,9 @@ If you want to get all bookmarks data please use default exporting function prov
 Chrome provides a feature to add all tabs as bookmarks into a folder at the same time, you can use the short cut `Ctrl + Shift + D` to trigger this function.
 
 Highly recommended to use another extension [OneTab](https://www.one-tab.com/), which closes all tabs and returns a page with a corresponding list of links, which can also be shared as an online page for others user to view these links.
+
+## Wiki
+在 [wiki](https://github.com/Benbinbin/TagDown/wiki/TagDown-%E6%89%A9%E5%B1%95%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0) 或[掘金](https://juejin.cn/column/7018368500662009892)可查看该项目的开发笔记。
 
 ## Version
 * [v2.0.0](https://github.com/Benbinbin/TagDown/releases/tag/v2.0.0) providing two modes, **tree mode** and **grid mode**, to **browser and visualize** the hierarchy bookmarks data, you can **add** new bookmarks and **edit** the existed bookmarks with some tags and groups in Version 2.0.0. With tags and groups attached to bookmark, you can **export bookmarks in many ways**. All data will be save in local, you can **export the entire database or restore it by importing backup data** at any time, so feel free to use this extension and chrome as your bookmarks manager.
