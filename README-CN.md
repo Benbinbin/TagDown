@@ -85,6 +85,9 @@ Chrome 提供了「为所有标签页添加书签」的功能，以批量创建�
 
 强烈推荐使用另一个扩展程序 [OneTab](https://www.one-tab.com/)，它关闭所有标签，并返回一个带有相应链接列表的页面，也可以将该页面开启在线功能，共享给其他人查看。
 
+## Wiki
+在 [wiki](https://github.com/Benbinbin/TagDown/wiki/TagDown-%E6%89%A9%E5%B1%95%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0) 或[掘金](https://juejin.cn/column/7018368500662009892)可查看该项目的开发笔记。
+
 ## 版本
 * [v2.0.0](https://github.com/Benbinbin/TagDown/releases/tag/v2.0.0) 提供两种模式，**树图模式**和**网格模式**，以**浏览器和可视化**层次化的书签数据，您可以在 2.0.0 版本中**添加**新书签和**编辑**现有书签，并添加 `tags` 和 `groups` 等额外信息。 通过附加到书签的 tag 和 group，您可以**以多种方式导出书签**。 所有数据都将保存在本地，您可以随时**导出整个数据库或导入备份以恢复它**，因此请尝试使用该扩展程序和 chrome 作为您的书签管理器。
 
