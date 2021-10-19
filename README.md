@@ -71,7 +71,7 @@ When install the unpacked extension, Chrome will assign a unique ID for each ext
 You can **export** these data before uninstall the extension, the `json` file can be a backup database, you can import it if you install the extension again in the next time.
 
 ### How to upgrade TagDown?
-If you upgrade TagDown from v1.0.0 to v2.0.0, you can uninstall the old version directly, then install the new version. But TagDown use IndexedDB from v2.0.0, and  re-install the extension may cause IndexedDB data lost, so you only need to **replace the folder** of the extension source code with the new version directly in file system.
+If you upgrade TagDown from v1.0.0 to v2.0.0, you can uninstall the old version directly, then install the new version. But TagDown use IndexedDB from v2.0.0, and  **re-install the extension may cause IndexedDB data lost, so you only need to *replace* the folder** of the extension source code with the new version directly in file system.
 
 ### The difference between bookmarks data save in Browser and the IndexedDB.
 IndexedDB data is a copy of the browser bookmark data, which has other information attached to each bookmark.

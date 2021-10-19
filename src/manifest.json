@@ -8,6 +8,9 @@
         "tabs",
         "storage"
     ],
+    "host_permissions": [
+        "https://dav.jianguoyun.com/dav/"
+    ],
     "background": {
         "service_worker": "./background/main.js",
         "type": "module"

@@ -1,5 +1,6 @@
 import { resolve } from 'path';
 import { defineConfig } from 'vite';
+import commonjs from '@rollup/plugin-commonjs';
 import vue from '@vitejs/plugin-vue';
 import { crx3 } from 'vite-plugin-vue-crx3';
 
@@ -10,7 +11,7 @@ export default defineConfig({
       '@': resolve(__dirname, 'src'),
     },
   },
-  plugins: [vue(), crx3()],
+  plugins: [commonjs(), vue(), crx3()],
   build: {
     target: 'es2015',
     rollupOptions: {
