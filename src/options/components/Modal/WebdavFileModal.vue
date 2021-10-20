@@ -13,7 +13,7 @@
           v-show="showModal"
           class="modal relative z-50 flex flex-col bg-white rounded shadow"
         >
-          <h2 class="p-4 text-base text-center font-bold">
+          <h2 class="p-8 text-xl text-center font-bold">
             选择需要恢复的备份文件
           </h2>
           <div
@@ -26,7 +26,7 @@
           </div>
           <div
             v-else
-            class="modal-body flex-grow p-4 flex flex-col space-y-2"
+            class="modal-body flex-grow px-8 py-4 flex flex-col space-y-2"
           >
             <button
               v-for="file of filesArr"
