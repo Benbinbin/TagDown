@@ -3,9 +3,7 @@
     <h3 class="text-base font-bold">
       WebDAV 备份
     </h3>
-    <div
-      class="p-4 flex flex-col items-center border-2 border-gray-200 border-dashed rounded"
-    >
+    <div class="p-4 flex flex-col items-center border-2 border-gray-200 border-dashed rounded">
       <div
         v-show="showWebDAVInfo"
         class="space-y-2"
@@ -244,7 +242,7 @@ export default {
   },
   setup(props) {
     const {
-      setWebDAVInfo, getWebDAVInfo, clearWebDAVInfo, setWebDAVSync, getWebDAVSync, getWebDAVUpdateTime, createWebDAVClient, checkWebDAVConnect, getWebDAVFolder, getWebDAVFile, writeWebDAVFile,
+      setWebDAVInfo, getWebDAVInfo, clearWebDAVInfo, setWebDAVSync, getWebDAVSync, getWebDAVLastFileState, createWebDAVClient, checkWebDAVConnect, getWebDAVFolder, getWebDAVFile, writeWebDAVFile,
     } = useWebDAV();
 
     const db = inject('db');
@@ -274,6 +272,7 @@ export default {
     const showWebDAVInfo = ref(false);
     const webDAVState = ref('');
 
+    const webDAVSync = ref('auto'); // auto, manual
     const webDAVUrl = ref('');
     const webDAVUsername = ref('');
     const webDAVPassword = ref('');
@@ -281,8 +280,6 @@ export default {
       if (!webDAVUrl.value || !webDAVUsername.value || !webDAVPassword.value) return false;
       return true;
     });
-
-    const webDAVSync = ref('auto');
 
     const webDAVBakcupTime = ref(null);
     const webDAVBackupTimeString = computed(() => {
@@ -301,7 +298,8 @@ export default {
       showWebDAVInfo.value = !result.state;
       webDAVState.value = result.msg;
       if (webDAVState.value === '连接成功') {
-        webDAVBakcupTime.value = await getWebDAVUpdateTime(webDAVClient.value, '/tagdown_backup');
+        const lastFileState = await getWebDAVLastFileState(webDAVClient.value, '/tagdown_backup');
+        if (lastFileState) webDAVBakcupTime.value = lastFileState.lastmod;
       } else {
         webDAVBakcupTime.value = null;
       }
@@ -329,8 +327,6 @@ export default {
 
     onMounted(async () => {
       await setWebDAVInfoHandler();
-      // const webDAVBakcupTimeInit = await getWebDAVBakcupTime();
-      // if (webDAVBakcupTimeInit) webDAVBakcupTime.value = webDAVBakcupTimeInit;
 
       if (!webDAVUrl.value || !webDAVUsername.value || !webDAVPassword.value) return;
       webDAVClient.value = createWebDAVClient(webDAVUrl.value, webDAVUsername.value, webDAVPassword.value);
@@ -382,7 +378,10 @@ export default {
       const filename = `tagdown_${date.getTime()}.json`;
       const result = await writeWebDAVFile(webDAVClient.value, '/tagdown_backup', filename, blob);
       setMsg(result.state, result.msg);
-      if (result.state) webDAVBakcupTime.value = await getWebDAVUpdateTime(webDAVClient.value, '/tagdown_backup');
+      if (result.state) {
+        const lastFileState = await getWebDAVLastFileState(webDAVClient.value, '/tagdown_backup');
+        if (lastFileState) webDAVBakcupTime.value = lastFileState.lastmod;
+      }
     };
 
     // get the database backup files list in webDAV server

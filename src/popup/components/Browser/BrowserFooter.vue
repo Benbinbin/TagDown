@@ -322,8 +322,8 @@
         <p
           class="p-4 text-sm font-bold"
           :class="{
-            'text-green-400': finishMsg === '成功',
-            'text-red-400': finishMsg === '失败'
+            'text-green-400': finishMsg === '删除成功',
+            'text-red-400': finishMsg === '删除失败'
           }"
         >
           {{ finishMsg }}
@@ -333,11 +333,14 @@
   </footer>
 </template>
 <script>
-import { ref, watch, inject } from 'vue';
-import useBookmark from '@/composables/useBookmark';
-import useTab from '@/composables/useTab';
+import {
+  ref, watch, inject, onMounted,
+} from 'vue';
 import PromptModal from '../Modal/PromptModal.vue';
 import PopupMsg from '../Modal/PopupMsg.vue';
+import useBookmark from '@/composables/useBookmark';
+import useTab from '@/composables/useTab';
+import useWebDAV from '@/composables/useWebDAV';
 
 export default {
   components: {
@@ -486,6 +489,20 @@ export default {
     // console.log('bookmarkState', bookmarkState);
     // console.log('currentBookmarkState', currentBookmarkState.value);
 
+    /**
+     * sync webDAV
+     */
+    const {
+      setWebDAVInfo, getWebDAVInfo, clearWebDAVInfo, setWebDAVSync, getWebDAVSync, getWebDAVLastFileState, createWebDAVClient, checkWebDAVConnect, getWebDAVFolder, getWebDAVFile, writeWebDAVFile,
+    } = useWebDAV();
+
+    const webDAVSync = ref('manual');
+    onMounted(async () => {
+      webDAVSync.value = await getWebDAVSync();
+    });
+
+    const syncWebDAV = inject('syncWebDAV');
+
     // delete bookmark
     const showDeleteConfirmModal = ref(false);
     let currentBookmarkId = '';
@@ -512,22 +529,24 @@ export default {
       if (value && currentBookmarkId) {
         deleteBookmark(currentBookmarkId).then(() => {
           showFinishMsgPopup.value = true;
-          finishMsg.value = '成功';
+          finishMsg.value = '删除成功';
           let timer = setTimeout(() => {
             showFinishMsgPopup.value = false;
             currentBookmarkState.value = false;
             setBookmarkState(false);
-
             timer = null;
-          }, 500);
+          }, 800);
+          if (webDAVSync.value === 'auto') {
+            syncWebDAV();
+          }
         }).catch((err) => {
           showFinishMsgPopup.value = true;
-          finishMsg.value = '失败';
+          finishMsg.value = '删除失败';
           let timer = setTimeout(() => {
             showFinishMsgPopup.value = false;
             timer = null;
             console.log(err);
-          }, 500);
+          }, 800);
         });
       }
     };

@@ -100,7 +100,7 @@ export default function useWebDAV() {
   });
 
   // get folder update time
-  const getWebDAVUpdateTime = async (client, folderPath) => {
+  const getWebDAVLastFileState = async (client, folderPath) => {
     await checkWebDAVFolder(client, folderPath);
     const filesArr = await getWebDAVFolder(client, folderPath);
     console.log(filesArr);
@@ -108,7 +108,8 @@ export default function useWebDAV() {
     // const stat = await client.stat(folderPath);
     // console.log(stat);
     const lastFile = filesArr[filesArr.length - 1];
-    return lastFile.lastmod;
+    // return lastFile.lastmod;
+    return lastFile;
   };
 
   // get file
@@ -132,12 +133,12 @@ export default function useWebDAV() {
     if (res) {
       return {
         state: true,
-        msg: '成功',
+        msg: 'WebDAV 同步成功',
       };
     }
     return {
       state: false,
-      msg: '失败',
+      msg: 'WebDAV 同步失败',
     };
   };
 
@@ -150,7 +151,8 @@ export default function useWebDAV() {
     // setWebDAVBakcupTime,
     // getWebDAVBakcupTime,
     checkWebDAVFolder,
-    getWebDAVUpdateTime,
+    // getWebDAVUpdateTime,
+    getWebDAVLastFileState,
     createWebDAVClient,
     checkWebDAVConnect,
     getWebDAVFolder,

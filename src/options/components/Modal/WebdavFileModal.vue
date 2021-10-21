@@ -1,8 +1,8 @@
 <template>
   <teleport to="body">
-    <div class="all-center fixed inset-0 z-40">
+    <div class="all-center fixed inset-0 z-10">
       <div
-        class="modal-background absolute inset-0 bg-black opacity-25"
+        class="modal-background absolute inset-0 z-20 bg-black opacity-25"
         @click="showModal = false"
       />
       <transition
@@ -11,7 +11,7 @@
       >
         <div
           v-show="showModal"
-          class="modal relative z-50 flex flex-col bg-white rounded shadow"
+          class="modal relative z-30 flex flex-col bg-white rounded shadow"
         >
           <h2 class="p-8 text-xl text-center font-bold">
             选择需要恢复的备份文件
@@ -28,13 +28,40 @@
             v-else
             class="modal-body flex-grow px-8 py-4 flex flex-col space-y-2"
           >
+            <div class="py-4 flex justify-between items-center text-xs font-bold">
+              <span>排序</span>
+              <div class="flex items-center space-x-2">
+                <button
+                  title="sort the backup files in descending order"
+                  class="px-2 py-1 rounded"
+                  :class="{
+                    'text-white bg-blue-500 hover:bg-blue-600': sortType === 'descend',
+                    'text-gray-600 hover:text-white bg-gray-200 hover:bg-blue-500': sortType !== 'descend'
+                  }"
+                  @click="sortType='descend'"
+                >
+                  从新到旧
+                </button>
+                <button
+                  title="sort the backup files in ascending order"
+                  class="px-2 py-1 rounded"
+                  :class="{
+                    'text-white bg-blue-500 hover:bg-blue-600': sortType === 'ascend',
+                    'text-gray-600 hover:text-white bg-gray-200 hover:bg-blue-500': sortType !== 'ascend'
+                  }"
+                  @click="sortType='ascend'"
+                >
+                  从旧到新
+                </button>
+              </div>
+            </div>
             <button
-              v-for="file of filesArr"
+              v-for="file of sortedFilesArr"
               :key="file.basename"
               class="p-4 flex flex-col space-y-2 rounded"
               :class="{
                 'text-gray-800 bg-gray-50 hover:bg-gray-100': selectFile!==file.basename,
-                'text-white bg-blue-400 hover:bg-blue-600': selectFile===file.basename
+                'text-white bg-blue-500 hover:bg-blue-600': selectFile===file.basename
               }"
               @click="selectFile=file.basename"
             >
@@ -43,7 +70,7 @@
             </button>
           </div>
 
-          <div class="p-2 all-center space-x-4">
+          <div class="p-4 all-center space-x-4">
             <button
               class="px-2 py-1 text-sm text-white bg-red-400 hover:bg-red-600 rounded"
               :class="{
@@ -67,7 +94,7 @@
   </teleport>
 </template>
 <script>
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, computed } from 'vue';
 
 export default {
   props: {
@@ -83,7 +110,14 @@ export default {
   setup(props, context) {
     // show modal
     const showModal = ref(false);
-    // console.log(props.show);
+
+    const sortType = ref('descend');
+    const sortedFilesArr = computed(() => {
+      if (sortType.value === 'descend') {
+        return [...props.filesArr].reverse();
+      }
+      return [...props.filesArr];
+    });
 
     onMounted(() => {
       if (props.show) {
@@ -108,6 +142,8 @@ export default {
 
     return {
       showModal,
+      sortType,
+      sortedFilesArr,
       lastUpdateTime,
       selectFile,
       resultHandler,

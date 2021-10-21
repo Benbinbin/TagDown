@@ -471,7 +471,7 @@
 </template>
 
 <script>
-import { ref, inject } from 'vue';
+import { ref, inject, onMounted } from 'vue';
 import BookmarkFavicon from './BookmarkFavicon.vue';
 import PopupMenu from '../Modal/PopupMenu.vue';
 import InputModal from '../Modal/InputModal.vue';
@@ -479,6 +479,7 @@ import PromptModal from '../Modal/PromptModal.vue';
 import useTab from '@/composables/useTab';
 import useBookmark from '@/composables/useBookmark';
 import useFolder from '@/composables/useFolder';
+import useWebDAV from '@/composables/useWebDAV';
 
 export default {
   components: {
@@ -548,7 +549,7 @@ export default {
     const showMsg = ref(false);
     const msg = ref(null);
 
-    const setMsg = (state, title, duration = 1000) => {
+    const setMsg = (state, title, duration = 1000) => new Promise((resolve, reject) => {
       msg.value = {
         state,
         title,
@@ -557,9 +558,10 @@ export default {
       let timer = setTimeout(() => {
         showMsg.value = false;
         msg.value = null;
+        resolve('finish');
         timer = null;
       }, duration);
-    };
+    });
 
     /**
      * node
@@ -639,6 +641,20 @@ export default {
     };
 
     /**
+     * sync webDAV
+     */
+    const {
+      setWebDAVInfo, getWebDAVInfo, clearWebDAVInfo, setWebDAVSync, getWebDAVSync, getWebDAVLastFileState, createWebDAVClient, checkWebDAVConnect, getWebDAVFolder, getWebDAVFile, writeWebDAVFile,
+    } = useWebDAV();
+
+    const webDAVSync = ref('manual');
+    onMounted(async () => {
+      webDAVSync.value = await getWebDAVSync();
+    });
+
+    const syncWebDAV = inject('syncWebDAV');
+
+    /**
      * modal
      */
 
@@ -655,19 +671,29 @@ export default {
       // console.log('toggle star state');
       const value = !starState.value;
       if (selectItemType.value === 'bookmark') {
-        await setBookmarkStar(selectItem.value.id, value).then(async () => {
-          starState.value = await getBookmarkStar(selectItem.value.id);
-          console.log(starState.value);
-        }).catch((err) => {
-          console.log(err);
-        });
+        await setBookmarkStar(selectItem.value.id, value)
+          .then(async () => {
+            starState.value = await getBookmarkStar(selectItem.value.id);
+            // console.log(starState.value);
+            if (webDAVSync.value === 'auto') {
+              syncWebDAV();
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       } else {
-        await setFolderStar(selectItem.value.id, value).then(async () => {
-          starState.value = await getFolderStar(selectItem.value.id);
-          console.log(starState.value);
-        }).catch((err) => {
-          console.log(err);
-        });
+        await setFolderStar(selectItem.value.id, value)
+          .then(async () => {
+            starState.value = await getFolderStar(selectItem.value.id);
+            // console.log(starState.value);
+            if (webDAVSync.value === 'auto') {
+              syncWebDAV();
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       }
       if (props.browserType === 'star') {
         showPopupMenu.value = false;
@@ -683,6 +709,9 @@ export default {
       await setBookmarkShare(selectItem.value.id, value).then(async () => {
         shareState.value = await getBookmarkShare(selectItem.value.id);
         // console.log(shareState.value);
+        if (webDAVSync.value === 'auto') {
+          syncWebDAV();
+        }
       }).catch((err) => {
         console.log(err);
       });
@@ -696,8 +725,11 @@ export default {
         }
       });
 
-      Promise.all(promiseArr).then(() => {
-        setMsg(true, '成功');
+      Promise.all(promiseArr).then(async () => {
+        await setMsg(true, '成功');
+        if (webDAVSync.value === 'auto') {
+          syncWebDAV();
+        }
       }).catch((err) => {
         console.log(err);
         setMsg(false, '失败');
@@ -766,6 +798,9 @@ export default {
           deleteBookmark(selectItem.value.id).then(() => {
             console.log(`bookmark ${selectItem.value.title} delete!`);
             context.emit('refresh-current-node');
+            if (webDAVSync.value === 'auto') {
+              syncWebDAV();
+            }
           }).catch((err) => {
             console.log(err);
           });
@@ -773,6 +808,9 @@ export default {
           deleteFolder(selectItem.value.id).then(() => {
             console.log(`bookmark ${selectItem.value.title} delete!`);
             context.emit('refresh-current-node');
+            if (webDAVSync.value === 'auto') {
+              syncWebDAV();
+            }
           }).catch((err) => {
             console.log(err);
           });

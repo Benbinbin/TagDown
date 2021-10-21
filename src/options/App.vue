@@ -342,17 +342,25 @@ export default {
     const showMsg = ref(false);
     const msg = ref(null);
 
-    const setMsg = (state, title, duration = 1000) => {
+    const setMsg = (state, title, refresh = false, duration = 1000) => {
       msg.value = {
         state,
         title,
       };
       showMsg.value = true;
-      let timer = setTimeout(() => {
-        showMsg.value = false;
-        msg.value = null;
-        timer = null;
-      }, duration);
+      if (!refresh) {
+        let timer = setTimeout(() => {
+          showMsg.value = false;
+          msg.value = null;
+          timer = null;
+        }, duration);
+      } else {
+        const timer = setTimeout(() => {
+          showMsg.value = false;
+          msg.value = null;
+          window.location.reload();
+        }, duration);
+      }
     };
 
     /**
@@ -406,22 +414,19 @@ export default {
       showDeleteIndexedDBConfirmModal.value = true;
     };
 
-    const getDeleteIndexedDBResult = (value) => {
+    const getDeleteIndexedDBResult = async (value) => {
       if (value) {
-        db.delete().then(() => {
+        const promiseArr = [];
+        promiseArr.push(db.bookmark.clear());
+        promiseArr.push(db.star.clear());
+        promiseArr.push(db.share.clear());
+        Promise.all(promiseArr).then(() => {
           console.log('database delete successful!');
-          setMsg(true, '成功');
+          setMsg(true, '成功', true);
         }).catch((err) => {
           console.log(err);
-          setMsg(false, '失败');
-        })
-          .finally(async () => {
-            if (!db.isOpen()) {
-              // console.log('the database has closed');
-              await db.open();
-              // console.log(db.isOpen());
-            }
-          });
+          setMsg(false, '失败', true);
+        });
       }
     };
 

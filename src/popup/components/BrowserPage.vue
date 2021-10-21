@@ -74,7 +74,7 @@
         :new-group-color="newGroupColor"
         @toggle-pin-node="togglePinNodeHandler"
       />
-      <!-- <BrowserStar v-show="browserType === 'star'" /> -->
+
       <BrowserPin
         v-show="browserType === 'pin'"
         ref="pin"
@@ -113,7 +113,7 @@ import BrowserHeader from './Browser/BrowserHeader.vue';
 import BrowserFooter from './Browser/BrowserFooter.vue';
 import BrowserGrid from './Browser/BrowserGrid.vue';
 import BrowserTree from './Browser/BrowserTree.vue';
-import BrowserStar from './Browser/BrowserStar.vue';
+
 import BrowserPin from './Browser/BrowserPin.vue';
 import BrowserMenu from './Browser/BrowserMenu.vue';
 import BrowserMenuPin from './Browser/BrowserMenuPin.vue';
@@ -126,7 +126,6 @@ export default {
     BrowserFooter,
     BrowserGrid,
     BrowserTree,
-    BrowserStar,
     BrowserPin,
   },
   setup() {
