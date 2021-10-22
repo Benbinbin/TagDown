@@ -7,9 +7,28 @@
     </header>
     <main class="container p-4 mx-auto">
       <section class="p-8 border-b-2 border-gray-200">
-        <h2 class="text-2xl font-bold py-4 text-gray-800">
-          IndexedDB 数据库
-        </h2>
+        <div class="flex justify-between items-center">
+          <h2 class="text-2xl font-bold py-4 text-gray-800">
+            IndexedDB 数据库
+          </h2>
+          <button
+            title="clear indexedDB database"
+            class="px-2 py-1 flex items-center text-sm text-white bg-red-400 hover:bg-red-600 space-x-1 rounded"
+            @click="deleteDatabaseHandler"
+          >
+            <svg
+              class="w-5 h-5"
+              viewBox="0 0 50 50"
+              fill="currentColor"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M41.5 11H34.0007V9.5C33.9994 8.30694 33.5249 7.16312 32.6813 6.3195C31.8376 5.47588 30.6938 5.00134 29.5007 5H20.5007C19.3077 5.00134 18.1639 5.47588 17.3202 6.3195C16.4766 7.16312 16.0021 8.30694 16.0007 9.5V11H8.5C8.10217 11 7.72064 11.158 7.43934 11.4393C7.15804 11.7206 7 12.1022 7 12.5C7 12.8978 7.15804 13.2794 7.43934 13.5607C7.72064 13.842 8.10217 14 8.5 14H10V41C10.0009 41.7954 10.3173 42.5579 10.8797 43.1203C11.4421 43.6827 12.2046 43.9991 13 44H37C37.7954 43.9991 38.5579 43.6827 39.1203 43.1203C39.6827 42.5579 39.9991 41.7954 40 41V14H41.5C41.8978 14 42.2794 13.842 42.5607 13.5607C42.842 13.2794 43 12.8978 43 12.5C43 12.1022 42.842 11.7206 42.5607 11.4393C42.2794 11.158 41.8978 11 41.5 11ZM19.0007 9.5C19.0012 9.10233 19.1594 8.72109 19.4406 8.43989C19.7218 8.15869 20.1031 8.0005 20.5007 8H29.5007C29.8984 8.0005 30.2797 8.15869 30.5609 8.43989C30.8421 8.72109 31.0003 9.10233 31.0007 9.5V11H19.0007V9.5ZM37 41H13V14H37V41ZM22.0007 21.5V33.5C22.0007 33.8978 21.8427 34.2794 21.5614 34.5607C21.2801 34.842 20.8986 35 20.5007 35C20.1029 35 19.7214 34.842 19.4401 34.5607C19.1588 34.2794 19.0007 33.8978 19.0007 33.5V21.5C19.0007 21.1022 19.1588 20.7206 19.4401 20.4393C19.7214 20.158 20.1029 20 20.5007 20C20.8986 20 21.2801 20.158 21.5614 20.4393C21.8427 20.7206 22.0007 21.1022 22.0007 21.5ZM31.0007 21.5V33.5C31.0007 33.8978 30.8427 34.2794 30.5614 34.5607C30.2801 34.842 29.8986 35 29.5007 35C29.1029 35 28.7214 34.842 28.4401 34.5607C28.1588 34.2794 28.0007 33.8978 28.0007 33.5V21.5C28.0007 21.1022 28.1588 20.7206 28.4401 20.4393C28.7214 20.158 29.1029 20 29.5007 20C29.8986 20 30.2801 20.158 30.5614 20.4393C30.8427 20.7206 31.0007 21.1022 31.0007 21.5Z"
+              />
+            </svg>
+            <span>清空</span>
+          </button>
+        </div>
         <div class="flex items-start flex-wrap space-x-8">
           <div class="space-y-4">
             <h3 class="text-base font-bold">
@@ -62,29 +81,12 @@
 
                 <span class="text-base">导入</span>
               </button>
-              <button
-                title="import indexedDB database"
-                class="px-2 py-1 flex items-center text-base text-white bg-red-400 hover:bg-red-600 space-x-1 rounded"
-                @click="deleteDatabaseHandler"
-              >
-                <svg
-                  class="w-6 h-6"
-                  viewBox="0 0 50 50"
-                  fill="currentColor"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M41.5 11H34.0007V9.5C33.9994 8.30694 33.5249 7.16312 32.6813 6.3195C31.8376 5.47588 30.6938 5.00134 29.5007 5H20.5007C19.3077 5.00134 18.1639 5.47588 17.3202 6.3195C16.4766 7.16312 16.0021 8.30694 16.0007 9.5V11H8.5C8.10217 11 7.72064 11.158 7.43934 11.4393C7.15804 11.7206 7 12.1022 7 12.5C7 12.8978 7.15804 13.2794 7.43934 13.5607C7.72064 13.842 8.10217 14 8.5 14H10V41C10.0009 41.7954 10.3173 42.5579 10.8797 43.1203C11.4421 43.6827 12.2046 43.9991 13 44H37C37.7954 43.9991 38.5579 43.6827 39.1203 43.1203C39.6827 42.5579 39.9991 41.7954 40 41V14H41.5C41.8978 14 42.2794 13.842 42.5607 13.5607C42.842 13.2794 43 12.8978 43 12.5C43 12.1022 42.842 11.7206 42.5607 11.4393C42.2794 11.158 41.8978 11 41.5 11ZM19.0007 9.5C19.0012 9.10233 19.1594 8.72109 19.4406 8.43989C19.7218 8.15869 20.1031 8.0005 20.5007 8H29.5007C29.8984 8.0005 30.2797 8.15869 30.5609 8.43989C30.8421 8.72109 31.0003 9.10233 31.0007 9.5V11H19.0007V9.5ZM37 41H13V14H37V41ZM22.0007 21.5V33.5C22.0007 33.8978 21.8427 34.2794 21.5614 34.5607C21.2801 34.842 20.8986 35 20.5007 35C20.1029 35 19.7214 34.842 19.4401 34.5607C19.1588 34.2794 19.0007 33.8978 19.0007 33.5V21.5C19.0007 21.1022 19.1588 20.7206 19.4401 20.4393C19.7214 20.158 20.1029 20 20.5007 20C20.8986 20 21.2801 20.158 21.5614 20.4393C21.8427 20.7206 22.0007 21.1022 22.0007 21.5ZM31.0007 21.5V33.5C31.0007 33.8978 30.8427 34.2794 30.5614 34.5607C30.2801 34.842 29.8986 35 29.5007 35C29.1029 35 28.7214 34.842 28.4401 34.5607C28.1588 34.2794 28.0007 33.8978 28.0007 33.5V21.5C28.0007 21.1022 28.1588 20.7206 28.4401 20.4393C28.7214 20.158 29.1029 20 29.5007 20C29.8986 20 30.2801 20.158 30.5614 20.4393C30.8427 20.7206 31.0007 21.1022 31.0007 21.5Z"
-                  />
-                </svg>
-
-                <span class="text-base">删除</span>
-              </button>
             </div>
           </div>
           <WebdavBackup />
         </div>
       </section>
+      <GistShare />
       <section class="p-8 border-b-2 border-gray-200">
         <div class="flex justify-between items-center">
           <h2 class="text-2xl font-bold py-4 text-gray-800">
@@ -108,6 +110,10 @@
             <button
               title="export bookmarks order by tags"
               class="px-2 py-1 text-sm text-white bg-green-400 hover:bg-green-600 rounded"
+              :class="{
+                'opacity-10': selectTags.size===0
+              }"
+              :disabled="selectTags.size===0"
               @click="exportBookmarks('tag')"
             >
               导出书签
@@ -189,6 +195,10 @@
             <button
               title="export bookmarks order by groups"
               class="px-2 py-1 text-sm text-white bg-green-400 hover:bg-green-600 rounded"
+              :class="{
+                'opacity-10': selectGroups.size===0
+              }"
+              :disabled="selectGroups.size===0"
               @click="exportBookmarks('group')"
             >
               导出书签
@@ -327,11 +337,13 @@ import {
 } from 'dexie-export-import';
 import PromptModal from './components/Modal/PromptModal.vue';
 import WebdavBackup from './components/WebdavBackup.vue';
+import GistShare from './components/GistShare.vue';
 
 export default {
   components: {
     PromptModal,
     WebdavBackup,
+    GistShare,
   },
   setup(props) {
     const db = inject('db');
