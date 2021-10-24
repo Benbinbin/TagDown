@@ -92,8 +92,6 @@ export default {
 
     onMounted(async () => {
       inputValue.value = await getGithubToken();
-      console.log(inputValue.value);
-      console.log(props.show);
       if (props.show) {
         showModal.value = true;
       }

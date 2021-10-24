@@ -62,7 +62,6 @@ export default {
   setup(props, context) {
     // show modal
     const showModal = ref(false);
-    // console.log(props.show);
     onMounted(() => {
       if (props.show) {
         showModal.value = true;

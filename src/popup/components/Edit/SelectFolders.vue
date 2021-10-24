@@ -300,7 +300,6 @@ export default {
     );
 
     const setCurrentNodeIdHandler = (value) => {
-      console.log(currentNode.value);
       if (value === 'parent' && currentNode.value.parentId) {
         currentNodeId.value = currentNode.value.parentId;
       } else if (value === 'root') {
@@ -419,8 +418,6 @@ export default {
       showPopupMenu.value = false;
     };
     const getSubfolderNameHandler = async (obj) => {
-      // console.log(obj);
-      console.log(selectItem.value);
       if (obj.state && selectItem.value) {
         await createFolder(selectItem.value.id, obj.value);
         refreshCurrentNode();
@@ -435,7 +432,6 @@ export default {
       showPopupMenu.value = false;
     };
     const getConfirmDeleteHandler = async (value) => {
-      // console.log(value);
       if (value && selectItem.value) {
         await deleteFolder(selectItem.value.id);
         refreshCurrentNode();

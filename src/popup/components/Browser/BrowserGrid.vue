@@ -632,7 +632,6 @@ export default {
       if (!text || !navigator.clipboard) return;
 
       navigator.clipboard.writeText(text).then(() => {
-        console.log('Copy text to clipboard successful!');
         setMsg(true, '成功');
       }, (err) => {
         console.error(err);

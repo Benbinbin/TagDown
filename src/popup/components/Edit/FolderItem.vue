@@ -117,8 +117,6 @@ export default {
 
     const showCandidateFolder = inject('showCandidateFolder');
     watch(showCandidateFolder, (value, preValue) => {
-      console.log(showCandidateFolder.value);
-      console.log(nodeSelectState.value);
       if (!preValue && value && nodeSelectState.value) {
         context.emit('expand-folder');
       }

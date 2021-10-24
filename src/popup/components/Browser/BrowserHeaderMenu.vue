@@ -204,7 +204,6 @@ export default {
       if (token.value) {
         gistString.value = '正在同步中';
         const allGroupsArr = [];
-        console.log(gistsRecords.value);
         gistsRecords.value.forEach((gistRecord) => {
           allGroupsArr.push(...gistRecord.groups);
         });

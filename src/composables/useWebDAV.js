@@ -103,7 +103,7 @@ export default function useWebDAV() {
   const getWebDAVLastFileState = async (client, folderPath) => {
     await checkWebDAVFolder(client, folderPath);
     const filesArr = await getWebDAVFolder(client, folderPath);
-    console.log(filesArr);
+    // console.log(filesArr);
     if (filesArr.length === 0) return null;
     // const stat = await client.stat(folderPath);
     // console.log(stat);
@@ -129,7 +129,7 @@ export default function useWebDAV() {
     const res = await client.putFileContents(`${folderPath}/${fileName}`, data, {
       contentLength: false,
     });
-    console.log(res);
+    // console.log(res);
     if (res) {
       return {
         state: true,

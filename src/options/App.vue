@@ -532,7 +532,7 @@ export default {
       await importInto(db, file, {
         overwriteValues: true,
       }).then(() => {
-        console.log('import database successful!');
+        // console.log('import database successful!');
         setMsg(true, '成功');
       }).catch((err) => {
         console.log(err);
@@ -556,7 +556,7 @@ export default {
         promiseArr.push(db.star.clear());
         promiseArr.push(db.share.clear());
         Promise.all(promiseArr).then(() => {
-          console.log('database delete successful!');
+          // console.log('database delete successful!');
           setMsg(true, '成功', true);
         }).catch((err) => {
           console.log(err);
@@ -642,7 +642,7 @@ export default {
     };
 
     const exportBookmarks = async (type) => {
-      console.log('export bookmarks');
+      // console.log('export bookmarks');
       let result = [];
       const promiseArr = [];
       let shareableIds = [];

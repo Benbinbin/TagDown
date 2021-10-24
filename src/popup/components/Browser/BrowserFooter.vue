@@ -508,15 +508,11 @@ export default {
     let currentBookmarkId = '';
 
     const deleteBookmarkHandler = () => {
-      console.log('delete bookmark');
       chrome.storage.local.get('currentBookmarkId', (result) => {
-        console.log(result);
         if (result) currentBookmarkId = result.currentBookmarkId;
         if (currentBookmarkId) {
-          // console.log(currentBookmarkId);
           showDeleteConfirmModal.value = true;
         }
-        console.log(showDeleteConfirmModal.value);
       });
     };
 

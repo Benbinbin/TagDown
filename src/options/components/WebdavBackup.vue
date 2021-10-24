@@ -294,7 +294,6 @@ export default {
     const getWebDAVState = async () => {
       if (!webDAVClient.value) return;
       const result = await checkWebDAVConnect(webDAVClient.value);
-      console.log(result);
       showWebDAVInfo.value = !result.state;
       webDAVState.value = result.msg;
       if (webDAVState.value === '连接成功') {
@@ -357,7 +356,6 @@ export default {
       if (value) {
         await clearWebDAVInfo();
         const webDAVInfo = await getWebDAVInfo();
-        // console.log(webDAVInfo);
         if (!webDAVInfo) {
           webDAVUrl.value = '';
           webDAVUsername.value = '';
@@ -400,7 +398,6 @@ export default {
       await importInto(db, blob, {
         overwriteValues: true,
       }).then(() => {
-        console.log('import database successful!');
         setMsg(true, '成功');
       }).catch((err) => {
         console.log(err);

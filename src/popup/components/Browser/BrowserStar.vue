@@ -605,7 +605,6 @@ export default {
       if (!text || !navigator.clipboard) return;
 
       navigator.clipboard.writeText(text).then(() => {
-        console.log('Copy text to clipboard successful!');
         setMsg(true, '成功');
       }, (err) => {
         console.error(err);
@@ -627,11 +626,9 @@ export default {
     // star
     const starState = ref(false);
     const toggleStarState = async () => {
-      console.log('toggle star state');
       const value = !starState.value;
       await setBookmarkStar(selectItem.value.id, value).then(async () => {
         starState.value = await getBookmarkStar(selectItem.value.id);
-        console.log(starState.value);
       }).catch((err) => {
         console.log(err);
       });
@@ -640,11 +637,9 @@ export default {
     // share
     const shareState = ref(false);
     const toggleBookmarkShareState = async () => {
-      console.log('toggle share state');
       const value = !shareState.value;
       await setBookmarkShare(selectItem.value.id, value).then(async () => {
         shareState.value = await getBookmarkShare(selectItem.value.id);
-        // console.log(shareState.value);
       }).catch((err) => {
         console.log(err);
       });

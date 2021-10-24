@@ -273,7 +273,6 @@ export default {
     const gistsRecords = ref([]);
     const updateGistsRecord = async () => {
       gistsRecords.value = await getGistsRecord();
-      // console.log(gistsRecords.value);
     };
     onMounted(async () => {
       await updateGistsRecord();
@@ -288,7 +287,6 @@ export default {
     };
 
     const editGistHandler = (gistRecord) => {
-      console.log(gistRecord);
       currentGist.value = gistRecord;
       showSetGistModal.value = true;
     };
@@ -323,7 +321,6 @@ export default {
           public: result.gistType === 'public',
           files: { [`${result.filename}.json`]: { content: JSON.stringify(fileContent) } },
         });
-        // console.log(res);
         if (res.state) {
           const newGistRecord = {
             filename: result.filename,
@@ -333,7 +330,6 @@ export default {
             groups: result.groups,
           };
           const gistsRecord = await getGistsRecord();
-          // console.log(gistsRecord);
           if (gistsRecord) {
             gistsRecord.unshift(newGistRecord); // return the new arr length
             await setGistsRecord(gistsRecord);
@@ -341,16 +337,13 @@ export default {
             await setGistsRecord([newGistRecord]);
           }
           await updateGistsRecord();
-          // setMsg(true, '创建成功');
         } else {
           setMsg(false, '创建失败');
         }
       } else {
         // edit gist
         const gistsRecord = await getGistsRecord();
-        // console.log(gistsRecord);
         const index = gistsRecord.findIndex((item) => item.gistId === result.gistId);
-        console.log(index);
         let filename = '';
         if (index === -1) {
           const gist = await getGist(token.value, result.gistId);
@@ -368,8 +361,6 @@ export default {
           description: result.description,
           files: { [`${filename}.json`]: { content: JSON.stringify(fileContent) } },
         });
-
-        console.log(res);
 
         if (res.state) {
           const newGistRecord = {
@@ -412,7 +403,6 @@ export default {
     };
 
     const syncGistHandler = async (result) => {
-      console.log(result);
       if (result === 'all') {
         syncAllGists.value = true;
         const allGroupsArr = [];
@@ -453,11 +443,8 @@ export default {
           files: { [`${result.filename}.json`]: { content: JSON.stringify(fileContent) } },
         });
 
-        console.log(res);
-
         if (res.state) {
           syncGistId.value = result.gistId;
-          console.log(syncGistId.value);
           setMsg(true, '更新成功');
           // syncGistId.value = '';
         } else {
@@ -470,7 +457,6 @@ export default {
     const showDeleteGistsRecordConfirmModal = ref(false);
     const deleteGist = ref('');
     const clearGistsRecordHandler = (value) => {
-      // console.log('clear gist record');
       showDeleteGistsRecordConfirmModal.value = true;
       if (value === 'all') {
         deleteGist.value = 'all';
@@ -486,7 +472,6 @@ export default {
         } else {
           const gistsRecord = await getGistsRecord();
           const index = gistsRecord.findIndex((item) => item.gistId === deleteGist.value);
-          console.log(index);
           if (index !== -1) {
             gistsRecord.splice(index, 1);
             await setGistsRecord(gistsRecord);

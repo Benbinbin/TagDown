@@ -156,21 +156,11 @@ export default {
     });
 
     const refreshUpdateTime = async () => {
-      // fetch(`https://api.github.com/gists/${props.gistRecord.gistId}`)
-      //   .then(async (res) => {
-      //     const resData = await res.json();
-      //     const lastCommit = resData.history[0];
-      //     updateTime.value = lastCommit.committed_at;
-      //   }).catch((err) => {
-      //     console.log('Error', err);
-      //   });
       const gist = await getGist(props.token, props.gistRecord.gistId);
-      console.log(gist);
       if (gist) {
         const lastCommit = gist.history[0];
         updateTime.value = lastCommit.committed_at;
       }
-      // updateTime.value = await getUpdateTime(props.gistRecord.gistId);
     };
 
     onMounted(() => {

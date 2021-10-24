@@ -316,11 +316,9 @@ export default {
       let blob = null;
       if (type === 'pin' && allPinBookmarks.value.length > 0) {
         const jsonFile = JSON.stringify(toRaw(allPinBookmarks.value), null, 2);
-        console.log(jsonFile);
         blob = new Blob([jsonFile], { type: 'application/json' });
       } else if (type === 'select' && selectNodes.length > 0) {
         const jsonFile = JSON.stringify(selectNodes, null, 2);
-        console.log(jsonFile);
 
         blob = new Blob([jsonFile], { type: 'application/json' });
       }

@@ -158,8 +158,6 @@ export default {
     });
 
     const syncWebDAV = async () => {
-      console.log('sync webDAV');
-
       if (webDAVState.value === '连接成功') {
         const blob = await exportDB(db, {
           prettyJson: true,
@@ -170,7 +168,6 @@ export default {
         let filename = `tagdown_${date.getTime()}.json`;
 
         if (lastFileState.value) filename = lastFileState.value.basename;
-        // console.log(filename);
         const result = await writeWebDAVFile(webDAVClient.value, '/tagdown_backup', filename, blob);
 
         if (result.state) {

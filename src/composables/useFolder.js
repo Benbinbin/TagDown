@@ -23,7 +23,7 @@ export default function useFolder() {
 
   // create new folder
   const createFolder = async (parentId, folderName) => {
-    console.log('create new folder');
+    // console.log('create new folder');
     const folder = await chrome.bookmarks.create({
       title: folderName,
       parentId,
