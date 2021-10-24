@@ -7,6 +7,97 @@
     </header>
     <main class="container p-4 mx-auto">
       <section class="p-8 border-b-2 border-gray-200">
+        <h2 class="text-2xl font-bold py-4 text-gray-800">
+          UI 设置
+        </h2>
+        <div class="flex items-start flex-wrap space-x-8">
+          <div class="space-y-4">
+            <h3 class="text-base font-bold">
+              弹出页状态
+            </h3>
+            <div
+              class="p-4 flex flex-col items-center space-y-4 border-2 border-gray-200 border-dashed rounded"
+            >
+              <button
+                title="auto set popup page state"
+                class="w-full px-2 py-1 border-2 border-green-400 rounded"
+                :class="{
+                  'text-white bg-green-400 hover:bg-green-600': popupState === 'auto',
+                  'text-green-400 hover:text-white bg-green-50 hover:bg-green-400': popupState !== 'auto',
+                }"
+                @click="setPopupState('auto')"
+              >
+                自动判断
+              </button>
+              <button
+                title="set popup page state as edit state"
+                class="w-full px-2 py-1 border-2 border-green-400 rounded"
+                :class="{
+                  'text-white bg-green-400 hover:bg-green-600': popupState === 'edit',
+                  'text-green-400 hover:text-white bg-green-50 hover:bg-green-400': popupState !== 'edit',
+                }"
+                @click="setPopupState('edit')"
+              >
+                编辑
+              </button>
+              <button
+                title="set popup page state as browser state"
+                class="w-full px-2 py-1 border-2 border-green-400 rounded"
+                :class="{
+                  'text-white bg-green-400 hover:bg-green-600': popupState === 'browser',
+                  'text-green-400 hover:text-white bg-green-50 hover:bg-green-400': popupState !== 'browser',
+                }"
+                @click="setPopupState('browser')"
+              >
+                浏览
+              </button>
+            </div>
+          </div>
+          <div class="space-y-4">
+            <h3 class="text-base font-bold">
+              弹出页浏览状态行为
+            </h3>
+            <div
+              class="p-4 flex flex-col items-center space-y-4 border-2 border-gray-200 border-dashed rounded"
+            >
+              <button
+                title="set popup browser page as the last folder"
+                class="w-full px-2 py-1 border-2 border-green-400 rounded"
+                :class="{
+                  'text-white bg-green-400 hover:bg-green-600': popupBrowser === 'folder',
+                  'text-green-400 hover:text-white bg-green-50 hover:bg-green-400': popupBrowser !== 'folder',
+                }"
+                @click="setPopupBrowser('folder')"
+              >
+                展示上一次浏览的文件夹
+              </button>
+              <button
+                title="set popup browser page as the root folder"
+                class="w-full px-2 py-1 border-2 border-green-400 rounded"
+                :class="{
+                  'text-white bg-green-400 hover:bg-green-600': popupBrowser === 'root',
+                  'text-green-400 hover:text-white bg-green-50 hover:bg-green-400': popupBrowser !== 'root',
+                }"
+                @click="setPopupBrowser('root')"
+              >
+                展示根文件夹
+              </button>
+              <button
+                title="set popup browser page as the star bookmarks"
+                class="w-full px-2 py-1 border-2 border-green-400 rounded"
+                :class="{
+                  'text-white bg-green-400 hover:bg-green-600': popupBrowser === 'star',
+                  'text-green-400 hover:text-white bg-green-50 hover:bg-green-400': popupBrowser !== 'star',
+                }"
+                @click="setPopupBrowser('star')"
+              >
+                展示常用书签
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="p-8 border-b-2 border-gray-200">
         <div class="flex justify-between items-center">
           <h2 class="text-2xl font-bold py-4 text-gray-800">
             IndexedDB 数据库
@@ -111,9 +202,9 @@
               title="export bookmarks order by tags"
               class="px-2 py-1 text-sm text-white bg-green-400 hover:bg-green-600 rounded"
               :class="{
-                'opacity-10': selectTags.size===0
+                'opacity-10': selectTags.size === 0
               }"
-              :disabled="selectTags.size===0"
+              :disabled="selectTags.size === 0"
               @click="exportBookmarks('tag')"
             >
               导出书签
@@ -196,9 +287,9 @@
               title="export bookmarks order by groups"
               class="px-2 py-1 text-sm text-white bg-green-400 hover:bg-green-600 rounded"
               :class="{
-                'opacity-10': selectGroups.size===0
+                'opacity-10': selectGroups.size === 0
               }"
-              :disabled="selectGroups.size===0"
+              :disabled="selectGroups.size === 0"
               @click="exportBookmarks('group')"
             >
               导出书签
@@ -347,6 +438,38 @@ export default {
   },
   setup(props) {
     const db = inject('db');
+
+    /**
+     * UI
+     */
+    // popup state
+    const popupState = ref('');
+    const getPopState = () => {
+      chrome.storage.local.get('popupState', (result) => {
+        popupState.value = result.popupState;
+      });
+    };
+    getPopState();
+
+    const setPopupState = async (value) => {
+      if (popupState.value === value) return;
+      await chrome.storage.local.set({ popupState: value });
+      getPopState();
+    };
+
+    // popup browser
+    const popupBrowser = ref('');
+    const getpopupBrowser = () => {
+      chrome.storage.local.get('popupBrowser', (result) => {
+        popupBrowser.value = result.popupBrowser;
+      });
+    };
+    getpopupBrowser();
+    const setPopupBrowser = async (value) => {
+      if (popupBrowser.value === value) return;
+      await chrome.storage.local.set({ popupBrowser: value });
+      getpopupBrowser();
+    };
 
     /**
      * popup msg
@@ -552,6 +675,10 @@ export default {
     };
 
     return {
+      popupState,
+      setPopupState,
+      popupBrowser,
+      setPopupBrowser,
       showMsg,
       msg,
       exportDatabase,

@@ -7,7 +7,7 @@
     <BrowserHeader
       :browser-type="browserType"
       :browser-mode="browserMode"
-      @change-browser-mode="browserMode = $event"
+      @change-browser-mode="changeBrowserModeHandler"
       @change-browser-type="browserType = $event"
     />
     <!-- menu -->
@@ -107,7 +107,7 @@
 </template>
 <script>
 import {
-  ref, computed, watch, inject,
+  ref, computed, watch, inject, onMounted,
 } from 'vue';
 import BrowserHeader from './Browser/BrowserHeader.vue';
 import BrowserFooter from './Browser/BrowserFooter.vue';
@@ -130,8 +130,28 @@ export default {
   },
   setup() {
     // browser page setting
-    const browserType = ref('all'); // all, star, pin
-    const browserMode = ref('grid'); // grid, tree
+    const browserType = ref(''); // all, star, pin
+    const browserMode = ref(''); // grid, tree
+
+    chrome.storage.local.get('popupBrowser', (result) => {
+      if (result.popupBrowser === 'star') {
+        browserMode.value = 'grid';
+        browserType.value = 'star';
+      } else {
+        browserMode.value = 'grid';
+        browserType.value = 'all';
+      }
+      chrome.storage.local.get('popupBrowserMode', (popupBrowserModeResult) => {
+        if (popupBrowserModeResult.popupBrowserMode && browserType.value === 'all') {
+          browserMode.value = popupBrowserModeResult.popupBrowserMode;
+        }
+      });
+    });
+
+    const changeBrowserModeHandler = async (value) => {
+      browserMode.value = value;
+      await chrome.storage.local.set({ popupBrowserMode: value });
+    };
 
     const browserMenuComponent = computed(() => {
       if (browserType.value === 'pin') {
@@ -154,7 +174,24 @@ export default {
       } else {
         currentNodeId.value = value;
       }
+      chrome.storage.local.set({ currentNodeId: currentNodeId.value });
     };
+
+    onMounted(() => {
+      chrome.storage.local.get('currentNodeId', (result) => {
+        if (!result.currentNodeId) {
+          currentNodeId.value = '0';
+        } else {
+          chrome.storage.local.get('popupBrowser', (popupBrowserResult) => {
+            if (popupBrowserResult.popupBrowser === 'folder') {
+              currentNodeId.value = result.currentNodeId;
+            } else {
+              currentNodeId.value = '0';
+            }
+          });
+        }
+      });
+    });
 
     const refreshCurrentNodeHandler = () => {
       chrome.bookmarks.getSubTree(currentNodeId.value).then((nodes) => {
@@ -297,6 +334,7 @@ export default {
     const currentGroupId = ref(NaN);
 
     return {
+      changeBrowserModeHandler,
       currentNodeId,
       currentNode,
       childrenNodes,

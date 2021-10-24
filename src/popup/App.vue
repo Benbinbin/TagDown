@@ -38,17 +38,28 @@ export default {
     EditPage,
   },
   setup() {
-    const page = ref('browser'); // browser, edit
+    const page = ref(''); // browser, edit
 
     const bookmarkState = ref(false);
     // get bookmarkState init data from chrome.storage
     chrome.storage.local.get('bookmarkState', (result) => {
       bookmarkState.value = result.bookmarkState;
-      // if (bookmarkState.value) {
-      //   page.value = 'browser';
-      // } else {
-      //   page.value = 'edit';
-      // }
+
+      chrome.storage.local.get('popupState', (popupStateResult) => {
+        if (popupStateResult.popupState === 'auto') {
+          if (bookmarkState.value) {
+            page.value = 'browser';
+          } else {
+            page.value = 'edit';
+          }
+        } else if (popupStateResult.popupState === 'browser') {
+          page.value = 'browser';
+        } else if (popupStateResult.popupState === 'edit') {
+          page.value = 'edit';
+        } else {
+          page.value = 'browser';
+        }
+      });
     });
 
     // provide bookmark state and change the bookmarkstate function
