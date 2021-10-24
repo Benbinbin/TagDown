@@ -125,7 +125,7 @@ Highly recommended to use another extension [OneTab](https://www.one-tab.com/), 
 在 [wiki](https://github.com/Benbinbin/TagDown/wiki/TagDown-%E6%89%A9%E5%B1%95%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0) 或[掘金](https://juejin.cn/column/7018368500662009892)可查看该项目的开发笔记。
 
 ## Version
-* [v2.1.0] Added database backing up with WebDAV feature, added sharing bookmarks as gist feature. Optimized the interaction of popup page and provide more customization options.
+* [v2.1.0](https://github.com/Benbinbin/TagDown/releases/tag/v2.1.0) Add database backing up with WebDAV feature, add sharing bookmarks as gist feature. Optimized the interaction of popup page and provide more customization options.
 
 * [v2.0.0](https://github.com/Benbinbin/TagDown/releases/tag/v2.0.0) providing two modes, **tree mode** and **grid mode**, to **browser and visualize** the hierarchy bookmarks data, you can **add** new bookmarks and **edit** the existed bookmarks with some tags and groups in Version 2.0.0. With tags and groups attached to bookmark, you can **export bookmarks in many ways**. All data will be save in local, you can **export the entire database or restore it by importing backup data** at any time, so feel free to use this extension and chrome as your bookmarks manager.
 
