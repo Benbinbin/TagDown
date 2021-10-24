@@ -4,7 +4,7 @@
       :title="webDAVTitle"
       class="btn"
       :class="{
-        'opacity-80': webDAVString === '正在同步中'
+        'opacity50': webDAVString === '正在同步中'
       }"
       :disabled="webDAVString === '正在同步中'"
       @click="syncWebDAVHandler"
@@ -43,6 +43,10 @@
     <button
       title="show extension options page"
       class="btn"
+      :class="{
+        'opacity50': gistString === '正在同步中'
+      }"
+      :disabled="gistString === '正在同步中'"
       @click="syncGistHandler"
     >
       <svg
@@ -57,7 +61,7 @@
           d="M24.8735 6C13.8934 6 5 14.8934 5 25.8735C5 34.6676 10.6888 42.0953 18.5885 44.7285C19.5822 44.9024 19.9548 44.3062 19.9548 43.7845C19.9548 43.3126 19.93 41.7475 19.93 40.0831C14.9368 41.0023 13.645 38.8658 13.2475 37.748C13.0239 37.1766 12.0551 35.4128 11.2105 34.9408C10.5149 34.5682 9.52123 33.649 11.1856 33.6242C12.7507 33.5994 13.8686 35.065 14.2412 35.6612C16.0298 38.6671 18.8866 37.8225 20.0294 37.3008C20.2032 36.009 20.7249 35.1396 21.2963 34.6427C16.8744 34.1459 12.2538 32.4318 12.2538 24.8302C12.2538 22.6689 13.0239 20.8803 14.2909 19.4892C14.0921 18.9923 13.3966 16.9553 14.4896 14.2227C14.4896 14.2227 16.154 13.701 19.9548 16.2597C21.5447 15.8126 23.234 15.589 24.9232 15.589C26.6125 15.589 28.3017 15.8126 29.8916 16.2597C33.6924 13.6762 35.3568 14.2227 35.3568 14.2227C36.4499 16.9553 35.7543 18.9923 35.5556 19.4892C36.8225 20.8803 37.5926 22.6441 37.5926 24.8302C37.5926 32.4566 32.9472 34.1459 28.5253 34.6427C29.2457 35.2638 29.8668 36.4562 29.8668 38.3193C29.8668 40.9774 29.8419 43.1138 29.8419 43.7845C29.8419 44.3062 30.2145 44.9273 31.2082 44.7285C35.1534 43.3966 38.5816 40.861 41.0103 37.4786C43.439 34.0963 44.7459 30.0375 44.7471 25.8735C44.7471 14.8934 35.8537 6 24.8735 6Z"
         />
       </svg>
-      <span class="flex-shrink-0 text-sm">Gist 同步</span>
+      <span class="flex-shrink-0 text-sm">{{ gistString }}</span>
     </button>
     <button
       title="show extension options page"
@@ -94,12 +98,15 @@
 import {
   ref, computed, onMounted, inject,
 } from 'vue';
-// import { exportDB, importInto } from 'dexie-export-import';
-// import useWebDAV from '@/composables/useWebDAV';
+import useGist from '@/composables/useGist';
 
 export default {
   setup(props) {
     const db = inject('db');
+
+    const {
+      setGithubToken, getGithubToken, clearGithubToken, getGistsRecord, setGistsRecord, clearGistsRecord, createGist, updateGist, getGist,
+    } = useGist();
 
     /**
      * popup msg
@@ -120,36 +127,9 @@ export default {
       }, duration);
     };
 
-    // sync webDAV
-    // const {
-    //   setWebDAVInfo, getWebDAVInfo, clearWebDAVInfo, setWebDAVSync, getWebDAVSync, getWebDAVLastFileState, createWebDAVClient, checkWebDAVConnect, getWebDAVFolder, getWebDAVFile, writeWebDAVFile,
-    // } = useWebDAV();
-
-    // const webDAVState = ref('');
     const webDAVState = inject('webDAVState');
 
-    // const webDAVUrl = ref('');
-    // const webDAVUsername = ref('');
-    // const webDAVPassword = ref('');
-    // const webDAVUrl = inject('webDAVUrl');
-    // const webDAVUsername = inject('webDAVUsername');
-    // const webDAVPassword = inject('webDAVPassword');
     const lastFileState = inject('lastFileState');
-
-    // get webDAV data from chrome.storage
-    // const setWebDAVInfoHandler = async () => {
-    //   // webDAV information
-    //   const webDAVInfo = await getWebDAVInfo();
-
-    //   if (!webDAVInfo) {
-    //     webDAVString.value = '设置 WebDAV';
-    //     webDAVState.value = '未添加';
-    //   } else {
-    //     webDAVUrl.value = webDAVInfo.url;
-    //     webDAVUsername.value = webDAVInfo.username;
-    //     webDAVPassword.value = webDAVInfo.password;
-    //   }
-    // };
 
     const webDAVString = ref('WebDAV 同步');
     const webDAVBakcupTime = ref(null);
@@ -172,70 +152,89 @@ export default {
       }
     });
 
-    // check the webDAV state by sending a request to webDAV server
-    // const webDAVClient = ref(null);
-    // const lastFileState = ref(null);
-
-    // const getWebDAVState = async () => {
-    //   if (!webDAVClient.value) return;
-    //   const result = await checkWebDAVConnect(webDAVClient.value);
-
-    //   webDAVState.value = result.msg;
-    //   if (webDAVState.value === '连接成功') {
-    //     lastFileState.value = await getWebDAVLastFileState(webDAVClient.value, '/tagdown_backup');
-    //     if (lastFileState.value) webDAVBakcupTime.value = lastFileState.value.lastmod;
-    //     webDAVString.value = 'WebDAV 同步';
-    //   } else {
-    //     webDAVBakcupTime.value = null;
-    //     webDAVString.value = '检查 WebDAV';
-    //   }
-    // };
-
-    // onMounted(async () => {
-    //   await setWebDAVInfoHandler();
-    //   if (!webDAVUrl.value || !webDAVUsername.value || !webDAVPassword.value) return;
-    //   webDAVClient.value = createWebDAVClient(webDAVUrl.value, webDAVUsername.value, webDAVPassword.value);
-    //   getWebDAVState();
-    // });
-
-    // const syncWebDAVHandler = async () => {
-    //   if (webDAVString.value === 'WebDAV 同步') {
-    //     console.log('sync webDAV');
-    //     webDAVString.value = '正在同步中';
-    //     const blob = await exportDB(db, {
-    //       prettyJson: true,
-    //     });
-    //     if (!blob) return;
-
-    //     const date = new Date();
-    //     let filename = `tagdown_${date.getTime()}.json`;
-
-    //     if (lastFileState.value) filename = lastFileState.value.basename;
-    //     console.log(filename);
-    //     const result = await writeWebDAVFile(webDAVClient.value, '/tagdown_backup', filename, blob);
-    //     setMsg(result.state, result.msg);
-    //     webDAVString.value = 'WebDAV 同步';
-    //     if (result.state) {
-    //       lastFileState.value = await getWebDAVLastFileState(webDAVClient.value, '/tagdown_backup');
-    //       console.log(lastFileState.value);
-    //       if (lastFileState.value) webDAVBakcupTime.value = lastFileState.value.lastmod;
-    //     }
-    //   } else {
-    //     chrome.runtime.openOptionsPage();
-    //   }
-    // };
-
     const syncWebDAV = inject('syncWebDAV');
 
     const syncWebDAVHandler = async () => {
-      webDAVString.value = '正在同步中';
-      await syncWebDAV();
-      webDAVString.value = 'WebDAV 同步';
+      if (webDAVState.value === '连接成功') {
+        webDAVString.value = '正在同步中';
+        await syncWebDAV();
+        webDAVString.value = 'WebDAV 同步';
+      } else {
+        chrome.runtime.openOptionsPage();
+      }
     };
 
     // sync Gist
-    const syncGistHandler = () => {
-      console.log('sync Gist');
+    const token = ref('');
+    const gistsRecords = ref([]);
+
+    const gistString = ref('');
+    onMounted(async () => {
+      token.value = await getGithubToken();
+      gistsRecords.value = await getGistsRecord();
+
+      if (token.value) {
+        gistString.value = 'Gist 同步';
+      } else {
+        gistString.value = '设置 Gist';
+      }
+    });
+
+    const getBookmarksByGroup = (group, shareableIds = []) => new Promise((resolve, reject) => {
+      db.bookmark.where('groups').equals(group).filter((item) => shareableIds.includes(item.id)).toArray()
+        .then((result) => {
+          resolve({
+            group,
+            bookmarks: result,
+          });
+        });
+    });
+
+    const getAllGroupsContent = async (groups) => {
+      const shareableIds = await db.share.where('share').equals(1).primaryKeys();
+      const promiseArr = [];
+      groups.forEach((group) => {
+        promiseArr.push(getBookmarksByGroup(group, shareableIds));
+      });
+      const allGroups = await Promise.all(promiseArr);
+      return allGroups;
+    };
+
+    const syncGistHandler = async () => {
+      if (token.value) {
+        gistString.value = '正在同步中';
+        const allGroupsArr = [];
+        console.log(gistsRecords.value);
+        gistsRecords.value.forEach((gistRecord) => {
+          allGroupsArr.push(...gistRecord.groups);
+        });
+        const allGroups = [...new Set(allGroupsArr)];
+        const allGroupsContent = await getAllGroupsContent(allGroups);
+
+        const updatePromiseArr = [];
+        gistsRecords.value.forEach((gistRecord) => {
+          const fileContent = [];
+          gistRecord.groups.forEach((group) => {
+            const targetGroup = allGroupsContent.find((item) => item.group === group);
+            fileContent.push(targetGroup);
+          });
+          const updatePromise = updateGist(token.value, gistRecord.gistId, {
+            gist_id: gistRecord.gistId,
+            description: gistRecord.description,
+            files: { [`${gistRecord.filename}.json`]: { content: JSON.stringify(fileContent) } },
+          });
+          updatePromiseArr.push(updatePromise);
+        });
+        Promise.all(updatePromiseArr).then(() => {
+          setMsg(true, '更新成功');
+          gistString.value = 'Gist 同步';
+        }).catch((err) => {
+          gistString.value = 'Gist 同步';
+          console.log('Error', err);
+        });
+      } else {
+        chrome.runtime.openOptionsPage();
+      }
     };
 
     // show extension options page
@@ -249,6 +248,7 @@ export default {
       webDAVString,
       webDAVTitle,
       webDAVState,
+      gistString,
       syncWebDAVHandler,
       syncGistHandler,
       showOptionsPageHandler,
