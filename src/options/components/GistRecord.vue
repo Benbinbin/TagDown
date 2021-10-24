@@ -8,9 +8,17 @@
         <button
           title="sync gist"
           class="p-1 text-gray-400 hover:bg-gray-200 rounded"
+          :class="{
+            'opacity-10': !token
+          }"
+          :disabled="!token || syncGistState"
+          @click="syncGistHandler"
         >
           <svg
             class="w-5 h-5"
+            :class="{
+              'animate-spin': syncGistState
+            }"
             viewBox="0 0 50 50"
             fill="currentColor"
             xmlns="http://www.w3.org/2000/svg"
@@ -74,6 +82,10 @@
         <button
           title="edit gist record"
           class="p-1 text-gray-400 hover:bg-gray-200 rounded"
+          :class="{
+            'opacity-10': !token
+          }"
+          :disabled="!token"
           @click="$emit('edit-gist-record')"
         >
           <svg
@@ -90,6 +102,7 @@
         <button
           title="delete gist record"
           class="p-1 text-red-400 hover:text-white hover:bg-red-400 rounded"
+          @click="$emit('delete-gist-record')"
         >
           <svg
             class="w-5 h-5"
@@ -107,7 +120,10 @@
   </div>
 </template>
 <script>
-import { ref, computed, onMounted } from 'vue';
+import {
+  ref, computed, onMounted, watch,
+} from 'vue';
+import useGist from '@/composables/useGist';
 
 export default {
   props: {
@@ -117,9 +133,19 @@ export default {
         return {};
       },
     },
+    token: {
+      type: String,
+      default: '',
+    },
+    syncGistId: {
+      type: String,
+      default: '',
+    },
   },
-  emits: ['edit-gist-record'],
-  setup(props) {
+  emits: ['edit-gist-record', 'delete-gist-record', 'sync-gist', 'reset-sync-gist'],
+  setup(props, context) {
+    const { getGist } = useGist();
+
     const updateTime = ref('');
     const updateTimeString = computed(() => {
       if (!updateTime.value) {
@@ -129,23 +155,48 @@ export default {
       return date.toLocaleString();
     });
 
-    const refreshUpdateTime = () => {
-      fetch(`https://api.github.com/gists/${props.gistRecord.gistId}`)
-        .then(async (res) => {
-          const resData = await res.json();
-          const lastCommit = resData.history[0];
-          updateTime.value = lastCommit.committed_at;
-        }).catch((err) => {
-          console.log('Error', err);
-        });
+    const refreshUpdateTime = async () => {
+      // fetch(`https://api.github.com/gists/${props.gistRecord.gistId}`)
+      //   .then(async (res) => {
+      //     const resData = await res.json();
+      //     const lastCommit = resData.history[0];
+      //     updateTime.value = lastCommit.committed_at;
+      //   }).catch((err) => {
+      //     console.log('Error', err);
+      //   });
+      const gist = await getGist(props.token, props.gistRecord.gistId);
+      console.log(gist);
+      if (gist) {
+        const lastCommit = gist.history[0];
+        updateTime.value = lastCommit.committed_at;
+      }
+      // updateTime.value = await getUpdateTime(props.gistRecord.gistId);
     };
 
     onMounted(() => {
       refreshUpdateTime();
     });
 
+    // sync gist
+    const syncGistState = ref(false);
+    const syncGistHandler = () => {
+      context.emit('sync-gist');
+      syncGistState.value = true;
+    };
+
+    watch(() => props.syncGistId, async (newValue, oldValue) => {
+      // console.log(props.syncGistId);
+      if (props.syncGistId === 'all' || props.syncGistId === props.gistRecord.gistId) {
+        await refreshUpdateTime();
+        context.emit('reset-sync-gist');
+      }
+      syncGistState.value = false;
+    });
+
     return {
       updateTimeString,
+      syncGistState,
+      syncGistHandler,
     };
   },
 };

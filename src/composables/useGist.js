@@ -103,6 +103,30 @@ export default function useGist() {
       });
   });
 
+  // get gist filename
+  const getGist = (token, gistId) => new Promise((resolve, reject) => {
+    let header = new Headers({});
+    if (token) {
+      header = new Headers({
+        Authorization: `Bearer ${token}`,
+      });
+    }
+    fetch(`https://api.github.com/gists/${gistId}`, {
+      method: 'GET',
+      headers: header,
+    })
+      .then(async (res) => {
+        if (res.status === 200) {
+          const gist = await res.json();
+          resolve(gist);
+        } else {
+          resolve(null);
+        }
+      }).catch((err) => {
+        console.log('Error', err);
+      });
+  });
+
   return {
     setGithubToken,
     getGithubToken,
@@ -112,5 +136,6 @@ export default function useGist() {
     clearGistsRecord,
     createGist,
     updateGist,
+    getGist,
   };
 }

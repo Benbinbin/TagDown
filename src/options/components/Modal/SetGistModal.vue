@@ -25,6 +25,9 @@
               <label
                 for="input-name"
                 class="flex-shrink-0 text-gray-600 text-base font-bold"
+                :class="{
+                  'opacity-50': gistInit || inputIdValue !== ''
+                }"
               >Name</label>
               <input
                 id="input-name"
@@ -32,8 +35,9 @@
                 v-model="inputNameValue"
                 type="text"
                 name="input-name"
-                placeholder="输入 Gist 名称"
+                placeholder="(二选一）输入 Gist 名称"
                 class="w-full p-1 border border-gray-200 rounded"
+                :disabled="gistInit || inputIdValue !== ''"
               >
             </div>
             <div class="p-4 space-y-2 border-2 border-gray-200 border-dashed rounded">
@@ -41,7 +45,7 @@
                 for="input-id"
                 class="text-gray-600 text-base font-bold"
                 :class="{
-                  'opacity-50': gistInit
+                  'opacity-50': gistInit || inputNameValue !== ''
                 }"
               >ID</label>
               <input
@@ -49,9 +53,9 @@
                 v-model="inputIdValue"
                 type="text"
                 name="input-id"
-                placeholder="（可选）输入 Gist ID，若省略则生成新的 Gist"
+                placeholder="(二选一）输入 Gist ID，若省略则生成新的 Gist"
                 class="w-full p-1 border border-gray-200 rounded"
-                :disabled="gistInit"
+                :disabled="gistInit || inputNameValue !== ''"
               >
             </div>
             <div
@@ -145,9 +149,9 @@
             <button
               class="px-2 py-1 text-white text-base bg-green-400 hover:bg-green-600 rounded"
               :class="{
-                'opacity-10': selectGroups.size === 0 || !inputNameValue
+                'opacity-10': selectGroups.size === 0 || (!inputNameValue && !inputIdValue)
               }"
-              :disabled="selectGroups.size === 0 || !inputNameValue"
+              :disabled="selectGroups.size === 0 || (!inputNameValue && !inputIdValue)"
               @click="resultHandler(true)"
             >
               确定

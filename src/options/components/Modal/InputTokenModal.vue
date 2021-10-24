@@ -76,7 +76,7 @@ export default {
   emits: ['update:show', 'update-token-state'],
   setup(props, context) {
     const {
-      setGithubToken, getGithubToken, createGist, updateGist,
+      setGithubToken, getGithubToken,
     } = useGist();
 
     // show modal
