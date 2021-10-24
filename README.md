@@ -16,12 +16,14 @@ TagDown is an open source browser extension to manage bookmarks, you can *browse
 
 ## Highlight
 
-* Support for :clapper: [adding](https://youtu.be/DvCZSY5Kn0o) `tags`, `groups`, and other additional information to bookmark
+* Support for :clapper: [adding](https://youtu.be/DvCZSY5Kn0o) `tags`, `groups`, and other **additional information** to bookmark
 * Support for :clapper: [exporting](https://youtu.be/EXnYbXRCnjg) any bookmarks to a `json` file
 * Browse bookmarks hierarchical data in :clapper: [tree diagram](https://youtu.be/LydLrF2y73U)
 * Open multiple bookmarks in one click, and support for :clapper: [opening bookmarks in group](https://youtu.be/a3ETD0T3wbs)
+* support for :clapper: [backing up IndexedDB with WebDAV](https://youtu.be/vYTNqmdpO1M)
+* support for :clapper: [sharing bookmarks as gist](https://youtu.be/RWLqwdL67cM)
 
-Data is kept local, additional information enhancement is non-destructive and does not affect browser bookmarks data after uninstalling the extension.
+:bulb: The extension uses two parts of data, the bookmark data in Chrome and additional data about the bookmarks stored in the IndexedDB database. **They are all stored locally**. Additional information enhancement is non-destructive and does not affect browser bookmarks data after uninstalling the extension.
 
 ## Install
 
@@ -55,6 +57,34 @@ TagDown provides an :clapper: [`export` and `import` feature](https://youtu.be/I
 
 Although all bookmarks save inside the browser, they only contain the `id`, `title`, `url` and `folder` information, TagDown wants to attach more information to bookmark, like `tags`, `description` about the bookmark, so TagDown use an local database to save these data.
 
+
+### How to sync, backup or share data?
+The data belongs to you. You can export the extension’s data at any time.
+
+* If you want to get all bookmarks data please use default exporting function provided by browser, you can get a HTML file instead:
+
+    1. Go to the bookmark manager: `chrome://bookmarks/`
+    2. Click the three dots in the upper/right
+    3. Select `Export Bookmarks` from the drop-down menu
+
+* If you want :clapper: [Export](https://youtu.be/Iscrkte5JWY) additional information about some bookmarks stored in IndexedDB, you can click the button in the settings page of the extension, you will get a JSON file
+
+* If you login the Chrome and [turn sync on](https://support.google.com/chrome/answer/185277), the bookmarks will sync by Google, so you can share bookmarks between different devices with the same account
+
+* If you want to back up additional information about some bookmarks stored in IndexedDB, you can go to the extension's settings page to :clapper: [set up WebDAV service](https://youtu.be/vYTNqmdpO1M), for example using [Nutstore](https://help.jianguoyun.com/?p=2064) for backup.
+    :warning: If you want to use other WebDAV services **other than Nutstore**, you need to modify the `manifest.json` file under the extension folder, and add the WebDAV server address to the `host_permissions` property. For example, if the server address you want to use is `https://example.com/dav`, the `host_permissions` attribute should be
+    ```json
+    {
+      // Omit other parts
+      "host_permissions": [
+        "https://dav.jianguoyun.com/dav/",
+        "https://example.com/dav"
+      ],
+      // Omit other parts
+    }
+    ```
+
+* If you want to :clapper: [Share bookmark](https://youtu.be/8n3ng6MuwPM), you can switch to the Pin page in the popup page of the extension, and export any bookmark you have chosen, you can also click the button to export the bookmark on the extension's settings page, and you will get a JSON file; you can also [create a Token of Github](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token) to :clapper: [share bookmarks as Gist](https://youtu.be/RWLqwdL67cM).
 
 ### If I uninstall the extension which part of the data will lose?
 
@@ -95,6 +125,8 @@ Highly recommended to use another extension [OneTab](https://www.one-tab.com/), 
 在 [wiki](https://github.com/Benbinbin/TagDown/wiki/TagDown-%E6%89%A9%E5%B1%95%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0) 或[掘金](https://juejin.cn/column/7018368500662009892)可查看该项目的开发笔记。
 
 ## Version
+* [v2.1.0] Added database backing up with WebDAV feature, added sharing bookmarks as gist feature. Optimized the interaction of popup page and provide more customization options.
+
 * [v2.0.0](https://github.com/Benbinbin/TagDown/releases/tag/v2.0.0) providing two modes, **tree mode** and **grid mode**, to **browser and visualize** the hierarchy bookmarks data, you can **add** new bookmarks and **edit** the existed bookmarks with some tags and groups in Version 2.0.0. With tags and groups attached to bookmark, you can **export bookmarks in many ways**. All data will be save in local, you can **export the entire database or restore it by importing backup data** at any time, so feel free to use this extension and chrome as your bookmarks manager.
 
 * [v1.0.0](https://github.com/Benbinbin/BookDown/releases/tag/v1.0.0) provide two modes to visualize the hierarchy data, you can **browser and visualize** the hierarchy bookmarks data fast and conveniently.
@@ -107,4 +139,6 @@ Highly recommended to use another extension [OneTab](https://www.one-tab.com/), 
 - [x] support for adding **memo/description** to describe bookmark
 - [x] ~~override the Bookmark Manager page~~ add **pinning** bookmarks temporarily feature to provide a more convenient way to manipulate bookmarks in batch
 - [x] support for backing up and exporting the bookmark
+- [x] support for sharing bookmarks as gist
+- [x] support for backup database with WebDAV
 - [ ] support for searching bookmarks based on tags or groups

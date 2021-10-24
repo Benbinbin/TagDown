@@ -15,12 +15,14 @@ TagDown 是一款开源的书签管理插件， 您可以使用扩展程序*浏�
 
 ## 特点
 
-* 支持 :clapper: [新增](https://www.bilibili.com/video/BV1up4y1s7VP?p=4)书签，并附加额外的信息，例如 `tags`、`groups` 等
+* 支持 :clapper: [新增](https://www.bilibili.com/video/BV1up4y1s7VP?p=4)书签，并**附加额外的信息，例如 `tags`、`groups` 等**
 * 支持 :clapper: [导出](https://www.bilibili.com/video/BV1up4y1s7VP?p=7)任意书签为 `json` 文档
 * 以 :clapper: [树图](https://www.bilibili.com/video/BV1up4y1s7VP?p=3)的形式浏览层级结构的书签数据
 * 一键打开多个书签，支持在 :clapper: [标签组](https://www.bilibili.com/video/BV1up4y1s7VP)内打开书签
+* IndexedDB 数据库支持 :clapper: [WebDAV 备份](https://www.bilibili.com/video/BV1up4y1s7VP?p=12)
+* 支持将书签 :clapper: [分享为 Gist](https://www.bilibili.com/video/BV1up4y1s7VP?p=10)
 
-数据保存在本地，额外附加的信息是「非破坏性」的，即卸载扩展程序后，不会影响浏览器的书签数据
+:bulb: 该扩展程序使用两部分数据，存储在 Chrome 中的书签数据和保存在 IndexedDB 数据库中关于书签的额外数据，**它们都保存在本地**。额外附加的信息是「非破坏性」的，即卸载扩展程序后，不会影响浏览器的书签数据
 
 ## 安装
 1. 下载最新版本的 [TagDown](https://github.com/Benbinbin/TagDown/releases) `zip` 文件并解压
@@ -49,6 +51,35 @@ TagDown 提供了 :clapper: [`export` 和 `import` 功能](https://www.bilibili.
 
 ### TagDown 为什么需要使用 IndexedDB 数据库？
 虽然书签都保存在浏览器中，但它们只包含 `id`、`title`、`url` 和文件夹信息，TagDown 希望给书签附加更多的信息，如 `tags`、`description` 等，因此使用一个内置在浏览器中的本地数据库来保存这些数据。
+
+### 如何同步、备份、分享数据？
+数据是属于您的，因此您可以随时导出该扩展程序的数据。
+
+* 如果您希望导出全部书签数据，请使用浏览器提供的默认导出功能，您将会得到一个 HTML 文件：
+
+    1. 进入书签管理器：`chrome://bookmarks/`
+    2. 点击页面右上角的汉堡菜单（三个小点）
+    3. 从下拉菜单中选择 `导出书签`
+
+* 如果您希望 :clapper: [导出](https://www.bilibili.com/video/BV1up4y1s7VP?p=10)存储在 IndexedDB 中关于部分书签的额外数据，可以在扩展程序的设置页面点击相应的按钮导出，您将得到一个 JSON 文件
+
+* 如果您希望同步全部书签数据，请在 Chrome 中登录账号，并[打开同步选项](https://support.google.com/chrome/answer/185277)，书签将由 Google 进行同步，这样您可以使用同一账户在不同设备之间共享书签。
+
+* 如果您希望备份存储在 IndexedDB 中关于部分书签的额外数据，可以在扩展程序的设置页面中 :clapper: [配置 WebDAV 服务](https://www.bilibili.com/video/BV1up4y1s7VP?p=12)，例如使用[坚果云](https://help.jianguoyun.com/?p=2064)进行同步备份。
+    :warning: 如果希望使用坚果云**以外**的 WebDAV 服务，需要将修改扩展程序文件夹下的 `manifest.json` 文件，将 WebDAV 服务器地址添加到 `host_permissions` 属性中。例如希望支持的服务器地址为 `https://example.com/dav`，则 `host_permissions` 属性应为
+    ```json
+    {
+      // 省略显示其他部分
+      "host_permissions": [
+        "https://dav.jianguoyun.com/dav/",
+        "https://example.com/dav"
+      ],
+      // 省略显示其他部分
+    }
+    ```
+
+* 如果希望 :clapper: [分享书签](https://www.bilibili.com/video/BV1up4y1s7VP?p=9)，可以在扩展程序的弹出页面中，切换到 Pin 页面，导出选择的任意书签，也可以在扩展程序的设置页面，点击相应的按钮导出书签，您将得到一个 JSON 文件；也可以[配置 Github 个人令牌](https://docs.github.com/cn/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)，:clapper: [将书签同步分享为 Gist](https://www.bilibili.com/video/BV1up4y1s7VP?p=10)。
+
 
 ### 如果卸载/移除扩展程序会丢失哪一部分数据？
 
@@ -89,6 +120,8 @@ Chrome 提供了「为所有标签页添加书签」的功能，以批量创建�
 在 [wiki](https://github.com/Benbinbin/TagDown/wiki/TagDown-%E6%89%A9%E5%B1%95%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0) 或[掘金](https://juejin.cn/column/7018368500662009892)可查看该项目的开发笔记。
 
 ## 版本
+* [v2.1.0] 新增 WebDAV 同步备份功能，新增 Gist 同步分享功能。优化了弹出框的交互，提供更多自定义选项。
+
 * [v2.0.0](https://github.com/Benbinbin/TagDown/releases/tag/v2.0.0) 提供两种模式，**树图模式**和**网格模式**，以**浏览器和可视化**层次化的书签数据，您可以在 2.0.0 版本中**添加**新书签和**编辑**现有书签，并添加 `tags` 和 `groups` 等额外信息。 通过附加到书签的 tag 和 group，您可以**以多种方式导出书签**。 所有数据都将保存在本地，您可以随时**导出整个数据库或导入备份以恢复它**，因此请尝试使用该扩展程序和 chrome 作为您的书签管理器。
 
 * [v1.0.0](https://github.com/Benbinbin/BookDown/releases/tag/v1.0.0) 提供两种模式，**浏览和可视化**层次化的书签数据。
