@@ -1,3 +1,19 @@
+:loudspeaker: 我创建了另一个书签管理扩展程序，名为 [Nut Mark](https://nutmark.benbinbin.com/)
+
+我基于当前这个插件对功能进行了精简，进一步优化了交互和UI设计，使插件更加针对性、更简单易用。
+
+与 TagDown 扩展相比，Nut Mark 专注于提供以下功能，使书签收集过程更加顺畅和简单：
+
+:sparkles: 「一键清理」链接
+
+:sparkles: 「自由」地浏览目录树，以便快速地寻找到目标文件夹
+
+:sparkles: 支持基于书签名称或目录名称搜索文件夹
+
+Nut Mark 让收藏书签变得更轻松，为什么不试试呢？ :point_right: [查看详情](https://nutmark.benbinbin.com/)
+
+---
+
 # TagDown
 
 <p align="center">
