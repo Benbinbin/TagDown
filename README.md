@@ -1,3 +1,19 @@
+:loudspeaker: I build another bookmark manager extension called [Nut Mark](https://nutmark.benbinbin.com/)
+
+I streamlined the features, and further optimized the interaction and UI design, making the plugin more targeted, simpler, and easier to use.
+
+Compared to the TagDown extension, Nut Mark focus on collecting bookmarks with the following features to make the process more smoothly and easily
+
+:sparkles: Clean "dirty" URL with one click
+
+:sparkles: Navigate freely through the directory tree
+
+:sparkles: Quick search to find the directory to hold the bookmark
+
+Nut Mark makes bookmarking a breeze, so why not have a try? :point_right: [check it out](https://nutmark.benbinbin.com/)
+
+---
+
 # TagDown
 
 <p align="center">
